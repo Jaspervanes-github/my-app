@@ -196,7 +196,7 @@ export default class Post extends Component {
               <p>{this.state.currentItem.body}</p>
             </Popup>
           </div>
-        </div>
+        </div> 
       </React.Fragment >
     )
   }
