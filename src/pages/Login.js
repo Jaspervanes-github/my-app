@@ -6,6 +6,7 @@ import { ContractFactory, ethers } from "ethers";
 import Value_ABI from "../Value_ABI.json";
 import Value_ByteCode from "../Value_ByteCode.json";
 
+
 export default class Login extends Component {
     constructor(props) {
         super(props);
@@ -107,16 +108,15 @@ export default class Login extends Component {
     renderMetamask() {
         if (!this.state.selectedAddress) {
             return (
-                <Button variant='contained' onClick={() => this.connectToMetamask()}>
-                    Connect to Metamask
-                </Button>
+                <div>
+                    <Button variant='contained' style={{ justifyContent: 'center' }} onClick={() => this.connectToMetamask()}>
+                        Connect to Metamask
+                    </Button>
+                </div>
             )
-            window.location.reload();
         } else {
             return (
-                <div>
-                    <Navigate to="/home" replace={false} />
-                </div>
+                <Navigate to="/home" replace={false} />
                 // <div>
                 //   <p>Welcome {this.state.selectedAddress}</p>
                 //   <p>Your ETH Balance is: {this.state.balance}</p>

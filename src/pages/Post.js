@@ -106,18 +106,23 @@ export default class Post extends Component {
               )}
             </ViewportList>
           </div>
+
           <Button variant="contained" onClick={() => { this.createNewPost() }}>
             Create new Post
           </Button>
+
           <p>{this.state.items.length}</p>
 
           <div className="resharePostTemplate">
             <Popup trigger={this.state.triggerResharePostPopup} setTrigger={() => {
-              this.setState({ triggerResharePostPopup: false });
+              this.setState({
+                triggerResharePostPopup: false,
+                content: ''
+              });
             }}>
               <h2>Reshare Post</h2>
               <form onSubmit={(event) => {
-                if(this.state.content == ''){
+                if (this.state.content === '') {
                   alert("Please enter a valid text");
                   event.preventDefault();
                   return;
@@ -138,11 +143,14 @@ export default class Post extends Component {
           </div>
           <div className="remixPostTemplate">
             <Popup trigger={this.state.triggerRemixPostPopup} setTrigger={() => {
-              this.setState({ triggerRemixPostPopup: false });
+              this.setState({
+                triggerRemixPostPopup: false,
+                content: ''
+              });
             }}>
               <h2>Remix Post</h2>
               <form onSubmit={(event) => {
-                if(this.state.content == ''){
+                if (this.state.content === '') {
                   alert("Please enter a valid text");
                   event.preventDefault();
                   return;
@@ -163,11 +171,14 @@ export default class Post extends Component {
           </div>
           <div className="newPostTemplate">
             <Popup trigger={this.state.triggerNewPostPopup} setTrigger={() => {
-              this.setState({ triggerNewPostPopup: false });
+              this.setState({
+                triggerNewPostPopup: false,
+                content: ''
+              });
             }}>
               <h2>New Post</h2>
               <form onSubmit={(event) => {
-                if(this.state.content == ''){
+                if (this.state.content === '') {
                   alert("Please enter a valid text");
                   event.preventDefault();
                   return;
@@ -187,7 +198,10 @@ export default class Post extends Component {
           </div>
           <div className="viewPostTemplate">
             <Popup trigger={this.state.triggerViewPostPopup} setTrigger={() => {
-              this.setState({ triggerViewPostPopup: false });
+              this.setState({
+                triggerViewPostPopup: false,
+                content: ''
+              });
             }}>
               <h2>View Post</h2>
               <h3>
@@ -196,7 +210,7 @@ export default class Post extends Component {
               <p>{this.state.currentItem.body}</p>
             </Popup>
           </div>
-        </div> 
+        </div>
       </React.Fragment >
     )
   }

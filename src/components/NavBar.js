@@ -7,10 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const styles = makeStyles({
     bar: {
         paddingTop: "1.15rem",
-        backgroundColor: "#fff",
-        ['@media (max-width:780px)']: {
-            flexDirection: "column"
-        }
+        backgroundColor: "#fff"
     },
     menuItem: {
         fontFamily: 'Fantasy',
@@ -19,9 +16,6 @@ const styles = makeStyles({
         flexGrow: 1,
         "&:hover": {
             background: '#246773'
-        },
-        ['@media (max-width:780px)']: {
-            paddingBottom: "1rem"
         }
     }
 })
