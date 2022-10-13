@@ -2,7 +2,7 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { Route, Routes } from "react-router-dom";
 import './App.css';
 
-import { Component } from 'react';
+import React, { Component } from 'react';
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NoPage from "./pages/NoPage";
@@ -40,15 +40,15 @@ export default class App extends Component {
 
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <div className="App">
-          <Routes>
-            <Route exact path="/" element={<Login />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="*" element={<NoPage />} />
-          </Routes>
-        </div>
-      </ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <div className="App">
+            <Routes>
+              <Route exact path="/" element={<Login />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="*" element={<NoPage />} />
+            </Routes>
+          </div>
+        </ThemeProvider>
     );
   }
 }

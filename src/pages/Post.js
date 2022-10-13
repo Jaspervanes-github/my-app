@@ -11,6 +11,11 @@ const ContractType = {
   REMIX: 2
 }
 
+const ContentType = {
+  TEXT: 0,
+  IMAGE: 1
+}
+
 export default class Post extends Component {
   constructor(props) {
     super(props);
@@ -26,7 +31,14 @@ export default class Post extends Component {
       triggerNewPostPopup: false,
       triggerViewPostPopup: false,
       currentItem: '',
-      content: ''
+      contractType: '',
+      originalPostAddress: '',
+      contentType: '',
+      hashOfContent: '',
+      content: '',
+      payees: [],
+      shares: [],
+      royatyMultiplier: ''
     }
 
     this.ref = React.createRef(null);
@@ -36,11 +48,42 @@ export default class Post extends Component {
   }
 
   handleChange(event) {
-    this.setState({ content: event.target.value });
+    const target = event.target;
+    const name = target.name;
+
+    let value;
+    console.log(target.type);
+    switch (target.type) {
+      case 'text':
+        value = target.value;
+        break;
+      case 'select-one':
+        value = target.value;
+        break;
+      default:
+        break;
+    }
+
+    this.setState({
+      [name]: value
+    });
   }
 
   handleSubmit(event) {
     //TODO: Implement the creating of a contract here
+    // let _hashOfContent = IPFS.saveTextToIPFS(this.state.content);
+    // this.setState({hashOfContent: _hashOfContent});
+
+    // let contract = deployNewPostContract(
+    //   this.state.contractType,
+    //   this.state.originalPostAddress,
+    //   this.state.contentType,
+    //   this.state.hashOfContent,
+    //   this.state.payees,
+    //   this.state.shares,
+    //   this.state.royatyMultiplier
+    //   );
+
     let _items = this.state.items;
 
     _items.push({
@@ -57,20 +100,43 @@ export default class Post extends Component {
   }
 
   createNewPost() {
-    this.setState({ triggerNewPostPopup: true });
+    this.setState({
+      contractType: ContractType.ORIGINAL,
+      contentType: ContentType.TEXT,
+      originalPostAddress: "0x0000000000000000000000000000000000000000",
+      payees: [],
+      shares: [],
+      royatyMultiplier: 5,
+      content: '',
+      triggerNewPostPopup: true
+    });
   }
 
   createResharePost(index) {
+    // let contract = this.state.contracts[index];
     this.setState({
       currentItem: this.state.items[index],
+      contractType: ContractType.RESHARE,
+      contentType: ContentType.TEXT,
+      // originalPostAddress: contract.originalPost,
+      // payees: contract.getPayees(),
+      // shares: contract.getShares(),
+      royatyMultiplier: 2,
       content: this.state.items[index].body,
       triggerResharePostPopup: true
     });
   }
 
   createRemixPost(index) {
+    // let contract = this.state.contracts[index];
     this.setState({
       currentItem: this.state.items[index],
+      contractType: ContractType.REMIX,
+      // contentType: contract.contentType,
+      // originalPostAddress: contract.originalPost,
+      // payees: contract.getPayees(),
+      // shares: contract.getShares(),
+      royatyMultiplier: 4,
       content: this.state.items[index].body,
       triggerRemixPostPopup: true
     });
@@ -116,8 +182,7 @@ export default class Post extends Component {
           <div className="resharePostTemplate">
             <Popup trigger={this.state.triggerResharePostPopup} setTrigger={() => {
               this.setState({
-                triggerResharePostPopup: false,
-                content: ''
+                triggerResharePostPopup: false
               });
             }}>
               <h2>Reshare Post</h2>
@@ -131,21 +196,21 @@ export default class Post extends Component {
                 this.setState({ triggerResharePostPopup: false });
               }}>
                 <label>
-                  Content:
-                  <input type="text" value={this.state.content} onChange={this.handleChange} />
+                  Address of Poster:
+                  {/* {this.state.accounts[0]} */}
+                  <br />
+                  Content of Post:
+                  <input type="text" name="content" disabled="true" value={this.state.content} onChange={this.handleChange} />
+                  <br />
                 </label>
                 <input type="submit" value="Submit Post" />
               </form>
-
-              <p>Content of post {this.state.currentItem.id}:</p>
-              {this.state.currentItem.body}
             </Popup>
           </div>
           <div className="remixPostTemplate">
             <Popup trigger={this.state.triggerRemixPostPopup} setTrigger={() => {
               this.setState({
-                triggerRemixPostPopup: false,
-                content: ''
+                triggerRemixPostPopup: false
               });
             }}>
               <h2>Remix Post</h2>
@@ -159,14 +224,21 @@ export default class Post extends Component {
                 this.setState({ triggerRemixPostPopup: false });
               }}>
                 <label>
-                  Content:
-                  <input type="text" value={this.state.content} onChange={this.handleChange} />
+                  Address of Poster:
+                  {/* {this.state.accounts[0]} */}
+                  <br />
+                  Content Type:
+                  <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
+                    <option selected value="0">TEXT</option>
+                    <option value="1">IMAGE</option>
+                  </select>
+                  <br />
+                  Content of Post:
+                  <input type="text" name="content" value={this.state.content} onChange={this.handleChange} />
+                  <br />
                 </label>
                 <input type="submit" value="Submit Post" />
               </form>
-
-              <p>Content of post {this.state.currentItem.id}:</p>
-              {this.state.currentItem.body}
             </Popup>
           </div>
           <div className="newPostTemplate">
@@ -187,13 +259,20 @@ export default class Post extends Component {
                 this.setState({ triggerNewPostPopup: false });
               }}>
                 <label>
-                  Content:
+                  Address of Poster:
+                  {/* {this.state.accounts[0]} */}
+                  <br />
+                  Content Type:
+                  <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
+                    <option selected value="0">TEXT</option>
+                    <option value="1">IMAGE</option>
+                  </select>
+                  <br />
+                  Content of Post:
                   <input type="text" value={this.state.content} onChange={this.handleChange} />
                 </label>
                 <input type="submit" value="Submit Post" />
               </form>
-
-              <p>This is some filler text...</p>
             </Popup>
           </div>
           <div className="viewPostTemplate">

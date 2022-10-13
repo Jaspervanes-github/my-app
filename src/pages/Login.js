@@ -3,8 +3,10 @@ import React, { Component } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { ContractFactory, ethers } from "ethers";
-import Value_ABI from "../Value_ABI.json";
-import Value_ByteCode from "../Value_ByteCode.json";
+import Post_ABI from "../Post_ABI.json"
+import Post_ByteCode from "../Post_ByteCode.json"
+// import Value_ABI from "../Value_ABI.json";
+// import Value_ByteCode from "../Value_ByteCode.json";
 
 
 export default class Login extends Component {
@@ -12,8 +14,8 @@ export default class Login extends Component {
         super(props);
 
         this.state = {
-            currentValue: 0,
-            contract: []
+            // currentValue: 0,
+            contracts: []
         };
     }
 
@@ -35,6 +37,7 @@ export default class Login extends Component {
             balance: balanceInEther,
             block,
             provider,
+            accounts,
             signer
         })
 
@@ -47,59 +50,65 @@ export default class Login extends Component {
         });
     }
 
-    async getValueOfContract() {
-        if (this.state.contract.length === 0) {
-            console.log("Please deploy a contract first");
-            return;
-        }
+    async deployNewPostContract(
+        contractType,
+        originalPostAddress,
+        contentType,
+        hashOfContent,
+        payees,
+        shares,
+        royaltyMultiplier
+    ) {
         try {
-            console.log("In method getValueOfContract");
-            let value = await this.state.contract[0].value();
-            console.log("Value retrieved is:", value.toNumber());
-
-            this.setState({ currentValue: value.toNumber() });
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async incrementValue() {
-        if (this.state.contract.length === 0) {
-            console.log("Please deploy a contract first");
-
-            return;
-        }
-        try {
-            console.log("In method incrementValue");
-            await this.state.contract[0].increment();
-
-            this.setState({ currentValue: this.state.currentValue + 1 });
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async setValueOfContract(value) {
-        if (this.state.contract.length === 0) {
-            console.log("Please deploy a contract first");
-            return;
-        }
-        try {
-            console.log("In method setValueOfContract");
-            await this.state.contract[0].setValue(value);
-            this.setState({ currentValue: value });
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async deployNewValueContract() {
-        try {
-            const factory = new ContractFactory(Value_ABI, Value_ByteCode, this.state.signer);
-            const contract = await factory.deploy();
-
+            const factory = new ContractFactory(Post_ABI, Post_ByteCode, this.state.signer);
+            const contract = await factory.deploy(
+                contractType,
+                originalPostAddress,
+                contentType,
+                hashOfContent,
+                payees,
+                shares,
+                royaltyMultiplier
+            );
             console.log(contract.address);
-            this.state.contract.push(contract);
+
+            this.state.contracts.push(contract);
+            // return contract;
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async getPayees(indexOfContract) {
+        try {
+            let payees = await this.state.contracts[indexOfContract].getAllPayees();
+            return payees;
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async getShares(indexOfContract) {
+        try {
+            let shares = await this.state.contracts[indexOfContract].getAllShares();
+            return shares;
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async viewPost(indexOfContract) {
+        try {
+            const transaction = await this.state.contracts[indexOfContract].viewPost({ value: ethers.utils.parseEther("1.0") });
+            await transaction.wait();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async payoutUser(indexOfContract) {
+        try {
+            await this.state.contracts[indexOfContract].payoutUser();
         } catch (err) {
             console.error(err);
         }
@@ -117,6 +126,8 @@ export default class Login extends Component {
         } else {
             return (
                 <Navigate to="/home" replace={false} />
+                // <Navigate to="/home" state={this.state} replace={false} />
+
                 // <div>
                 //   <p>Welcome {this.state.selectedAddress}</p>
                 //   <p>Your ETH Balance is: {this.state.balance}</p>

@@ -7,6 +7,12 @@ import Post from './Post.js';
 export default class Home extends Component {
   constructor(props) {
     super(props);
+    
+    //   this.state = ({
+    //   provider: props.location.state.provider,
+    //   accounts: props.location.state.accounts,
+    //   signer: props.location.state.signer
+    // });
   }
 
   render() {
