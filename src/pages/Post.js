@@ -54,7 +54,7 @@ export default class Post extends Component {
     let value;
     console.log(target.type);
     switch (target.type) {
-      case 'text':
+      case 'textarea':
         value = target.value;
         break;
       case 'select-one':
@@ -150,6 +150,11 @@ export default class Post extends Component {
 
   }
 
+  auto_height(elem) {
+    elem.target.style.height = '1px';
+    elem.target.style.height = elem.target.scrollHeight + 'px';
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -158,7 +163,9 @@ export default class Post extends Component {
             <ViewportList viewportRef={this.ref} items={this.state.items} itemMinSize={40} margin={8}>
               {(item) => (
                 <React.Fragment key={item.id}>
-                  <div className="post">
+                  <div className="post" style={{
+                    borderStyle: "groove"
+                  }}>
                     <h3>
                       {item.name} - {item.id}
                     </h3>
@@ -197,10 +204,15 @@ export default class Post extends Component {
               }}>
                 <label>
                   Address of Poster:
-                  {/* {this.state.accounts[0]} */}
+                  {/* <p>{this.state.accounts[0]}</p> */}
                   <br />
                   Content of Post:
-                  <input type="text" name="content" disabled="true" value={this.state.content} onChange={this.handleChange} />
+                  <p style={{
+                    height: this.scrollHeight + 'px',
+                    maxHeight: window.innerHeight / 2
+                  }}>
+                    {this.state.content}
+                  </p>
                   <br />
                 </label>
                 <input type="submit" value="Submit Post" />
@@ -225,7 +237,7 @@ export default class Post extends Component {
               }}>
                 <label>
                   Address of Poster:
-                  {/* {this.state.accounts[0]} */}
+                  {/* <p>{this.state.accounts[0]}</p> */}
                   <br />
                   Content Type:
                   <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
@@ -234,7 +246,16 @@ export default class Post extends Component {
                   </select>
                   <br />
                   Content of Post:
-                  <input type="text" name="content" value={this.state.content} onChange={this.handleChange} />
+                  <textarea name="content" rows="1" style={{
+                    width: '100%',
+                    minWidth: '100%',
+                    maxWidth: '100%',
+                    height: this.scrollHeight + 'px',
+                    maxHeight: window.innerHeight / 2,
+                    resize: "none"
+                  }} onInput={this.auto_height} onSelect={this.auto_height} onChange={this.handleChange}>
+                    {this.state.content}
+                  </textarea>
                   <br />
                 </label>
                 <input type="submit" value="Submit Post" />
@@ -260,7 +281,7 @@ export default class Post extends Component {
               }}>
                 <label>
                   Address of Poster:
-                  {/* {this.state.accounts[0]} */}
+                  {/* <p>{this.state.accounts[0]}</p> */}
                   <br />
                   Content Type:
                   <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
@@ -269,7 +290,15 @@ export default class Post extends Component {
                   </select>
                   <br />
                   Content of Post:
-                  <input type="text" value={this.state.content} onChange={this.handleChange} />
+                  <textarea name="content" rows="1" style={{
+                    width: '100%',
+                    minWidth: '100%',
+                    maxWidth: '100%',
+                    height: this.scrollHeight + 'px',
+                    maxHeight: window.innerHeight / 2,
+                    resize: "none"
+                  }} onInput={this.auto_height} onSelect={this.auto_height} onChange={this.handleChange}>
+                  </textarea>
                 </label>
                 <input type="submit" value="Submit Post" />
               </form>
@@ -286,7 +315,11 @@ export default class Post extends Component {
               <h3>
                 {this.state.currentItem.name} - {this.state.currentItem.id}
               </h3>
-              <p>{this.state.currentItem.body}</p>
+              <div style={{
+                maxHeight: window.innerHeight / 2
+              }}>
+                <p>{this.state.currentItem.body}</p>
+              </div>
             </Popup>
           </div>
         </div>
