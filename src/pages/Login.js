@@ -117,7 +117,7 @@ export default class Login extends Component {
     renderMetamask() {
         if (!this.state.selectedAddress) {
             return (
-                <div>
+                <div style={{margin: "25%"}}>
                     <Button variant='contained' style={{ justifyContent: 'center' }} onClick={() => this.connectToMetamask()}>
                         Connect to Metamask
                     </Button>

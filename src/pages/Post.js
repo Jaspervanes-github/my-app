@@ -159,18 +159,36 @@ export default class Post extends Component {
     return (
       <React.Fragment>
         <div className="main">
-          <div className="scroll-container" ref={this.ref}>
+          <div className="scroll-container" ref={this.ref} style={{
+            marginLeft: "3%",
+            marginRight: "3%",
+            marginTop: "1%",
+            marginBottom: "1%",
+            overflowY: "auto",
+            maxHeight: (window.innerHeight / 1.4) + 'px',
+            borderStyle: "solid",
+            borderWidth: "4px",
+            padding: "4px"
+          }}>
             <ViewportList viewportRef={this.ref} items={this.state.items} itemMinSize={40} margin={8}>
               {(item) => (
                 <React.Fragment key={item.id}>
                   <div className="post" style={{
-                    borderStyle: "groove"
+                    borderStyle: "groove",
+                    maxWidth: window.innerWidth / 1.1,
+                    maxHeight: window.innerHeight / 3,
                   }}>
                     <h3>
                       {item.name} - {item.id}
                     </h3>
-                    <p>{item.body}</p>
-
+                    <div style={{
+                      maxWidth: window.innerWidth / 1.1,
+                      maxHeight: window.innerHeight / 5,
+                      overflowY: "auto",
+                    }}>
+                      <p>{item.body}</p>
+                    </div>
+                    <br/>
                     <Button variant="contained" onClick={() => { this.createResharePost(item.id) }}> Reshare</Button>
                     <Button variant="contained" onClick={() => { this.createRemixPost(item.id) }}> Remix</Button>
                     <Button variant="contained" onClick={() => { this.viewPost(item) }}> View</Button>
@@ -209,7 +227,11 @@ export default class Post extends Component {
                   Content of Post:
                   <p style={{
                     height: this.scrollHeight + 'px',
-                    maxHeight: window.innerHeight / 2
+                    maxHeight: window.innerHeight / 2,
+                    overflowY: "auto",
+                    borderStyle: "solid",
+                    borderColor: "grey",
+                    borderWidth: '2px'
                   }}>
                     {this.state.content}
                   </p>
@@ -316,7 +338,8 @@ export default class Post extends Component {
                 {this.state.currentItem.name} - {this.state.currentItem.id}
               </h3>
               <div style={{
-                maxHeight: window.innerHeight / 2
+                maxHeight: window.innerHeight / 2,
+                overflowY: "auto"
               }}>
                 <p>{this.state.currentItem.body}</p>
               </div>
