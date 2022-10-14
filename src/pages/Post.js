@@ -30,6 +30,7 @@ export default class Post extends Component {
       triggerRemixPostPopup: false,
       triggerNewPostPopup: false,
       triggerViewPostPopup: false,
+
       currentItem: '',
       contractType: '',
       originalPostAddress: '',
@@ -147,7 +148,6 @@ export default class Post extends Component {
       currentItem: item,
       triggerViewPostPopup: true
     });
-
   }
 
   resizeHeightOfElement(elem) {
@@ -264,7 +264,7 @@ export default class Post extends Component {
                   <br />
                   Content Type:
                   <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
-                    <option selected value="0">TEXT</option>
+                    <option value="0">TEXT</option>
                     <option value="1">IMAGE</option>
                   </select>
                   <br />
