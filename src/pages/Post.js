@@ -33,7 +33,7 @@ export default class Post extends Component {
       currentItem: '',
       contractType: '',
       originalPostAddress: '',
-      contentType: '',
+      contentType: ContentType.TEXT,
       hashOfContent: '',
       content: '',
       payees: [],
@@ -150,7 +150,7 @@ export default class Post extends Component {
 
   }
 
-  auto_height(elem) {
+  resizeHeightOfElement(elem) {
     elem.target.style.height = '1px';
     elem.target.style.height = elem.target.scrollHeight + 'px';
   }
@@ -188,7 +188,7 @@ export default class Post extends Component {
                     }}>
                       <p>{item.body}</p>
                     </div>
-                    <br/>
+                    <br />
                     <Button variant="contained" onClick={() => { this.createResharePost(item.id) }}> Reshare</Button>
                     <Button variant="contained" onClick={() => { this.createRemixPost(item.id) }}> Remix</Button>
                     <Button variant="contained" onClick={() => { this.viewPost(item) }}> View</Button>
@@ -241,6 +241,7 @@ export default class Post extends Component {
               </form>
             </Popup>
           </div>
+
           <div className="remixPostTemplate">
             <Popup trigger={this.state.triggerRemixPostPopup} setTrigger={() => {
               this.setState({
@@ -268,22 +269,38 @@ export default class Post extends Component {
                   </select>
                   <br />
                   Content of Post:
-                  <textarea name="content" rows="1" style={{
-                    width: '100%',
-                    minWidth: '100%',
-                    maxWidth: '100%',
-                    height: this.scrollHeight + 'px',
-                    maxHeight: window.innerHeight / 2,
-                    resize: "none"
-                  }} onInput={this.auto_height} onSelect={this.auto_height} onChange={this.handleChange}>
-                    {this.state.content}
-                  </textarea>
+                  {(() => {
+                    //if contentType is TEXT
+                    if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                      return (
+                        <textarea name="content" rows="1" style={{
+                          width: '100%',
+                          minWidth: '100%',
+                          maxWidth: '100%',
+                          height: this.scrollHeight + 'px',
+                          maxHeight: window.innerHeight / 2,
+                          resize: "none"
+                        }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
+                          {this.state.content}
+                        </textarea>
+                      )
+                    }
+                    //if contentType is IMAGE
+                    else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                      return (
+                        // render Image selection component here
+                        <div></div>
+                      )
+                    }
+                  })()}
+
                   <br />
                 </label>
                 <input type="submit" value="Submit Post" />
               </form>
             </Popup>
           </div>
+
           <div className="newPostTemplate">
             <Popup trigger={this.state.triggerNewPostPopup} setTrigger={() => {
               this.setState({
@@ -312,20 +329,35 @@ export default class Post extends Component {
                   </select>
                   <br />
                   Content of Post:
-                  <textarea name="content" rows="1" style={{
-                    width: '100%',
-                    minWidth: '100%',
-                    maxWidth: '100%',
-                    height: this.scrollHeight + 'px',
-                    maxHeight: window.innerHeight / 2,
-                    resize: "none"
-                  }} onInput={this.auto_height} onSelect={this.auto_height} onChange={this.handleChange}>
-                  </textarea>
+                  {(() => {
+                    //if contentType is TEXT
+                    if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                      return (
+                        <textarea name="content" rows="1" style={{
+                          width: '100%',
+                          minWidth: '100%',
+                          maxWidth: '100%',
+                          height: this.scrollHeight + 'px',
+                          maxHeight: window.innerHeight / 2,
+                          resize: "none"
+                        }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
+                        </textarea>
+                      )
+                    }
+                    //if contentType is IMAGE
+                    else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                      return (
+                        // render Image selection component here
+                        <div></div>
+                      )
+                    }
+                  })()}
                 </label>
                 <input type="submit" value="Submit Post" />
               </form>
             </Popup>
           </div>
+
           <div className="viewPostTemplate">
             <Popup trigger={this.state.triggerViewPostPopup} setTrigger={() => {
               this.setState({
