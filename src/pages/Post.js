@@ -3,6 +3,7 @@ import { Button } from "@material-ui/core";
 import React, { Component } from 'react';
 import ViewportList from "react-viewport-list";
 import Popup from "../components/Popup.js"
+import { DataConsumer } from '../DataContext'
 
 
 const ContractType = {
@@ -157,228 +158,232 @@ export default class Post extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <div className="main">
-          <div className="scroll-container" ref={this.ref} style={{
-            marginLeft: "3%",
-            marginRight: "3%",
-            marginTop: "1%",
-            marginBottom: "1%",
-            overflowY: "auto",
-            maxHeight: (window.innerHeight / 1.4) + 'px',
-            borderStyle: "solid",
-            borderWidth: "4px",
-            padding: "4px"
-          }}>
-            <ViewportList viewportRef={this.ref} items={this.state.items} itemMinSize={40} margin={8}>
-              {(item) => (
-                <React.Fragment key={item.id}>
-                  <div className="post" style={{
-                    borderStyle: "groove",
-                    maxWidth: window.innerWidth / 1.1,
-                    maxHeight: window.innerHeight / 3,
-                  }}>
-                    <h3>
-                      {item.name} - {item.id}
-                    </h3>
-                    <div style={{
-                      maxWidth: window.innerWidth / 1.1,
-                      maxHeight: window.innerHeight / 5,
-                      overflowY: "auto",
-                    }}>
-                      <p>{item.body}</p>
-                    </div>
-                    <br />
-                    <Button variant="contained" onClick={() => { this.createResharePost(item.id) }}> Reshare</Button>
-                    <Button variant="contained" onClick={() => { this.createRemixPost(item.id) }}> Remix</Button>
-                    <Button variant="contained" onClick={() => { this.viewPost(item) }}> View</Button>
-                  </div>
-                </React.Fragment>
-              )}
-            </ViewportList>
-          </div>
-
-          <Button variant="contained" onClick={() => { this.createNewPost() }}>
-            Create new Post
-          </Button>
-
-          <p>{this.state.items.length}</p>
-
-          <div className="resharePostTemplate">
-            <Popup trigger={this.state.triggerResharePostPopup} setTrigger={() => {
-              this.setState({
-                triggerResharePostPopup: false
-              });
-            }}>
-              <h2>Reshare Post</h2>
-              <form onSubmit={(event) => {
-                if (this.state.content === '') {
-                  alert("Please enter a valid text");
-                  event.preventDefault();
-                  return;
-                }
-                this.handleSubmit(event);
-                this.setState({ triggerResharePostPopup: false });
+      <DataConsumer>
+        {({ state, dispatch }) => (
+          <React.Fragment>
+            <div className="main">
+              <div className="scroll-container" ref={this.ref} style={{
+                marginLeft: "3%",
+                marginRight: "3%",
+                marginTop: "1%",
+                marginBottom: "1%",
+                overflowY: "auto",
+                maxHeight: (window.innerHeight / 1.4) + 'px',
+                borderStyle: "solid",
+                borderWidth: "4px",
+                padding: "4px"
               }}>
-                <label>
-                  Address of Poster:
-                  {/* <p>{this.state.accounts[0]}</p> */}
-                  <br />
-                  Content of Post:
-                  <p style={{
-                    height: this.scrollHeight + 'px',
-                    maxHeight: window.innerHeight / 2,
-                    overflowY: "auto",
-                    borderStyle: "solid",
-                    borderColor: "grey",
-                    borderWidth: '2px'
-                  }}>
-                    {this.state.content}
-                  </p>
-                  <br />
-                </label>
-                <input type="submit" value="Submit Post" />
-              </form>
-            </Popup>
-          </div>
-
-          <div className="remixPostTemplate">
-            <Popup trigger={this.state.triggerRemixPostPopup} setTrigger={() => {
-              this.setState({
-                triggerRemixPostPopup: false
-              });
-            }}>
-              <h2>Remix Post</h2>
-              <form onSubmit={(event) => {
-                if (this.state.content === '') {
-                  alert("Please enter a valid text");
-                  event.preventDefault();
-                  return;
-                }
-                this.handleSubmit(event);
-                this.setState({ triggerRemixPostPopup: false });
-              }}>
-                <label>
-                  Address of Poster:
-                  {/* <p>{this.state.accounts[0]}</p> */}
-                  <br />
-                  Content Type:
-                  <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
-                    <option value="0">TEXT</option>
-                    <option value="1">IMAGE</option>
-                  </select>
-                  <br />
-                  Content of Post:
-                  {(() => {
-                    //if contentType is TEXT
-                    if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
-                      return (
-                        <textarea name="content" rows="1" style={{
-                          width: '100%',
-                          minWidth: '100%',
-                          maxWidth: '100%',
-                          height: this.scrollHeight + 'px',
-                          maxHeight: window.innerHeight / 2,
-                          resize: "none"
-                        }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
-                          {this.state.content}
-                        </textarea>
-                      )
-                    }
-                    //if contentType is IMAGE
-                    else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
-                      return (
-                        // render Image selection component here
-                        <div></div>
-                      )
-                    }
-                  })()}
-
-                  <br />
-                </label>
-                <input type="submit" value="Submit Post" />
-              </form>
-            </Popup>
-          </div>
-
-          <div className="newPostTemplate">
-            <Popup trigger={this.state.triggerNewPostPopup} setTrigger={() => {
-              this.setState({
-                triggerNewPostPopup: false,
-                content: ''
-              });
-            }}>
-              <h2>New Post</h2>
-              <form onSubmit={(event) => {
-                if (this.state.content === '') {
-                  alert("Please enter a valid text");
-                  event.preventDefault();
-                  return;
-                }
-                this.handleSubmit(event);
-                this.setState({ triggerNewPostPopup: false });
-              }}>
-                <label>
-                  Address of Poster:
-                  {/* <p>{this.state.accounts[0]}</p> */}
-                  <br />
-                  Content Type:
-                  <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
-                    <option selected value="0">TEXT</option>
-                    <option value="1">IMAGE</option>
-                  </select>
-                  <br />
-                  Content of Post:
-                  {(() => {
-                    //if contentType is TEXT
-                    if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
-                      return (
-                        <textarea name="content" rows="1" style={{
-                          width: '100%',
-                          minWidth: '100%',
-                          maxWidth: '100%',
-                          height: this.scrollHeight + 'px',
-                          maxHeight: window.innerHeight / 2,
-                          resize: "none"
-                        }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
-                        </textarea>
-                      )
-                    }
-                    //if contentType is IMAGE
-                    else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
-                      return (
-                        // render Image selection component here
-                        <div></div>
-                      )
-                    }
-                  })()}
-                </label>
-                <input type="submit" value="Submit Post" />
-              </form>
-            </Popup>
-          </div>
-
-          <div className="viewPostTemplate">
-            <Popup trigger={this.state.triggerViewPostPopup} setTrigger={() => {
-              this.setState({
-                triggerViewPostPopup: false,
-                content: ''
-              });
-            }}>
-              <h2>View Post</h2>
-              <h3>
-                {this.state.currentItem.name} - {this.state.currentItem.id}
-              </h3>
-              <div style={{
-                maxHeight: window.innerHeight / 2,
-                overflowY: "auto"
-              }}>
-                <p>{this.state.currentItem.body}</p>
+                <ViewportList viewportRef={this.ref} items={this.state.items} itemMinSize={40} margin={8}>
+                  {(item) => (
+                    <React.Fragment key={item.id}>
+                      <div className="post" style={{
+                        borderStyle: "groove",
+                        maxWidth: window.innerWidth / 1.1,
+                        maxHeight: window.innerHeight / 3,
+                      }}>
+                        <h3>
+                          {item.name} - {item.id}
+                        </h3>
+                        <div style={{
+                          maxWidth: window.innerWidth / 1.1,
+                          maxHeight: window.innerHeight / 5,
+                          overflowY: "auto",
+                        }}>
+                          <p>{item.body}</p>
+                        </div>
+                        <br />
+                        <Button variant="contained" onClick={() => { this.createResharePost(item.id) }}> Reshare</Button>
+                        <Button variant="contained" onClick={() => { this.createRemixPost(item.id) }}> Remix</Button>
+                        <Button variant="contained" onClick={() => { this.viewPost(item) }}> View</Button>
+                      </div>
+                    </React.Fragment>
+                  )}
+                </ViewportList>
               </div>
-            </Popup>
-          </div>
-        </div>
-      </React.Fragment >
+
+              <Button variant="contained" onClick={() => { this.createNewPost() }}>
+                Create new Post
+              </Button>
+
+              <p>{this.state.items.length}</p>
+
+              <div className="resharePostTemplate">
+                <Popup trigger={this.state.triggerResharePostPopup} setTrigger={() => {
+                  this.setState({
+                    triggerResharePostPopup: false
+                  });
+                }}>
+                  <h2>Reshare Post</h2>
+                  <form onSubmit={(event) => {
+                    if (this.state.content === '') {
+                      alert("Please enter a valid text");
+                      event.preventDefault();
+                      return;
+                    }
+                    this.handleSubmit(event);
+                    this.setState({ triggerResharePostPopup: false });
+                  }}>
+                    <label>
+                      Address of Poster:
+                      {/* <p>{this.state.accounts[0]}</p> */}
+                      <br />
+                      Content of Post:
+                      <p style={{
+                        height: this.scrollHeight + 'px',
+                        maxHeight: window.innerHeight / 2,
+                        overflowY: "auto",
+                        borderStyle: "solid",
+                        borderColor: "grey",
+                        borderWidth: '2px'
+                      }}>
+                        {this.state.content}
+                      </p>
+                      <br />
+                    </label>
+                    <input type="submit" value="Submit Post" />
+                  </form>
+                </Popup>
+              </div>
+
+              <div className="remixPostTemplate">
+                <Popup trigger={this.state.triggerRemixPostPopup} setTrigger={() => {
+                  this.setState({
+                    triggerRemixPostPopup: false
+                  });
+                }}>
+                  <h2>Remix Post</h2>
+                  <form onSubmit={(event) => {
+                    if (this.state.content === '') {
+                      alert("Please enter a valid text");
+                      event.preventDefault();
+                      return;
+                    }
+                    this.handleSubmit(event);
+                    this.setState({ triggerRemixPostPopup: false });
+                  }}>
+                    <label>
+                      Address of Poster:
+                      {/* <p>{this.state.accounts[0]}</p> */}
+                      <br />
+                      Content Type:
+                      <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
+                        <option value="0">TEXT</option>
+                        <option value="1">IMAGE</option>
+                      </select>
+                      <br />
+                      Content of Post:
+                      {(() => {
+                        //if contentType is TEXT
+                        if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                          return (
+                            <textarea name="content" rows="1" style={{
+                              width: '100%',
+                              minWidth: '100%',
+                              maxWidth: '100%',
+                              height: this.scrollHeight + 'px',
+                              maxHeight: window.innerHeight / 2,
+                              resize: "none"
+                            }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
+                              {this.state.content}
+                            </textarea>
+                          )
+                        }
+                        //if contentType is IMAGE
+                        else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                          return (
+                            // render Image selection component here
+                            <div></div>
+                          )
+                        }
+                      })()}
+
+                      <br />
+                    </label>
+                    <input type="submit" value="Submit Post" />
+                  </form>
+                </Popup>
+              </div>
+
+              <div className="newPostTemplate">
+                <Popup trigger={this.state.triggerNewPostPopup} setTrigger={() => {
+                  this.setState({
+                    triggerNewPostPopup: false,
+                    content: ''
+                  });
+                }}>
+                  <h2>New Post</h2>
+                  <form onSubmit={(event) => {
+                    if (this.state.content === '') {
+                      alert("Please enter a valid text");
+                      event.preventDefault();
+                      return;
+                    }
+                    this.handleSubmit(event);
+                    this.setState({ triggerNewPostPopup: false });
+                  }}>
+                    <label>
+                      Address of Poster:
+                      {/* <p>{this.state.accounts[0]}</p> */}
+                      <br />
+                      Content Type:
+                      <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
+                        <option selected value="0">TEXT</option>
+                        <option value="1">IMAGE</option>
+                      </select>
+                      <br />
+                      Content of Post:
+                      {(() => {
+                        //if contentType is TEXT
+                        if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                          return (
+                            <textarea name="content" rows="1" style={{
+                              width: '100%',
+                              minWidth: '100%',
+                              maxWidth: '100%',
+                              height: this.scrollHeight + 'px',
+                              maxHeight: window.innerHeight / 2,
+                              resize: "none"
+                            }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
+                            </textarea>
+                          )
+                        }
+                        //if contentType is IMAGE
+                        else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                          return (
+                            // render Image selection component here
+                            <div></div>
+                          )
+                        }
+                      })()}
+                    </label>
+                    <input type="submit" value="Submit Post" />
+                  </form>
+                </Popup>
+              </div>
+
+              <div className="viewPostTemplate">
+                <Popup trigger={this.state.triggerViewPostPopup} setTrigger={() => {
+                  this.setState({
+                    triggerViewPostPopup: false,
+                    content: ''
+                  });
+                }}>
+                  <h2>View Post</h2>
+                  <h3>
+                    {this.state.currentItem.name} - {this.state.currentItem.id}
+                  </h3>
+                  <div style={{
+                    maxHeight: window.innerHeight / 2,
+                    overflowY: "auto"
+                  }}>
+                    <p>{this.state.currentItem.body}</p>
+                  </div>
+                </Popup>
+              </div>
+            </div>
+          </React.Fragment >
+        )}
+      </DataConsumer>
     )
   }
 }

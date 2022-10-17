@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 import { ContractFactory, ethers } from "ethers";
 import Post_ABI from "../Post_ABI.json"
 import Post_ByteCode from "../Post_ByteCode.json"
+import { DataConsumer } from '../DataContext'
 // import Value_ABI from "../Value_ABI.json";
 // import Value_ByteCode from "../Value_ByteCode.json";
 
@@ -19,7 +20,7 @@ export default class Login extends Component {
         };
     }
 
-    async connectToMetamask() {
+    async connectToMetamask(state, dispatch) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const accounts = await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner();
@@ -31,6 +32,11 @@ export default class Login extends Component {
         provider.on("block", (block) => {
             this.setState({ block })
         })
+
+        dispatch({ type: 'setProvider', value: provider });
+        dispatch({ type: 'setAccounts', value: accounts });
+        dispatch({ type: 'setSigner', value: signer });
+        dispatch({ type: 'setSelectedAccount', value: accounts[0] });
 
         this.setState({
             selectedAddress: accounts[0],
@@ -114,11 +120,14 @@ export default class Login extends Component {
         }
     }
 
-    renderMetamask() {
+    renderMetamask(state, dispatch) {
         if (!this.state.selectedAddress) {
             return (
                 <div style={{ margin: "25%" }}>
-                    <Button variant='contained' style={{ justifyContent: 'center' }} onClick={() => this.connectToMetamask()}>
+                    <Button variant='contained' style={{ justifyContent: 'center' }} onClick=
+                        {
+                            () => this.connectToMetamask(state, dispatch)
+                        }>
                         Connect to Metamask
                     </Button>
                 </div>
@@ -170,9 +179,13 @@ export default class Login extends Component {
 
     render() {
         return (
-            <div>
-                {this.renderMetamask()}
-            </div>
+            <DataConsumer>
+                {({ state, dispatch }) => (
+                    <div>
+                        {this.renderMetamask(state, dispatch)}
+                    </div>
+                )}
+            </DataConsumer>
         )
     }
 }
