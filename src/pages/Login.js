@@ -25,27 +25,10 @@ export default class Login extends Component {
         const accounts = await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner();
 
-        const balance = await provider.getBalance(accounts[0]);
-        const balanceInEther = ethers.utils.formatEther(balance);
-
-        const block = await provider.getBlockNumber();
-        provider.on("block", (block) => {
-            this.setState({ block })
-        })
-
         dispatch({ type: 'setProvider', value: provider });
         dispatch({ type: 'setAccounts', value: accounts });
         dispatch({ type: 'setSigner', value: signer });
         dispatch({ type: 'setSelectedAccount', value: accounts[0] });
-
-        this.setState({
-            selectedAddress: accounts[0],
-            balance: balanceInEther,
-            block,
-            provider,
-            accounts,
-            signer
-        })
 
         provider.provider.on('accountsChanged', function () {
             window.location.reload();
@@ -121,7 +104,7 @@ export default class Login extends Component {
     }
 
     renderMetamask(state, dispatch) {
-        if (!this.state.selectedAddress) {
+        if (!state.selectedAccount) {
             return (
                 <div style={{ margin: "25%" }}>
                     <Button variant='contained' style={{ justifyContent: 'center' }} onClick=
@@ -135,44 +118,6 @@ export default class Login extends Component {
         } else {
             return (
                 <Navigate to="/home" replace={false} />
-                // <Navigate to="/home" state={this.state} replace={false} />
-
-                // <div>
-                //   <p>Welcome {this.state.selectedAddress}</p>
-                //   <p>Your ETH Balance is: {this.state.balance}</p>
-                //   <p>Current ETH Block is: {this.state.block}</p>
-
-                //   <Button variant='contained' onClick={() => {
-                //     this.getValueOfContract();
-                //   }}>
-                //     Get Value
-                //   </Button>
-
-                //   <Button variant='contained' onClick={() => {
-                //     this.incrementValue();
-                //   }}>
-                //     Increment Value
-                //   </Button>
-
-                //   <Button variant='contained' onClick={() => {
-                //     this.setValueOfContract(10);
-                //   }}>
-                //     Set Value
-                //   </Button>
-
-                //   <Button variant='contained' onClick={() => {
-                //     this.deployNewValueContract();
-                //   }}>
-                //     Deploy new Contract
-                //   </Button>
-
-                //   <p>Current value of ValueContract: {this.state.currentValue}</p>
-                //   <p>Current contractAddress of newly deployed contract: {
-                //     (this.state.contract.length === 0)
-                //       ? "No contract deployed"
-                //       : this.state.contract[0].address
-                //   }</p>
-                // </div>
             );
         }
     }
