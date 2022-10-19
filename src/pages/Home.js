@@ -30,7 +30,7 @@ export default class Home extends Component {
               <NavBar />
               <IPFS />
               <Post />
-              <Footer />
+              {/* <Footer /> */}
             </div>
           </React.Fragment >
         )

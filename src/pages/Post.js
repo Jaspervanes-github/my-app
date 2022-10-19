@@ -229,14 +229,14 @@ export default class Post extends Component {
                     <React.Fragment key={item.id}>
                       <div className="post" style={{
                         borderStyle: "groove",
-                        maxWidth: window.innerWidth / 1.1,
+                        maxWidth: window.innerWidth / 1,
                         maxHeight: window.innerHeight / 3,
                       }}>
                         <h3>
                           {item} - {/*{item.id}*/}
                         </h3>
                         <div style={{
-                          maxWidth: window.innerWidth / 1.1,
+                          maxWidth: window.innerWidth / 1,
                           maxHeight: window.innerHeight / 5,
                           overflowY: "auto",
                         }}>
