@@ -4,7 +4,7 @@ import Footer from '../components/Footer';
 import NavBar from '../components/NavBar';
 import IPFS from '../IPFS.js';
 import Post from './Post.js';
-import { DataConsumer } from '../DataContext'
+import { DataConsumer } from '../DataContext';
 
 
 export default class Home extends Component {
@@ -28,17 +28,18 @@ export default class Home extends Component {
     return (
       <DataConsumer>
         {({ state, dispatch }) => (
-          <React.Fragment>
+          < React.Fragment >
             {this.checkState(state)}
-            <div className="Home">
+            < div className="Home">
               {console.log(state.provider)}
               <NavBar />
               <IPFS />
               <Post />
               <Footer />
             </div>
-          </React.Fragment>
-        )}
+          </React.Fragment >
+        )
+        }
       </DataConsumer>
     )
   }

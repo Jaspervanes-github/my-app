@@ -199,6 +199,32 @@ export default class Post extends Component {
                     </React.Fragment>
                   )}
                 </ViewportList>
+                {/* <ViewportList viewportRef={this.ref} items={state.posts} itemMinSize={40} margin={8}>
+                  {(item) => (
+                    <React.Fragment key={item.id}>
+                      <div className="post" style={{
+                        borderStyle: "groove",
+                        maxWidth: window.innerWidth / 1.1,
+                        maxHeight: window.innerHeight / 3,
+                      }}>
+                        <h3>
+                          {item}
+                        </h3>
+                        <div style={{
+                          maxWidth: window.innerWidth / 1.1,
+                          maxHeight: window.innerHeight / 5,
+                          overflowY: "auto",
+                        }}>
+                          <p>{item.body}Heeeeyyyy</p>
+                        </div>
+                        <br />
+                        <Button variant="contained" onClick={() => { this.createResharePost(item.id) }}> Reshare</Button>
+                        <Button variant="contained" onClick={() => { this.createRemixPost(item.id) }}> Remix</Button>
+                        <Button variant="contained" onClick={() => { this.viewPost(item) }}> View</Button>
+                      </div>
+                    </React.Fragment>
+                  )}
+                </ViewportList> */}
               </div>
 
               <Button variant="contained" onClick={() => { this.createNewPost() }}>
@@ -225,7 +251,7 @@ export default class Post extends Component {
                   }}>
                     <label>
                       Address of Poster:
-                      {/* <p>{this.state.accounts[0]}</p> */}
+                      <p>{state.selectedAccount}</p>
                       <br />
                       Content of Post:
                       <p style={{
@@ -263,7 +289,7 @@ export default class Post extends Component {
                   }}>
                     <label>
                       Address of Poster:
-                      {/* <p>{this.state.accounts[0]}</p> */}
+                      <p>{state.selectedAccount}</p>
                       <br />
                       Content Type:
                       <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
@@ -323,7 +349,7 @@ export default class Post extends Component {
                   }}>
                     <label>
                       Address of Poster:
-                      {/* <p>{this.state.accounts[0]}</p> */}
+                      <p>{state.selectedAccount}</p>
                       <br />
                       Content Type:
                       <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>

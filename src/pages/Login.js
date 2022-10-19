@@ -29,6 +29,7 @@ export default class Login extends Component {
         dispatch({ type: 'setAccounts', value: accounts });
         dispatch({ type: 'setSigner', value: signer });
         dispatch({ type: 'setSelectedAccount', value: accounts[0] });
+        dispatch({ type: 'setPosts', value: JSON.parse(localStorage.getItem("posts")) });
 
         provider.provider.on('accountsChanged', function () {
             window.location.reload();
@@ -60,6 +61,10 @@ export default class Login extends Component {
                 royaltyMultiplier
             );
             console.log(contract.address);
+
+            let currentPosts = JSON.parse(localStorage.getItem("posts"));
+            currentPosts.push(contract);
+            localStorage.setItem("posts", JSON.stringify(currentPosts));
 
             this.state.contracts.push(contract);
             // return contract;

@@ -41,7 +41,7 @@ function dataReducer(state, action) {
         posts: state.posts
        }
     } case 'setPosts': {
-      console.log("In setPosts");
+      console.log("In setPosts: " + action.value );
       return { 
         provider: state.provider,
         signer: state.signer,
