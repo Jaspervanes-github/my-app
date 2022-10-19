@@ -10,15 +10,10 @@ import { DataConsumer } from '../DataContext';
 export default class Home extends Component {
   constructor(props) {
     super(props);
-
-    //   this.state = ({
-    //   provider: props.location.state.provider,
-    //   accounts: props.location.state.accounts,
-    //   signer: props.location.state.signer
-    // });
   }
 
   checkState(state) {
+    //This means that the login page hasnt been visited so it doesnt have access to all the provider data
     if (state.provider === '') {
       return <Navigate to="/" replace={false} />
     }

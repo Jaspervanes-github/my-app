@@ -4,6 +4,10 @@ import React, { Component } from 'react';
 import ViewportList from "react-viewport-list";
 import Popup from "../components/Popup.js"
 import { DataConsumer } from '../DataContext'
+import Post_ABI from "../Post_ABI.json"
+import Post_ByteCode from "../Post_ByteCode.json"
+import { ContractFactory, ethers } from "ethers";
+
 
 
 const ContractType = {
@@ -71,34 +75,101 @@ export default class Post extends Component {
     });
   }
 
-  handleSubmit(event) {
+  handleSubmit(event, state, dispatch) {
     //TODO: Implement the creating of a contract here
     // let _hashOfContent = IPFS.saveTextToIPFS(this.state.content);
-    // this.setState({hashOfContent: _hashOfContent});
+    let _hashOfContent = "somefillertext";
+    this.setState({ hashOfContent: _hashOfContent });
 
-    // let contract = deployNewPostContract(
-    //   this.state.contractType,
-    //   this.state.originalPostAddress,
-    //   this.state.contentType,
-    //   this.state.hashOfContent,
-    //   this.state.payees,
-    //   this.state.shares,
-    //   this.state.royatyMultiplier
-    //   );
+    this.deployNewPostContract(
+      state,
+      dispatch,
+      this.state.contractType,
+      this.state.originalPostAddress,
+      this.state.contentType,
+      this.state.hashOfContent,
+      this.state.payees,
+      this.state.shares,
+      this.state.royatyMultiplier
+    );
 
-    let _items = this.state.items;
+    // let _items = this.state.items;
 
-    _items.push({
-      id: _items.length,
-      name: faker.name.firstName(5),
-      body: this.state.content
-    });
+    // _items.push({
+    //   id: _items.length,
+    //   name: faker.name.firstName(5),
+    //   body: this.state.content
+    // });
 
     this.setState({
-      items: _items,
+      // items: _items,
       content: ''
     });
     event.preventDefault();
+  }
+
+  async deployNewPostContract(state, dispatch,
+    contractType,
+    originalPostAddress,
+    contentType,
+    hashOfContent,
+    payees,
+    shares,
+    royaltyMultiplier
+  ) {
+    try {
+      const factory = new ContractFactory(Post_ABI, Post_ByteCode, state.signer);
+      const contract = await factory.deploy(
+        contractType,
+        originalPostAddress,
+        contentType,
+        hashOfContent,
+        payees,
+        shares,
+        royaltyMultiplier
+      );
+      console.log(contract.address);
+
+      dispatch({ type: 'addPost', value: contract });
+      localStorage.setItem("posts", JSON.stringify(state.posts));
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async getPayees(state, indexOfContract) {
+    try {
+      let payees = await state.posts[indexOfContract].getAllPayees();
+      return payees;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async getShares(state, indexOfContract) {
+    try {
+      let shares = await state.posts[indexOfContract].getAllShares();
+      return shares;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async viewPost(state, indexOfContract) {
+    try {
+      const transaction = await state.posts[indexOfContract].viewPost({ value: ethers.utils.parseEther("1.0") });
+      await transaction.wait();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async payoutUser(state, indexOfContract) {
+    try {
+      await state.posts[indexOfContract].payoutUser();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   createNewPost() {
@@ -231,6 +302,10 @@ export default class Post extends Component {
                 Create new Post
               </Button>
 
+              <Button variant="contained" onClick={() => { console.log(state.posts.toString()) }}>
+                log de state.posts
+              </Button>
+
               <p>{this.state.items.length}</p>
 
               <div className="resharePostTemplate">
@@ -246,7 +321,7 @@ export default class Post extends Component {
                       event.preventDefault();
                       return;
                     }
-                    this.handleSubmit(event);
+                    this.handleSubmit(event, state, dispatch);
                     this.setState({ triggerResharePostPopup: false });
                   }}>
                     <label>
@@ -284,7 +359,7 @@ export default class Post extends Component {
                       event.preventDefault();
                       return;
                     }
-                    this.handleSubmit(event);
+                    this.handleSubmit(event, state, dispatch);
                     this.setState({ triggerRemixPostPopup: false });
                   }}>
                     <label>
@@ -344,7 +419,7 @@ export default class Post extends Component {
                       event.preventDefault();
                       return;
                     }
-                    this.handleSubmit(event);
+                    this.handleSubmit(event, state, dispatch);
                     this.setState({ triggerNewPostPopup: false });
                   }}>
                     <label>

@@ -6,52 +6,60 @@ function dataReducer(state, action) {
   switch (action.type) {
     case 'setProvider': {
       console.log("In setProvider");
-      return { 
+      return {
         provider: action.value,
         signer: state.signer,
         accounts: state.accounts,
         selectedAccount: state.selectedAccount,
         posts: state.posts
-       }
+      }
     } case 'setAccounts': {
       console.log("In setAccounts");
-      return { 
+      return {
         provider: state.provider,
         signer: state.signer,
         accounts: action.value,
         selectedAccount: state.selectedAccount,
         posts: state.posts
-       }
+      }
     } case 'setSigner': {
       console.log("In setSigner");
-      return { 
+      return {
         provider: state.provider,
         signer: action.value,
         accounts: state.accounts,
         selectedAccount: state.selectedAccount,
         posts: state.posts
-       }
+      }
     } case 'setSelectedAccount': {
       console.log("In setSelectedAccount");
-      return { 
+      return {
         provider: state.provider,
         signer: state.signer,
         accounts: state.accounts,
         selectedAccount: action.value,
         posts: state.posts
-       }
+      }
     } case 'setPosts': {
-      console.log("In setPosts: " + action.value );
-      return { 
+      console.log("In setPosts: " + action.value);
+      return {
         provider: state.provider,
         signer: state.signer,
         accounts: state.accounts,
         selectedAccount: state.selectedAccount,
         posts: action.value
-       }
+      }
     } case 'addPost': {
-      console.log("In addPost");
-      return { posts: state.posts.push(action.value), state: state }
+      console.log("In addPost: " + action.value.toString);
+      let currentPostList = state.posts;
+      currentPostList.push(action.value);
+      return {
+        provider: state.provider,
+        signer: state.signer,
+        accounts: state.accounts,
+        selectedAccount: state.selectedAccount,
+        posts: currentPostList
+      }
     }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`)
