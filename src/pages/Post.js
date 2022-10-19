@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { Button } from "@material-ui/core";
 import React, { Component } from 'react';
 import ViewportList from "react-viewport-list";
@@ -26,11 +25,6 @@ export default class Post extends Component {
     super(props);
 
     this.state = {
-      items: new Array(5).fill().map((value, index) => ({
-        id: index,
-        name: faker.name.firstName(5),
-        body: faker.lorem.paragraph(8)
-      })),
       triggerResharePostPopup: false,
       triggerRemixPostPopup: false,
       triggerNewPostPopup: false,
@@ -40,11 +34,10 @@ export default class Post extends Component {
       contractType: '',
       originalPostAddress: '',
       contentType: ContentType.TEXT,
-      hashOfContent: '',
       content: '',
       payees: [],
       shares: [],
-      royatyMultiplier: ''
+      royaltyMultiplier: ''
     }
 
     this.ref = React.createRef(null);
@@ -79,36 +72,25 @@ export default class Post extends Component {
     //TODO: Implement the creating of a contract here
     // let _hashOfContent = IPFS.saveTextToIPFS(this.state.content);
     let _hashOfContent = "somefillertext";
-    this.setState({ hashOfContent: _hashOfContent });
 
     this.deployNewPostContract(
       state,
       dispatch,
+      state.posts.length,
       this.state.contractType,
       this.state.originalPostAddress,
       this.state.contentType,
-      this.state.hashOfContent,
+      _hashOfContent,
       this.state.payees,
       this.state.shares,
-      this.state.royatyMultiplier
+      this.state.royaltyMultiplier
     );
 
-    // let _items = this.state.items;
-
-    // _items.push({
-    //   id: _items.length,
-    //   name: faker.name.firstName(5),
-    //   body: this.state.content
-    // });
-
-    this.setState({
-      // items: _items,
-      content: ''
-    });
     event.preventDefault();
   }
 
   async deployNewPostContract(state, dispatch,
+    id,
     contractType,
     originalPostAddress,
     contentType,
@@ -120,6 +102,7 @@ export default class Post extends Component {
     try {
       const factory = new ContractFactory(Post_ABI, Post_ByteCode, state.signer);
       const contract = await factory.deploy(
+        id,
         contractType,
         originalPostAddress,
         contentType,
@@ -130,8 +113,7 @@ export default class Post extends Component {
       );
       console.log(contract.address);
 
-      dispatch({ type: 'addPost', value: contract });
-      localStorage.setItem("posts", JSON.stringify(state.posts));
+      dispatch({ type: 'addPost', value: contract.address });
     } catch (err) {
       console.error(err);
     }
@@ -179,38 +161,36 @@ export default class Post extends Component {
       originalPostAddress: "0x0000000000000000000000000000000000000000",
       payees: [],
       shares: [],
-      royatyMultiplier: 5,
+      royaltyMultiplier: 5,
       content: '',
       triggerNewPostPopup: true
     });
   }
 
-  createResharePost(index) {
-    // let contract = this.state.contracts[index];
+  createResharePost(item) {
     this.setState({
-      currentItem: this.state.items[index],
+      currentItem: item,
       contractType: ContractType.RESHARE,
-      contentType: ContentType.TEXT,
-      // originalPostAddress: contract.originalPost,
-      // payees: contract.getPayees(),
-      // shares: contract.getShares(),
-      royatyMultiplier: 2,
-      content: this.state.items[index].body,
+      contentType: item.contentType,
+      originalPostAddress: item.originalPost,
+      payees: item.getPayees(),
+      shares: item.getShares(),
+      royaltyMultiplier: 2,
+      content: item.hashOfContent,
       triggerResharePostPopup: true
     });
   }
 
-  createRemixPost(index) {
-    // let contract = this.state.contracts[index];
+  createRemixPost(item) {
     this.setState({
-      currentItem: this.state.items[index],
+      currentItem: item,
       contractType: ContractType.REMIX,
-      // contentType: contract.contentType,
-      // originalPostAddress: contract.originalPost,
-      // payees: contract.getPayees(),
-      // shares: contract.getShares(),
-      royatyMultiplier: 4,
-      content: this.state.items[index].body,
+      contentType: item.contentType,
+      originalPostAddress: item.originalPost,
+      payees: item.getPayees(),
+      shares: item.getShares(),
+      royaltyMultiplier: 4,
+      content: item.hashOfContent,
       triggerRemixPostPopup: true
     });
   }
@@ -244,7 +224,7 @@ export default class Post extends Component {
                 borderWidth: "4px",
                 padding: "4px"
               }}>
-                <ViewportList viewportRef={this.ref} items={this.state.items} itemMinSize={40} margin={8}>
+                <ViewportList viewportRef={this.ref} items={state.posts} itemMinSize={40} margin={8}>
                   {(item) => (
                     <React.Fragment key={item.id}>
                       <div className="post" style={{
@@ -253,60 +233,42 @@ export default class Post extends Component {
                         maxHeight: window.innerHeight / 3,
                       }}>
                         <h3>
-                          {item.name} - {item.id}
+                          {item} - {/*{item.id}*/}
                         </h3>
                         <div style={{
                           maxWidth: window.innerWidth / 1.1,
                           maxHeight: window.innerHeight / 5,
                           overflowY: "auto",
                         }}>
-                          <p>{item.body}</p>
+                          {/* <p>{item.hashOfContent()}</p>
+                          <p>{item.contractType()}</p>
+                          <p>{item.contentType()}</p>
+                          <p>{item.payees.length}</p>
+                          <p>{item.shares.payees.length}</p>
+                          <p>{item.royaltyMultiplier()}</p> */}
                         </div>
                         <br />
-                        <Button variant="contained" onClick={() => { this.createResharePost(item.id) }}> Reshare</Button>
-                        <Button variant="contained" onClick={() => { this.createRemixPost(item.id) }}> Remix</Button>
+                        <Button variant="contained" onClick={() => { this.createResharePost(item) }}> Reshare</Button>
+                        <Button variant="contained" onClick={() => { this.createRemixPost(item) }}> Remix</Button>
                         <Button variant="contained" onClick={() => { this.viewPost(item) }}> View</Button>
                       </div>
                     </React.Fragment>
                   )}
                 </ViewportList>
-                {/* <ViewportList viewportRef={this.ref} items={state.posts} itemMinSize={40} margin={8}>
-                  {(item) => (
-                    <React.Fragment key={item.id}>
-                      <div className="post" style={{
-                        borderStyle: "groove",
-                        maxWidth: window.innerWidth / 1.1,
-                        maxHeight: window.innerHeight / 3,
-                      }}>
-                        <h3>
-                          {item}
-                        </h3>
-                        <div style={{
-                          maxWidth: window.innerWidth / 1.1,
-                          maxHeight: window.innerHeight / 5,
-                          overflowY: "auto",
-                        }}>
-                          <p>{item.body}Heeeeyyyy</p>
-                        </div>
-                        <br />
-                        <Button variant="contained" onClick={() => { this.createResharePost(item.id) }}> Reshare</Button>
-                        <Button variant="contained" onClick={() => { this.createRemixPost(item.id) }}> Remix</Button>
-                        <Button variant="contained" onClick={() => { this.viewPost(item) }}> View</Button>
-                      </div>
-                    </React.Fragment>
-                  )}
-                </ViewportList> */}
               </div>
 
               <Button variant="contained" onClick={() => { this.createNewPost() }}>
                 Create new Post
               </Button>
 
-              <Button variant="contained" onClick={() => { console.log(state.posts.toString()) }}>
-                log de state.posts
+              <Button variant="contained" onClick={() => { console.log(JSON.stringify(localStorage.posts)) }}>
+                log de localStorage.posts
+              </Button>
+              <Button variant="contained" onClick={() => { localStorage.setItem("posts", JSON.stringify([])) }}>
+                Clear the localStorage
               </Button>
 
-              <p>{this.state.items.length}</p>
+              <p>{state.posts.length}</p>
 
               <div className="resharePostTemplate">
                 <Popup trigger={this.state.triggerResharePostPopup} setTrigger={() => {
