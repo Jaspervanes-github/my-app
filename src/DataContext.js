@@ -50,15 +50,27 @@ function dataReducer(state, action) {
         posts: action.value
       }
     } case 'addPost': {
-      console.log("In addPost: " + action.value.toString);
+      console.log("In addPost: " + action.value.toString());
       let currentPostList = state.posts;
-      currentPostList.push(action.value);
-      return {
-        provider: state.provider,
-        signer: state.signer,
-        accounts: state.accounts,
-        selectedAccount: state.selectedAccount,
-        posts: currentPostList
+      if (!currentPostList.includes(action.value)) {
+        currentPostList.push(action.value);
+        console.log(currentPostList);
+        localStorage.setItem("posts", JSON.stringify(currentPostList));
+        return {
+          provider: state.provider,
+          signer: state.signer,
+          accounts: state.accounts,
+          selectedAccount: state.selectedAccount,
+          posts: currentPostList
+        }
+      } else{
+        return{
+          provider: state.provider,
+          signer: state.signer,
+          accounts: state.accounts,
+          selectedAccount: state.selectedAccount,
+          posts: state.posts
+        }
       }
     }
     default: {

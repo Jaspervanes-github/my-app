@@ -2,6 +2,11 @@
 	{
 		"inputs": [
 			{
+				"internalType": "int256",
+				"name": "_id",
+				"type": "int256"
+			},
+			{
 				"internalType": "enum Post.ContractType",
 				"name": "_contractType",
 				"type": "uint8"
@@ -74,6 +79,19 @@
 	},
 	{
 		"inputs": [],
+		"name": "contractType",
+		"outputs": [
+			{
+				"internalType": "enum Post.ContractType",
+				"name": "",
+				"type": "uint8"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "getAllPayees",
 		"outputs": [
 			{
@@ -106,6 +124,19 @@
 				"internalType": "string",
 				"name": "",
 				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "id",
+		"outputs": [
+			{
+				"internalType": "int256",
+				"name": "",
+				"type": "int256"
 			}
 		],
 		"stateMutability": "view",

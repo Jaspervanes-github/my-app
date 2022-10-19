@@ -6,18 +6,11 @@ import { ContractFactory, ethers } from "ethers";
 import Post_ABI from "../Post_ABI.json"
 import Post_ByteCode from "../Post_ByteCode.json"
 import { DataConsumer } from '../DataContext'
-// import Value_ABI from "../Value_ABI.json";
-// import Value_ByteCode from "../Value_ByteCode.json";
 
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            // currentValue: 0,
-            contracts: []
-        };
     }
 
     async connectToMetamask(state, dispatch) {
@@ -38,74 +31,6 @@ export default class Login extends Component {
         provider.provider.on("chainChanged", () => {
             window.location.reload();
         });
-    }
-
-    async deployNewPostContract(
-        contractType,
-        originalPostAddress,
-        contentType,
-        hashOfContent,
-        payees,
-        shares,
-        royaltyMultiplier
-    ) {
-        try {
-            const factory = new ContractFactory(Post_ABI, Post_ByteCode, this.state.signer);
-            const contract = await factory.deploy(
-                contractType,
-                originalPostAddress,
-                contentType,
-                hashOfContent,
-                payees,
-                shares,
-                royaltyMultiplier
-            );
-            console.log(contract.address);
-
-            let currentPosts = JSON.parse(localStorage.getItem("posts"));
-            currentPosts.push(contract);
-            localStorage.setItem("posts", JSON.stringify(currentPosts));
-
-            this.state.contracts.push(contract);
-            // return contract;
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async getPayees(indexOfContract) {
-        try {
-            let payees = await this.state.contracts[indexOfContract].getAllPayees();
-            return payees;
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async getShares(indexOfContract) {
-        try {
-            let shares = await this.state.contracts[indexOfContract].getAllShares();
-            return shares;
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async viewPost(indexOfContract) {
-        try {
-            const transaction = await this.state.contracts[indexOfContract].viewPost({ value: ethers.utils.parseEther("1.0") });
-            await transaction.wait();
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async payoutUser(indexOfContract) {
-        try {
-            await this.state.contracts[indexOfContract].payoutUser();
-        } catch (err) {
-            console.error(err);
-        }
     }
 
     renderMetamask(state, dispatch) {
