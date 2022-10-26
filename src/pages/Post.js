@@ -4,7 +4,6 @@ import ViewportList from "react-viewport-list";
 import { ContractFactory, ethers } from "ethers";
 import * as IPFS from 'ipfs-core';
 
-import styles from "./Post.css";
 import Popup from "../components/Popup.js";
 import { DataConsumer } from '../DataContext';
 import Post_ABI from "../Post_ABI.json";
@@ -301,26 +300,21 @@ export default class Post extends Component {
               }}>
                 <ViewportList viewportRef={this.ref} items={state.posts} itemMinSize={40} margin={8}>
                   {(item) => (
-                    <React.Fragment key={item.id}>
+                    <React.Fragment key={state.posts.indexOf(item)}>
                       <div className="post" style={{
                         borderStyle: "groove",
                         maxWidth: window.innerWidth / 1,
                         maxHeight: window.innerHeight / 3,
                       }}>
                         <h3>
-                          {item} - {/*{item.id()}*/}
+                          Address of Contract: {item}
                         </h3>
                         <div style={{
                           maxWidth: window.innerWidth / 1,
                           maxHeight: window.innerHeight / 5,
                           overflowY: "auto",
                         }}>
-                          {/* <p>{item.hashOfContent()}</p>
-                          <p>{item.contractType()}</p>
-                          <p>{item.contentType()}</p>
-                          <p>{item.payees.length}</p>
-                          <p>{item.shares.payees.length}</p>
-                          <p>{item.royaltyMultiplier()}</p> */}
+                          To view the content of this post press "View"
                         </div>
                         <br />
                         <Button variant="contained" onClick={() => { this.createResharePost(state, item) }}> Reshare</Button>
