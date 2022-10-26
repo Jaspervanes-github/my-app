@@ -1,0 +1,50 @@
+.scroll_container {
+    margin-left: "3%";
+    margin-right: "3%";
+    margin-top: "1%";
+    margin-bottom: "1%";
+    overflow-y: "auto";
+    border-style: "solid";
+    border-width: "4px";
+    padding: "4px";
+}
+
+.post {
+    border-style: "groove";
+}
+
+.post_inner {
+    overflow-y: "auto";
+}
+
+.reshare_body {
+    overflow-y: "auto";
+    border-style: "solid";
+    border-color: "grey";
+    border-width: '2px';
+}
+
+.remix_body {
+    width: '100%';
+    min-width: '100%';
+    max-width: '100%';
+    resize: "none";
+}
+
+.new_body {
+    width: '100%';
+    min-width: '100%';
+    max-width: '100%';
+    resize: "none";
+}
+
+.viewPost_inner {
+    overflow-y: "auto";
+}
+
+.view_body {
+    overflow-y: "auto";
+    border-style: "solid";
+    border-color: "grey";
+    border-width: '2px';
+}

@@ -1,13 +1,14 @@
 import { Button } from "@material-ui/core";
 import React, { Component } from 'react';
 import ViewportList from "react-viewport-list";
-import Popup from "../components/Popup.js"
-import { DataConsumer } from '../DataContext'
-import Post_ABI from "../Post_ABI.json"
-import Post_ByteCode from "../Post_ByteCode.json"
 import { ContractFactory, ethers } from "ethers";
 import * as IPFS from 'ipfs-core';
 
+import styles from "./Post.css";
+import Popup from "../components/Popup.js";
+import { DataConsumer } from '../DataContext';
+import Post_ABI from "../Post_ABI.json";
+import Post_ByteCode from "../Post_ByteCode.json";
 
 
 const ContractType = {
@@ -45,7 +46,6 @@ export default class Post extends Component {
     }
 
     this.ref = React.createRef(null);
-
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -86,7 +86,6 @@ export default class Post extends Component {
       this.state.shares,
       this.state.royaltyMultiplier
     );
-
     event.preventDefault();
   }
 
@@ -112,7 +111,7 @@ export default class Post extends Component {
 
     for await (const itr of asyncitr) {
       dataReceived += decoder.decode(itr, { stream: true })
-      console.log(dataReceived);
+      console.log("Data received: " + dataReceived);
     }
     return dataReceived;
   }
@@ -139,11 +138,12 @@ export default class Post extends Component {
         shares,
         royaltyMultiplier
       );
-      console.log(contract.address);
+      console.log("Address of deployed contract: " + contract.address);
 
       dispatch({ type: 'addPost', value: contract.address });
     } catch (err) {
       console.error(err);
+      alert("To submit the post you need to accept the transaction.");
     }
   }
 
@@ -156,16 +156,6 @@ export default class Post extends Component {
     }
   }
 
-  // async getTestPayees(state, indexOfContract) {
-  //   try {
-  //     let testContract = await ethers.getContract(state.posts[indexOfContract], Post_ABI, state.signer);
-  //     let payees = await testContract.getAllPayees();
-  //     return payees;
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }
-
   async getShares(state, indexOfContract) {
     try {
       let shares = await state.posts[indexOfContract].getAllShares();
@@ -174,15 +164,6 @@ export default class Post extends Component {
       console.error(err);
     }
   }
-
-  // async viewPost(state, indexOfContract) {
-  //   try {
-  //     const transaction = await state.posts[indexOfContract].viewPost({ value: ethers.utils.parseEther("1.0") });
-  //     await transaction.wait();
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }
 
   async payoutUser(state, indexOfContract) {
     try {
@@ -275,11 +256,10 @@ export default class Post extends Component {
         console.error(err);
         return;
       }
-    } else{
+    } else {
       alert("You can't view your own posts");
       return;
     }
-
 
     let _contentType = await contract.contentType();
     let _id = await contract.id();
@@ -356,16 +336,9 @@ export default class Post extends Component {
                 Create new Post
               </Button>
 
-              <Button variant="contained" onClick={() => { console.log(JSON.stringify(localStorage.posts)) }}>
-                log de localStorage.posts
-              </Button>
               <Button variant="contained" onClick={() => { localStorage.setItem("posts", JSON.stringify([])) }}>
                 Clear the localStorage
               </Button>
-              {/* <Button variant="contained" onClick={() => { console.log(this.getTestPayees(state, 0)) }}>
-                GetPayees
-              </Button> */}
-
               <p>{state.posts.length}</p>
 
               <div className="resharePostTemplate">
@@ -503,7 +476,7 @@ export default class Post extends Component {
                       <br />
                       Content Type:
                       <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
-                        <option selected value="0">TEXT</option>
+                        <option value="0">TEXT</option>
                         <option value="1">IMAGE</option>
                       </select>
                       <br />
