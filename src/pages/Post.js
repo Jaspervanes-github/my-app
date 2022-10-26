@@ -32,9 +32,12 @@ export default class Post extends Component {
       triggerViewPostPopup: false,
 
       currentItem: '',
+      id: 0,
       contractType: '',
+      addressOfPoster: '',
       originalPostAddress: '',
       contentType: ContentType.TEXT,
+      hashOfContent: '',
       content: '',
       payees: [],
       shares: [],
@@ -214,7 +217,8 @@ export default class Post extends Component {
     let _originalPostAddress = await contract.originalPost();
     let _payees = await contract.getAllPayees();
     let _shares = await contract.getAllShares();
-    let _content = await contract.hashOfContent();
+    let _hashOfContent = await contract.hashOfContent();
+    let _content = await this.retrieveDataFromIPFS(_hashOfContent);
 
     this.setState({
       currentItem: item,
@@ -224,6 +228,7 @@ export default class Post extends Component {
       payees: _payees,
       shares: _shares,
       royaltyMultiplier: 2,
+      hashOfContent: _hashOfContent,
       content: _content,
       triggerResharePostPopup: true
     });
@@ -241,7 +246,8 @@ export default class Post extends Component {
     let _originalPostAddress = await contract.originalPost();
     let _payees = await contract.getAllPayees();
     let _shares = await contract.getAllShares();
-    let _content = await contract.hashOfContent();
+    let _hashOfContent = await contract.hashOfContent();
+    let _content = await this.retrieveDataFromIPFS(_hashOfContent);
 
     this.setState({
       currentItem: item,
@@ -251,14 +257,28 @@ export default class Post extends Component {
       payees: _payees,
       shares: _shares,
       royaltyMultiplier: 4,
+      hashOfContent: _hashOfContent,
       content: _content,
       triggerRemixPostPopup: true
     });
   }
 
-  viewPost(item) {
+  async viewPost(state, item) {
+    let contract = new ethers.Contract(item, Post_ABI, state.signer);
+
+    let _addressOfPoster = await contract.addressOfPoster();
+    let _contentType = await contract.contentType();
+    let _id = await contract.id();
+    let _hashOfContent = await contract.hashOfContent();
+    let _content = await this.retrieveDataFromIPFS(_hashOfContent);
+
     this.setState({
       currentItem: item,
+      id: _id.toNumber(),
+      addressOfPoster: _addressOfPoster,
+      contentType: _contentType,
+      hashOfContent: _hashOfContent,
+      content: _content,
       triggerViewPostPopup: true
     });
   }
@@ -311,7 +331,7 @@ export default class Post extends Component {
                         <br />
                         <Button variant="contained" onClick={() => { this.createResharePost(state, item) }}> Reshare</Button>
                         <Button variant="contained" onClick={() => { this.createRemixPost(state, item) }}> Remix</Button>
-                        <Button variant="contained" onClick={() => { this.viewPost(item) }}> View</Button>
+                        <Button variant="contained" onClick={() => { this.viewPost(state, item) }}> View</Button>
                       </div>
                     </React.Fragment>
                   )}
@@ -355,17 +375,31 @@ export default class Post extends Component {
                       <p>{state.selectedAccount}</p>
                       <br />
                       Content of Post:
-                      <p style={{
-                        height: this.scrollHeight + 'px',
-                        maxHeight: window.innerHeight / 2,
-                        overflowY: "auto",
-                        borderStyle: "solid",
-                        borderColor: "grey",
-                        borderWidth: '2px'
-                      }}>
-                        You made it all the way to here!
-                        {/* {this.retrieveDataFromIPFS(this.state.content)}   */}
-                      </p>
+                      {(() => {
+                        //if contentType is TEXT
+                        if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                          return (
+                            <p style={{
+                              height: this.scrollHeight + 'px',
+                              maxHeight: window.innerHeight / 2,
+                              overflowY: "auto",
+                              borderStyle: "solid",
+                              borderColor: "grey",
+                              borderWidth: '2px'
+                            }}>
+                              {this.state.content}
+                            </p>
+                          )
+                        }
+                        //if contentType is IMAGE
+                        else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                          return (
+                            // render Image selection component here
+                            <div></div>
+                          )
+                        }
+                      })()}
+
                       <br />
                     </label>
                     <input type="submit" value="Submit Post" />
@@ -412,8 +446,7 @@ export default class Post extends Component {
                               maxHeight: window.innerHeight / 2,
                               resize: "none"
                             }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
-                              You made it all the way to here!
-                              {/* {this.retrieveDataFromIPFS(this.state.content)} */}
+                              {this.state.content}
                             </textarea>
                           )
                         }
@@ -499,13 +532,37 @@ export default class Post extends Component {
                 }}>
                   <h2>View Post</h2>
                   <h3>
-                    {this.state.currentItem.name} - {this.state.currentItem.id}
+                    {this.state.addressOfPoster} - {this.state.id}
                   </h3>
                   <div style={{
                     maxHeight: window.innerHeight / 2,
                     overflowY: "auto"
                   }}>
-                    <p>{this.state.currentItem.body}</p>
+                    Content of Post:
+                    {(() => {
+                      //if contentType is TEXT
+                      if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                        return (
+                          <p style={{
+                            height: this.scrollHeight + 'px',
+                            maxHeight: window.innerHeight / 2,
+                            overflowY: "auto",
+                            borderStyle: "solid",
+                            borderColor: "grey",
+                            borderWidth: '2px'
+                          }}>
+                            {this.state.content}
+                          </p>
+                        )
+                      }
+                      //if contentType is IMAGE
+                      else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                        return (
+                          // render Image selection component here
+                          <div></div>
+                        )
+                      }
+                    })()}
                   </div>
                 </Popup>
               </div>
