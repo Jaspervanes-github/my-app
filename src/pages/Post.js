@@ -6,6 +6,7 @@ import { DataConsumer } from '../DataContext'
 import Post_ABI from "../Post_ABI.json"
 import Post_ByteCode from "../Post_ByteCode.json"
 import { ContractFactory, ethers } from "ethers";
+import * as IPFS from 'ipfs-core';
 
 
 
@@ -68,11 +69,9 @@ export default class Post extends Component {
     });
   }
 
-  handleSubmit(event, state, dispatch) {
-    //TODO: Implement the creating of a contract here
-    // let _hashOfContent = IPFS.saveTextToIPFS(this.state.content);
-    let _hashOfContent = "somefillertext";
-
+  async handleSubmit(event, state, dispatch) {
+    let _hashOfContent = await this.saveTextToIPFS(this.state.content);
+    
     this.deployNewPostContract(
       state,
       dispatch,
@@ -80,7 +79,7 @@ export default class Post extends Component {
       this.state.contractType,
       this.state.originalPostAddress,
       this.state.contentType,
-      _hashOfContent,
+      _hashOfContent.cid.toString(),
       this.state.payees,
       this.state.shares,
       this.state.royaltyMultiplier
@@ -88,6 +87,17 @@ export default class Post extends Component {
 
     event.preventDefault();
   }
+
+  async saveTextToIPFS(text) {
+    let node = await IPFS.create({ repo: 'ok' + Math.random() });
+
+    let textAdded = await node.add(text);
+    console.log(
+        "CID of Added text:", textAdded.cid.toString(),
+        "\nUrl is: ipfs.io/ipfs/" + textAdded.cid.toString());
+
+    return textAdded;
+}
 
   async deployNewPostContract(state, dispatch,
     id,
@@ -127,6 +137,16 @@ export default class Post extends Component {
       console.error(err);
     }
   }
+
+  // async getTestPayees(state, indexOfContract) {
+  //   try {
+  //     let testContract = await ethers.getContract(state.posts[indexOfContract], Post_ABI, state.signer);
+  //     let payees = await testContract.getAllPayees();
+  //     return payees;
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }
 
   async getShares(state, indexOfContract) {
     try {
@@ -233,7 +253,7 @@ export default class Post extends Component {
                         maxHeight: window.innerHeight / 3,
                       }}>
                         <h3>
-                          {item} - {/*{item.id}*/}
+                          {item} - {/*{item.id()}*/}
                         </h3>
                         <div style={{
                           maxWidth: window.innerWidth / 1,
@@ -267,6 +287,9 @@ export default class Post extends Component {
               <Button variant="contained" onClick={() => { localStorage.setItem("posts", JSON.stringify([])) }}>
                 Clear the localStorage
               </Button>
+              {/* <Button variant="contained" onClick={() => { console.log(this.getTestPayees(state, 0)) }}>
+                GetPayees
+              </Button> */}
 
               <p>{state.posts.length}</p>
 
@@ -299,7 +322,7 @@ export default class Post extends Component {
                         borderColor: "grey",
                         borderWidth: '2px'
                       }}>
-                        {this.state.content}
+                        {this.state.content}  
                       </p>
                       <br />
                     </label>
