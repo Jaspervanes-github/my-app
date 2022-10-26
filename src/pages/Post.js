@@ -52,7 +52,6 @@ export default class Post extends Component {
     const name = target.name;
 
     let value;
-    console.log(target.type);
     switch (target.type) {
       case 'textarea':
         value = target.value;
@@ -71,7 +70,7 @@ export default class Post extends Component {
 
   async handleSubmit(event, state, dispatch) {
     let _hashOfContent = await this.saveTextToIPFS(this.state.content);
-    
+
     this.deployNewPostContract(
       state,
       dispatch,
@@ -93,11 +92,27 @@ export default class Post extends Component {
 
     let textAdded = await node.add(text);
     console.log(
-        "CID of Added text:", textAdded.cid.toString(),
-        "\nUrl is: ipfs.io/ipfs/" + textAdded.cid.toString());
+      "CID of Added text:", textAdded.cid.toString(),
+      "\nUrl is: ipfs.io/ipfs/" + textAdded.cid.toString());
 
     return textAdded;
-}
+  }
+
+  async retrieveDataFromIPFS(hash) {
+    let node = await IPFS.create({ repo: 'ok' + Math.random() });
+
+    let asyncitr = node.cat(hash);
+    const decoder = new TextDecoder();
+    let dataReceived = '';
+
+    // decodeImageFromBuffer(asyncitr);
+
+    for await (const itr of asyncitr) {
+      dataReceived += decoder.decode(itr, { stream: true })
+      console.log(dataReceived);
+    }
+    return dataReceived;
+  }
 
   async deployNewPostContract(state, dispatch,
     id,
@@ -187,30 +202,56 @@ export default class Post extends Component {
     });
   }
 
-  createResharePost(item) {
+  async createResharePost(state, item) {
+    let contract = new ethers.Contract(item, Post_ABI, state.signer);
+    let _addressOfPoster = await contract.addressOfPoster();
+    if (_addressOfPoster.toLowerCase() === state.selectedAccount) {
+      alert("You can't reshare your own posts");
+      return;
+    }
+
+    let _contentType = await contract.contentType();
+    let _originalPostAddress = await contract.originalPost();
+    let _payees = await contract.getAllPayees();
+    let _shares = await contract.getAllShares();
+    let _content = await contract.hashOfContent();
+
     this.setState({
       currentItem: item,
       contractType: ContractType.RESHARE,
-      contentType: item.contentType,
-      originalPostAddress: item.originalPost,
-      payees: item.getPayees(),
-      shares: item.getShares(),
+      contentType: _contentType,
+      originalPostAddress: _originalPostAddress,
+      payees: _payees,
+      shares: _shares,
       royaltyMultiplier: 2,
-      content: item.hashOfContent,
+      content: _content,
       triggerResharePostPopup: true
     });
   }
 
-  createRemixPost(item) {
+  async createRemixPost(state, item) {
+    let contract = new ethers.Contract(item, Post_ABI, state.signer);
+    let _addressOfPoster = await contract.addressOfPoster();
+    if (_addressOfPoster.toLowerCase() === state.selectedAccount) {
+      alert("You can't remix your own posts");
+      return;
+    }
+
+    let _contentType = await contract.contentType();
+    let _originalPostAddress = await contract.originalPost();
+    let _payees = await contract.getAllPayees();
+    let _shares = await contract.getAllShares();
+    let _content = await contract.hashOfContent();
+
     this.setState({
       currentItem: item,
       contractType: ContractType.REMIX,
-      contentType: item.contentType,
-      originalPostAddress: item.originalPost,
-      payees: item.getPayees(),
-      shares: item.getShares(),
+      contentType: _contentType,
+      originalPostAddress: _originalPostAddress,
+      payees: _payees,
+      shares: _shares,
       royaltyMultiplier: 4,
-      content: item.hashOfContent,
+      content: _content,
       triggerRemixPostPopup: true
     });
   }
@@ -268,8 +309,8 @@ export default class Post extends Component {
                           <p>{item.royaltyMultiplier()}</p> */}
                         </div>
                         <br />
-                        <Button variant="contained" onClick={() => { this.createResharePost(item) }}> Reshare</Button>
-                        <Button variant="contained" onClick={() => { this.createRemixPost(item) }}> Remix</Button>
+                        <Button variant="contained" onClick={() => { this.createResharePost(state, item) }}> Reshare</Button>
+                        <Button variant="contained" onClick={() => { this.createRemixPost(state, item) }}> Remix</Button>
                         <Button variant="contained" onClick={() => { this.viewPost(item) }}> View</Button>
                       </div>
                     </React.Fragment>
@@ -322,7 +363,8 @@ export default class Post extends Component {
                         borderColor: "grey",
                         borderWidth: '2px'
                       }}>
-                        {this.state.content}  
+                        You made it all the way to here!
+                        {/* {this.retrieveDataFromIPFS(this.state.content)}   */}
                       </p>
                       <br />
                     </label>
@@ -370,7 +412,8 @@ export default class Post extends Component {
                               maxHeight: window.innerHeight / 2,
                               resize: "none"
                             }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
-                              {this.state.content}
+                              You made it all the way to here!
+                              {/* {this.retrieveDataFromIPFS(this.state.content)} */}
                             </textarea>
                           )
                         }
