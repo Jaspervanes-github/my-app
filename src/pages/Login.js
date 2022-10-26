@@ -13,6 +13,7 @@ export default class Login extends Component {
         super(props);
     }
 
+    //Connects with the MetaMask plugin and loads the existing posts
     async connectToMetamask(state, dispatch) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const accounts = await provider.send("eth_requestAccounts", []);
@@ -33,6 +34,7 @@ export default class Login extends Component {
         });
     }
 
+    //Renders all the ellements of the Login page
     renderMetamask(state, dispatch) {
         if (!state.selectedAccount) {
             return (

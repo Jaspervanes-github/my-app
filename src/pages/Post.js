@@ -49,6 +49,7 @@ export default class Post extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  //Handles the changes in the form element of the popups
   handleChange(event) {
     const target = event.target;
     const name = target.name;
@@ -70,6 +71,7 @@ export default class Post extends Component {
     });
   }
 
+  //Handles the submittions of the form element of the popups
   async handleSubmit(event, state, dispatch) {
     let _hashOfContent = await this.saveTextToIPFS(this.state.content);
 
@@ -88,6 +90,7 @@ export default class Post extends Component {
     event.preventDefault();
   }
 
+  //Saves the text to the IPFS network and returns a hash of the content
   async saveTextToIPFS(text) {
     let node = await IPFS.create({ repo: 'ok' + Math.random() });
 
@@ -99,6 +102,7 @@ export default class Post extends Component {
     return textAdded;
   }
 
+  //Retrieves the data of the IPFS network using the given hash from the saveTextToIPFS()
   async retrieveDataFromIPFS(hash) {
     let node = await IPFS.create({ repo: 'ok' + Math.random() });
 
@@ -115,6 +119,7 @@ export default class Post extends Component {
     return dataReceived;
   }
 
+  //Deploys a new Post contract to the blockchain and adds it to to posts list
   async deployNewPostContract(state, dispatch,
     id,
     contractType,
@@ -172,6 +177,7 @@ export default class Post extends Component {
     }
   }
 
+  //Sets all the correct data to create a new Post and opens the NewPostPopup
   createNewPost() {
     this.setState({
       contractType: ContractType.ORIGINAL,
@@ -185,6 +191,7 @@ export default class Post extends Component {
     });
   }
 
+  //Fetches the data of the post it wants to reshare and opens the ResharePostPopup
   async createResharePost(state, item) {
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
     let _addressOfPoster = await contract.addressOfPoster();
@@ -214,6 +221,7 @@ export default class Post extends Component {
     });
   }
 
+  //Fetches the data of the post it wants to remix and opens the RemixPostPopup
   async createRemixPost(state, item) {
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
     let _addressOfPoster = await contract.addressOfPoster();
@@ -243,6 +251,7 @@ export default class Post extends Component {
     });
   }
 
+  //Let the user pay a certain amount to view the content of the post
   async viewPost(state, item) {
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
     let _addressOfPoster = await contract.addressOfPoster();
@@ -281,6 +290,7 @@ export default class Post extends Component {
     elem.target.style.height = elem.target.scrollHeight + 'px';
   }
 
+  //Renders all the elements of the Post
   render() {
     return (
       <DataConsumer>
