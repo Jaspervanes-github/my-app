@@ -28,7 +28,7 @@ export default class Home extends Component {
             < div className="Home">
               {console.log(state.provider)}
               <NavBar />
-              <IPFS />
+              {/* <IPFS /> */}
               <Post />
               {/* <Footer /> */}
             </div>

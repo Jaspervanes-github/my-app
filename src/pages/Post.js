@@ -175,14 +175,14 @@ export default class Post extends Component {
     }
   }
 
-  async viewPost(state, indexOfContract) {
-    try {
-      const transaction = await state.posts[indexOfContract].viewPost({ value: ethers.utils.parseEther("1.0") });
-      await transaction.wait();
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  // async viewPost(state, indexOfContract) {
+  //   try {
+  //     const transaction = await state.posts[indexOfContract].viewPost({ value: ethers.utils.parseEther("1.0") });
+  //     await transaction.wait();
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }
 
   async payoutUser(state, indexOfContract) {
     try {
@@ -265,8 +265,22 @@ export default class Post extends Component {
 
   async viewPost(state, item) {
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
-
     let _addressOfPoster = await contract.addressOfPoster();
+
+    if (_addressOfPoster.toLowerCase() !== state.selectedAccount) {
+      try {
+        const transaction = await contract.viewPost({ value: ethers.utils.parseEther("0.00001") });
+        await transaction.wait();
+      } catch (err) {
+        console.error(err);
+        return;
+      }
+    } else{
+      alert("You can't view your own posts");
+      return;
+    }
+
+
     let _contentType = await contract.contentType();
     let _id = await contract.id();
     let _hashOfContent = await contract.hashOfContent();
