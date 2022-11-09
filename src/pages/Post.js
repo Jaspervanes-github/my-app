@@ -174,7 +174,7 @@ export default class Post extends Component {
           break;
         default: break;
       }
-      this.createToastMessage("To submit the post you need to accept the transaction.", false);
+      this.createToastMessage("To submit the post you need to accept the transaction.", 5000);
     }
   }
 
@@ -220,14 +220,14 @@ export default class Post extends Component {
 
   //Fetches the data of the post it wants to reshare and opens the ResharePostPopup
   async createResharePost(state, item) {
-    this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
-
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
     let _addressOfPoster = await contract.addressOfPoster();
     if (_addressOfPoster.toLowerCase() === state.selectedAccount) {
       this.createToastMessage("You can't reshare your own posts", false);
       return;
     }
+
+    this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
 
     let _contentType = await contract.contentType();
     let _originalPostAddress = await contract.originalPost();
@@ -252,14 +252,14 @@ export default class Post extends Component {
 
   //Fetches the data of the post it wants to remix and opens the RemixPostPopup
   async createRemixPost(state, item) {
-    this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
-
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
     let _addressOfPoster = await contract.addressOfPoster();
     if (_addressOfPoster.toLowerCase() === state.selectedAccount) {
       this.createToastMessage("You can't remix your own posts", 5000);
       return;
     }
+
+    this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
 
     let _contentType = await contract.contentType();
     let _originalPostAddress = await contract.originalPost();
@@ -284,13 +284,13 @@ export default class Post extends Component {
 
   //Let the user pay a certain amount to view the content of the post
   async viewPost(state, item) {
-    this.createToastMessage("Awaiting transaction...", 3000);
-
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
     let _addressOfPoster = await contract.addressOfPoster();
 
     if (_addressOfPoster.toLowerCase() !== state.selectedAccount) {
       try {
+        this.createToastMessage("Awaiting transaction...", 3000);
+
         const transaction = await contract.viewPost({ value: ethers.utils.parseEther("0.00001") });
         await transaction.wait();
       } catch (err) {

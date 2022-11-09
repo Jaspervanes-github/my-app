@@ -52,7 +52,7 @@ export default class App extends Component {
                 newestOnTop={false}
                 closeOnClick
                 rtl={false}
-                pauseOnFocusLoss
+                pauseOnFocusLoss={false}
                 draggable={false}
                 theme="dark"
               />
