@@ -1,9 +1,17 @@
 import { Button } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import ReshareIcon from "@material-ui/icons/Share";
+import RemixIcon from "@material-ui/icons/Edit";
+import ViewIcon from "@material-ui/icons/Visibility";
+import DetailIcon from "@material-ui/icons/Info";
+import CreatePostIcon from "@material-ui/icons/AddBox";
 import React, { Component } from 'react';
 import ViewportList from "react-viewport-list";
 import { ContractFactory, ethers } from "ethers";
 import * as IPFS from 'ipfs-core';
 import { toast } from 'react-toastify';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 
 import Popup from "../components/Popup.js";
 import { DataConsumer } from '../DataContext';
@@ -21,6 +29,8 @@ const ContentType = {
   TEXT: 0,
   IMAGE: 1
 }
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default class Post extends Component {
   constructor(props) {
@@ -331,6 +341,13 @@ export default class Post extends Component {
         {({ state, dispatch }) => (
           <React.Fragment>
             <div className="main">
+              <Button aria-label="create" startIcon={<CreatePostIcon />} style={{ fontFamily:"PT Mono", border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf" }} onClick={() => { this.createNewPost() }}>
+                Create New Post
+              </Button>
+
+              {/* <Button variant="contained" onClick={() => { localStorage.setItem("posts", JSON.stringify([])) }}>
+                Clear the localStorage
+              </Button> */}
               <div className="scroll-container" ref={this.ref} style={{
                 marginLeft: "3%",
                 marginRight: "3%",
@@ -361,23 +378,25 @@ export default class Post extends Component {
                           To view the content of this post press "View"
                         </div>
                         <br />
-                        <Button variant="contained" onClick={() => { this.createResharePost(state, item) }}> Reshare</Button>
-                        <Button variant="contained" onClick={() => { this.createRemixPost(state, item) }}> Remix</Button>
-                        <Button variant="contained" onClick={() => { this.viewPost(state, item) }}> View</Button>
+                        <div className="post-buttons">
+                          <IconButton aria-label="reshare" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf" }} onClick={() => { this.createResharePost(state, item) }}>
+                            <ReshareIcon />
+                          </IconButton>
+                          <IconButton aria-label="remix" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf" }} onClick={() => { this.createRemixPost(state, item) }}>
+                            <RemixIcon />
+                          </IconButton>
+                          <IconButton aria-label="view" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf" }} onClick={() => { this.viewPost(state, item) }}>
+                            <ViewIcon />
+                          </IconButton>
+                          <IconButton aria-label="detail" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf" }} onClick={() => { }}>
+                            <DetailIcon />
+                          </IconButton>
+                        </div>
                       </div>
                     </React.Fragment>
                   )}
                 </ViewportList>
               </div>
-
-              <Button variant="contained" onClick={() => { this.createNewPost() }}>
-                Create new Post
-              </Button>
-
-              <Button variant="contained" onClick={() => { localStorage.setItem("posts", JSON.stringify([])) }}>
-                Clear the localStorage
-              </Button>
-              <p>{state.posts.length}</p>
 
               <div className="resharePostTemplate">
                 <Popup trigger={this.state.triggerResharePostPopup} setTrigger={() => {
@@ -425,6 +444,34 @@ export default class Post extends Component {
                         }
                       })()}
 
+                      {/* <Pie data={{
+                        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                        datasets: [
+                          {
+                            label: '# of Votes',
+                            data: [12, 19, 3, 5, 2, 3],
+                            backgroundColor: [
+                              'rgba(255, 99, 132, 0.2)',
+                              'rgba(54, 162, 235, 0.2)',
+                              'rgba(255, 206, 86, 0.2)',
+                              'rgba(75, 192, 192, 0.2)',
+                              'rgba(153, 102, 255, 0.2)',
+                              'rgba(255, 159, 64, 0.2)',
+                            ],
+                            borderColor: [
+                              'rgba(255, 99, 132, 1)',
+                              'rgba(54, 162, 235, 1)',
+                              'rgba(255, 206, 86, 1)',
+                              'rgba(75, 192, 192, 1)',
+                              'rgba(153, 102, 255, 1)',
+                              'rgba(255, 159, 64, 1)',
+                            ],
+                            borderWidth: 1,
+                            maxWidth: "10px",
+                            maxHeight: "10px"
+                          },
+                        ],
+                      }} /> */}
                       <br />
                     </label>
                     <input type="submit" value="Submit Post" />
@@ -592,7 +639,8 @@ export default class Post extends Component {
               </div>
             </div>
           </React.Fragment >
-        )}
+        )
+        }
       </DataConsumer>
     )
   }

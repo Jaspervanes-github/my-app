@@ -21,9 +21,6 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: [
-      'Roboto'
-    ],
     h4: {
       fontWeight: 600,
       fontSize: 28,

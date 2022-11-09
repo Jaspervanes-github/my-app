@@ -1,5 +1,8 @@
+@import url(https://fonts.googleapis.com/css?family=PT+Mono);
+
 .App {
   text-align: center;
+  font-family: 'PT Mono';
 }
 
 .App-logo {

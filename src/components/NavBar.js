@@ -3,19 +3,20 @@ import { Link } from 'react-router-dom'
 import { Toolbar, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 
-
 const styles = makeStyles({
     bar: {
-        paddingTop: "1.15rem",
-        backgroundColor: "#fff"
+        background: '#000000',
+// backgroundImage: "Banner_Homepage.png"
     },
     menuItem: {
-        fontFamily: 'Fantasy',
-        background: '#3eaabd',
+        background: '#666666',
+        position: "center",
+        maxWidth: "fit-content",
+        color: "#FFFFFF",
         cursor: "pointer",
         flexGrow: 1,
         "&:hover": {
-            background: '#246773'
+            background: '#262626'
         }
     }
 })

@@ -26,6 +26,7 @@ export default class Home extends Component {
           < React.Fragment >
             {this.checkState(state)}
             < div className="Home">
+              <h1>Hanpicked Net</h1>
               <NavBar />
               {/* <IPFS /> */}
               <Post />
