@@ -72,12 +72,13 @@ export default class Post extends Component {
   }
 
   //Handles the submittions of the form element of the popups
-  async handleSubmit(event, state, dispatch) {
+  async handleSubmit(event, state, dispatch, type) {
     let _hashOfContent = await this.saveTextToIPFS(this.state.content);
 
     this.deployNewPostContract(
       state,
       dispatch,
+      type,
       state.posts.length,
       this.state.contractType,
       this.state.originalPostAddress,
@@ -120,7 +121,7 @@ export default class Post extends Component {
   }
 
   //Deploys a new Post contract to the blockchain and adds it to to posts list
-  async deployNewPostContract(state, dispatch,
+  async deployNewPostContract(state, dispatch, type,
     id,
     contractType,
     originalPostAddress,
@@ -147,6 +148,19 @@ export default class Post extends Component {
       dispatch({ type: 'addPost', value: contract.address });
     } catch (err) {
       console.error(err);
+      switch (type) {
+        case ContractType.RESHARE:
+          this.setState({ triggerResharePostPopup: true });
+          break;
+        case ContractType.REMIX:
+          this.setState({ triggerRemixPostPopup: true });
+          break;
+        case ContractType.ORIGINAL:
+          this.setState({ triggerNewPostPopup: true });
+          break;
+        default: break;
+      }
+
       alert("To submit the post you need to accept the transaction.");
     }
   }
@@ -358,7 +372,7 @@ export default class Post extends Component {
                       event.preventDefault();
                       return;
                     }
-                    this.handleSubmit(event, state, dispatch);
+                    this.handleSubmit(event, state, dispatch, ContractType.RESHARE);
                     this.setState({ triggerResharePostPopup: false });
                   }}>
                     <label>
@@ -411,7 +425,7 @@ export default class Post extends Component {
                       event.preventDefault();
                       return;
                     }
-                    this.handleSubmit(event, state, dispatch);
+                    this.handleSubmit(event, state, dispatch, ContractType.REMIX);
                     this.setState({ triggerRemixPostPopup: false });
                   }}>
                     <label>
@@ -461,7 +475,6 @@ export default class Post extends Component {
                 <Popup trigger={this.state.triggerNewPostPopup} setTrigger={() => {
                   this.setState({
                     triggerNewPostPopup: false,
-                    content: ''
                   });
                 }}>
                   <h2>New Post</h2>
@@ -471,7 +484,7 @@ export default class Post extends Component {
                       event.preventDefault();
                       return;
                     }
-                    this.handleSubmit(event, state, dispatch);
+                    this.handleSubmit(event, state, dispatch, ContractType.ORIGINAL);
                     this.setState({ triggerNewPostPopup: false });
                   }}>
                     <label>
@@ -497,6 +510,7 @@ export default class Post extends Component {
                               maxHeight: window.innerHeight / 2,
                               resize: "none"
                             }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
+                              {this.state.content}
                             </textarea>
                           )
                         }
@@ -518,7 +532,6 @@ export default class Post extends Component {
                 <Popup trigger={this.state.triggerViewPostPopup} setTrigger={() => {
                   this.setState({
                     triggerViewPostPopup: false,
-                    content: ''
                   });
                 }}>
                   <h2>View Post</h2>
