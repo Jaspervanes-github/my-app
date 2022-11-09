@@ -2,6 +2,8 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { Route, Routes } from "react-router-dom";
 import './App.css';
 import React, { Component } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -44,6 +46,16 @@ export default class App extends Component {
       <ThemeProvider theme={theme}>
         <DataProvider>
           <div className="App">
+          <ToastContainer
+                position="top-center"
+                autoClose={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable={false}
+                theme="dark"
+              />
             <Routes>
               <Route exact path="/" element={<Login />} />
               <Route path="/home" element={<Home />} />
