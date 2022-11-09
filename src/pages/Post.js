@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ViewportList from "react-viewport-list";
 import { ContractFactory, ethers } from "ethers";
 import * as IPFS from 'ipfs-core';
+import { toast } from 'react-toastify';
 
 import Popup from "../components/Popup.js";
 import { DataConsumer } from '../DataContext';
@@ -49,6 +50,18 @@ export default class Post extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  //Creates a Toast message at the top of the screen
+  createToastMessage(text, autoClose) {
+    toast(text, {
+      autoClose: autoClose,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: false,
+      progress: undefined,
+    })
+  }
+
   //Handles the changes in the form element of the popups
   handleChange(event) {
     const target = event.target;
@@ -73,6 +86,7 @@ export default class Post extends Component {
 
   //Handles the submittions of the form element of the popups
   async handleSubmit(event, state, dispatch, type) {
+    this.createToastMessage("The post is being created, please wait...", 3000);
     let _hashOfContent = await this.saveTextToIPFS(this.state.content);
 
     this.deployNewPostContract(
@@ -160,8 +174,7 @@ export default class Post extends Component {
           break;
         default: break;
       }
-
-      alert("To submit the post you need to accept the transaction.");
+      this.createToastMessage("To submit the post you need to accept the transaction.", false);
     }
   }
 
@@ -207,10 +220,12 @@ export default class Post extends Component {
 
   //Fetches the data of the post it wants to reshare and opens the ResharePostPopup
   async createResharePost(state, item) {
+    this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
+
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
     let _addressOfPoster = await contract.addressOfPoster();
     if (_addressOfPoster.toLowerCase() === state.selectedAccount) {
-      alert("You can't reshare your own posts");
+      this.createToastMessage("You can't reshare your own posts", false);
       return;
     }
 
@@ -237,10 +252,12 @@ export default class Post extends Component {
 
   //Fetches the data of the post it wants to remix and opens the RemixPostPopup
   async createRemixPost(state, item) {
+    this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
+
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
     let _addressOfPoster = await contract.addressOfPoster();
     if (_addressOfPoster.toLowerCase() === state.selectedAccount) {
-      alert("You can't remix your own posts");
+      this.createToastMessage("You can't remix your own posts", 5000);
       return;
     }
 
@@ -267,6 +284,8 @@ export default class Post extends Component {
 
   //Let the user pay a certain amount to view the content of the post
   async viewPost(state, item) {
+    this.createToastMessage("Awaiting transaction...", 3000);
+
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
     let _addressOfPoster = await contract.addressOfPoster();
 
@@ -275,11 +294,12 @@ export default class Post extends Component {
         const transaction = await contract.viewPost({ value: ethers.utils.parseEther("0.00001") });
         await transaction.wait();
       } catch (err) {
+        this.createToastMessage("To view the content of the post you need to accept the transaction.", 5000);
         console.error(err);
         return;
       }
     } else {
-      alert("You can't view your own posts");
+      this.createToastMessage("You can't view your own posts", 5000);
       return;
     }
 
@@ -368,7 +388,7 @@ export default class Post extends Component {
                   <h2>Reshare Post</h2>
                   <form onSubmit={(event) => {
                     if (this.state.content === '') {
-                      alert("Please enter a valid text");
+                      this.createToastMessage("Please enter a valid text", 5000);
                       event.preventDefault();
                       return;
                     }
@@ -421,7 +441,7 @@ export default class Post extends Component {
                   <h2>Remix Post</h2>
                   <form onSubmit={(event) => {
                     if (this.state.content === '') {
-                      alert("Please enter a valid text");
+                      this.createToastMessage("Please enter a valid text", 5000);
                       event.preventDefault();
                       return;
                     }
@@ -480,7 +500,7 @@ export default class Post extends Component {
                   <h2>New Post</h2>
                   <form onSubmit={(event) => {
                     if (this.state.content === '') {
-                      alert("Please enter a valid text");
+                      this.createToastMessage("Please enter a valid text", 5000);
                       event.preventDefault();
                       return;
                     }
