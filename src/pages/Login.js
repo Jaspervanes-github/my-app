@@ -2,9 +2,7 @@ import { Button } from '@material-ui/core';
 import React, { Component } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { ContractFactory, ethers } from "ethers";
-import Post_ABI from "../Post_ABI.json"
-import Post_ByteCode from "../Post_ByteCode.json"
+import { ethers } from "ethers";
 import { DataConsumer } from '../DataContext'
 
 
@@ -38,14 +36,34 @@ export default class Login extends Component {
     renderMetamask(state, dispatch) {
         if (!state.selectedAccount) {
             return (
-                <div style={{ margin: "25%" }}>
-                    <Button variant='contained' style={{ justifyContent: 'center' }} onClick=
-                        {
-                            () => this.connectToMetamask(state, dispatch)
-                        }>
-                        Connect to Metamask
-                    </Button>
-                </div>
+                <React.Fragment>
+                    <div className="main" style={{
+                        display: 'flex',
+                        flexDirection: "column",
+                    }}>
+                        <p style={{
+                            marginTop: "1%",
+                            marginBottom: "1%",
+                            marginLeft: "10%",
+                            marginRight: "10%"
+                        }}>
+                            Welcome to the Handpicked Media application.
+                            This application is created by Jasper van Es during an internship in 2022-2023.
+                            This application simulates the workings of a social media platform in combination with the blockchain.
+                            <br />
+                            <br />
+                            Please click "Connect to MetaMask" to login to your cryptowallet account. Once connected you get navigated to the home page of the application.
+                        </p>
+                        <div className="container" >
+                            <Button variant='contained' style={{ margin: "5%" }} onClick=
+                                {
+                                    () => this.connectToMetamask(state, dispatch)
+                                }>
+                                Connect to Metamask
+                            </Button>
+                        </div>
+                    </div>
+                </React.Fragment>
             )
         } else {
             return (
@@ -58,9 +76,11 @@ export default class Login extends Component {
         return (
             <DataConsumer>
                 {({ state, dispatch }) => (
-                    <div>
-                        {this.renderMetamask(state, dispatch)}
-                    </div>
+                    <React.Fragment>
+                        <div>
+                            {this.renderMetamask(state, dispatch)}
+                        </div>
+                    </React.Fragment>
                 )}
             </DataConsumer>
         )

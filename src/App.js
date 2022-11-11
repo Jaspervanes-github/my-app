@@ -8,7 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NoPage from "./pages/NoPage";
-import { DataProvider } from './DataContext'
+import { DataProvider } from './DataContext';
+import logo from "./HP_logo.png";
 
 
 const theme = createTheme({
@@ -43,16 +44,23 @@ export default class App extends Component {
       <ThemeProvider theme={theme}>
         <DataProvider>
           <div className="App">
-          <ToastContainer
-                position="top-center"
-                autoClose={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss={false}
-                draggable={false}
-                theme="dark"
-              />
+            <ToastContainer
+              position="top-center"
+              autoClose={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss={false}
+              draggable={false}
+              theme="dark"
+            />
+
+              <h1 style={{
+                fontSize: "250%"
+              }}>Hanpicked Media
+                <img src={logo} width="50px" height="50px" />
+              </h1>
+
             <Routes>
               <Route exact path="/" element={<Login />} />
               <Route path="/home" element={<Home />} />
