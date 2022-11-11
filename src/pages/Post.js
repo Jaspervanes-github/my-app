@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+import { Button, Box } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import ReshareIcon from "@material-ui/icons/Share";
 import RemixIcon from "@material-ui/icons/Edit";
@@ -334,6 +334,15 @@ export default class Post extends Component {
     elem.target.style.height = elem.target.scrollHeight + 'px';
   }
 
+  async retrievePostInfo(state, item) {
+    let contract = new ethers.Contract(item, Post_ABI, state.signer);
+    let _hashOfContent = await contract.hashOfContent();
+    let _content = await this.retrieveDataFromIPFS(_hashOfContent);
+    this.setState({
+      content: _content
+    })
+  }
+
   //Renders all the elements of the Post
   render() {
     return (
@@ -341,9 +350,24 @@ export default class Post extends Component {
         {({ state, dispatch }) => (
           <React.Fragment>
             <div className="main">
-              <Button aria-label="create" startIcon={<CreatePostIcon />} style={{ fontFamily:"PT Mono", border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf" }} onClick={() => { this.createNewPost() }}>
-                Create New Post
-              </Button>
+              <Box style={{
+                marginRight: "1%",
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "flex-end"
+              }}>
+                <Button aria-label="create" startIcon={<CreatePostIcon />} style={{
+                  marginTop: "1%",
+                  position: "left",
+                  fontFamily: "PT Mono",
+                  border: "2px solid #4d4d4d",
+                  borderRadius: 15,
+                  backgroundColor: "#bfbfbf",
+                }}
+                  onClick={() => { this.createNewPost() }}>
+                  Create New Post
+                </Button>
+              </Box>
 
               {/* <Button variant="contained" onClick={() => { localStorage.setItem("posts", JSON.stringify([])) }}>
                 Clear the localStorage
@@ -357,7 +381,7 @@ export default class Post extends Component {
                 maxHeight: (window.innerHeight / 1.4) + 'px',
                 borderStyle: "solid",
                 borderWidth: "4px",
-                padding: "4px"
+                padding: "4px",
               }}>
                 <ViewportList viewportRef={this.ref} items={state.posts} itemMinSize={40} margin={8}>
                   {(item) => (
@@ -375,6 +399,7 @@ export default class Post extends Component {
                           maxHeight: window.innerHeight / 5,
                           overflowY: "auto",
                         }}>
+                          {/* {this.retrievePostInfo()} */}
                           To view the content of this post press "View"
                         </div>
                         <br />
