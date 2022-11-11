@@ -382,6 +382,7 @@ export default class Post extends Component {
                 borderStyle: "solid",
                 borderWidth: "4px",
                 padding: "4px",
+                backgroundColor: "rgba(0, 0, 0, 0.9)"
               }}>
                 <ViewportList viewportRef={this.ref} items={state.posts} itemMinSize={40} margin={8}>
                   {(item) => (
