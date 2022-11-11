@@ -56,7 +56,7 @@ export default class App extends Component {
             />
 
               <h1 style={{
-                fontSize: "250%"
+                fontSize: "250%",
               }}>Hanpicked Media
                 <img src={logo} width="50px" height="50px" />
               </h1>

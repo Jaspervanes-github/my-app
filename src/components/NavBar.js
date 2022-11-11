@@ -24,8 +24,13 @@ const styles = makeStyles({
         border: "solid",
         borderWidth: 1,
         borderRadius: 8,
-        minWidth: "auto",
+        minWidth: "100%",
+        justifyContent: "left",
+        fontFamily: "PT Mono",
+        fontWeight: "bold",
+        fontSize: "large",
         flexGrow: 1,
+        marginBottom: "3%",
         "&:hover": {
             background: '#262626'
         }

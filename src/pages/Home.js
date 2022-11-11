@@ -26,8 +26,11 @@ export default class Home extends Component {
         {({ state, dispatch }) => (
           < React.Fragment >
             {this.checkState(state)}
-            < div className="Home">
-              <Grid container spacing={1}>
+            <div className="Home">
+              <Grid container spacing={1} style={{
+                maxWidth: "1500px",
+                maxHeight: "1080px"
+              }}>
                 <Grid item xs={1} style={{
                   minWidth: "auto",
                   maxWidth: "20%",

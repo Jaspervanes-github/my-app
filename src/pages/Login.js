@@ -42,8 +42,8 @@ export default class Login extends Component {
                         flexDirection: "column",
                     }}>
                         <p style={{
-                            marginTop: "1%",
-                            marginBottom: "1%",
+                            marginTop: "2%",
+                            marginBottom: "2%",
                             marginLeft: "10%",
                             marginRight: "10%"
                         }}>
@@ -55,7 +55,7 @@ export default class Login extends Component {
                             Please click "Connect to MetaMask" to login to your cryptowallet account. Once connected you get navigated to the home page of the application.
                         </p>
                         <div className="container" >
-                            <Button variant='contained' style={{ margin: "5%" }} onClick=
+                            <Button variant='contained' style={{ marginTop: "3%", marginBottom: "3%", fontFamily: "PT Mono", fontWeight: "bold" }} onClick=
                                 {
                                     () => this.connectToMetamask(state, dispatch)
                                 }>

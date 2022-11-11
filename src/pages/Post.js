@@ -360,6 +360,7 @@ export default class Post extends Component {
                   marginTop: "1%",
                   position: "left",
                   fontFamily: "PT Mono",
+                  fontWeight: "bold",
                   border: "2px solid #4d4d4d",
                   borderRadius: 15,
                   backgroundColor: "#bfbfbf",
@@ -382,7 +383,8 @@ export default class Post extends Component {
                 borderStyle: "solid",
                 borderWidth: "4px",
                 padding: "4px",
-                backgroundColor: "rgba(0, 0, 0, 0.9)"
+                backgroundColor: "rgba(0, 0, 0, 0.9)",
+                
               }}>
                 <ViewportList viewportRef={this.ref} items={state.posts} itemMinSize={40} margin={8}>
                   {(item) => (
@@ -404,17 +406,19 @@ export default class Post extends Component {
                           To view the content of this post press "View"
                         </div>
                         <br />
-                        <div className="post-buttons">
-                          <IconButton aria-label="reshare" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf" }} onClick={() => { this.createResharePost(state, item) }}>
+                        <div className="post-buttons" style={{
+                        marginBottom: "2%"
+                        }}>
+                          <IconButton aria-label="reshare" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf", marginRight: "0.2em" }} onClick={() => { this.createResharePost(state, item) }}>
                             <ReshareIcon />
                           </IconButton>
-                          <IconButton aria-label="remix" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf" }} onClick={() => { this.createRemixPost(state, item) }}>
+                          <IconButton aria-label="remix" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf", marginRight: "0.2em" }} onClick={() => { this.createRemixPost(state, item) }}>
                             <RemixIcon />
                           </IconButton>
-                          <IconButton aria-label="view" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf" }} onClick={() => { this.viewPost(state, item) }}>
+                          <IconButton aria-label="view" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf", marginRight: "0.2em" }} onClick={() => { this.viewPost(state, item) }}>
                             <ViewIcon />
                           </IconButton>
-                          <IconButton aria-label="detail" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf" }} onClick={() => { }}>
+                          <IconButton aria-label="detail" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf", marginRight: "0.2em" }} onClick={() => { }}>
                             <DetailIcon />
                           </IconButton>
                         </div>
