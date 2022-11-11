@@ -10,53 +10,43 @@ import { useNavigate } from "react-router-dom";
 
 const styles = makeStyles({
     bar: {
-        background: "#212121"
+        color: "rgba(0, 0,0,0.87)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "flex-start"
     },
     menuItem: {
         background: '#666666',
         position: "center",
         color: "#FFFFFF",
         cursor: "pointer",
+        border: "solid",
+        borderWidth: 1,
+        borderRadius: 8,
+        minWidth: "auto",
         flexGrow: 1,
         "&:hover": {
             background: '#262626'
         }
-    }
+    },
 })
 
 function NavBar(props) {
     const classes = styles()
     const navigate = useNavigate();
     return (
-        <Toolbar position="sticky" color="rgba(0, 0,0,0.87)" className={classes.bar}>
-            <Button startIcon={<HomeIcon />} size="100%" className={classes.menuItem} onClick={() => { navigate("/home") }} style={{
-                border: "solid",
-                borderWidth: 1,
-                borderRadius: 8,
-            }}>
+        <Toolbar className={classes.bar}>
+            <Button startIcon={<HomeIcon />} size="100%" className={classes.menuItem} onClick={() => { navigate("/home") }}>
                 Home
             </Button>
-            <Button startIcon={<DiscoverIcon />} size="100%" className={classes.menuItem} onClick={() => { navigate("/discover") }} style={{
-                border: "solid",
-                borderWidth: 1,
-                borderRadius: 8,
-            }}>
+            <Button startIcon={<DiscoverIcon />} size="100%" className={classes.menuItem} onClick={() => { navigate("/discover") }}>
                 Discover
             </Button>
-            <Button startIcon={<NotificationsIcon />} size="100%" className={classes.menuItem} onClick={() => { navigate("/notifications") }} style={{
-                border: "solid",
-                borderWidth: 1,
-                borderRadius: 8,
-                minWidth: "auto"
-            }}>
+            <Button startIcon={<NotificationsIcon />} size="100%" className={classes.menuItem} onClick={() => { navigate("/notifications") }}>
                 Notifications
             </Button>
-            <Button startIcon={<LogoutIcon />} size="100%" className={classes.menuItem} onClick={() => { navigate("/"); window.location.reload(); }} style={{
-                border: "solid",
-                borderWidth: 1,
-                borderRadius: 8,
-                minWidth: "auto"
-            }}>
+            <Button startIcon={<LogoutIcon />} size="100%" className={classes.menuItem} onClick={() => { window.location.reload(); }}>
                 Logout
             </Button>
         </Toolbar>

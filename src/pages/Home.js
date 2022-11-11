@@ -29,21 +29,15 @@ export default class Home extends Component {
             < div className="Home">
               <Grid container spacing={1}>
                 <Grid item xs={1} style={{
-                  minWidth:"20%",
+                  minWidth: "auto",
                   maxWidth: "20%",
                   minHeight: "100%"
                 }}>
-                  <NavBar style={{
-                    marginLeft: "1000px",
-                    display: "flex",
-                  justifyContent: "space-around",
-                  alignItems: "flex-start",
-                  flex: 1
-                  }}/>
+                  <NavBar />
                 </Grid>
                 {/* <IPFS /> */}
                 <Grid item xs={1} style={{
-                  minWidth:"80%",
+                  minWidth: "80%",
                   maxWidth: "80%",
                   minHeight: "100%"
                 }}>

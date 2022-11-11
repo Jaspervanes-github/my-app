@@ -20,7 +20,8 @@ const NoPage = () => {
         {checkState(state)}
         <NavBar />
         <h1>Error 404: Page Not Found</h1>
-        <Footer />
+        <h3>Something went wrong...</h3>
+        {/* <Footer /> */}
       </React.Fragment>
     )
     }
