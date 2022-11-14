@@ -11,7 +11,7 @@ import { ContractFactory, ethers } from "ethers";
 import * as IPFS from 'ipfs-core';
 import { toast } from 'react-toastify';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
+import Chart from 'react-apexcharts';
 
 import Popup from "../components/Popup.js";
 import { DataConsumer } from '../DataContext';
@@ -41,6 +41,7 @@ export default class Post extends Component {
       triggerRemixPostPopup: false,
       triggerNewPostPopup: false,
       triggerViewPostPopup: false,
+      triggerDetailPostPopup: false,
 
       currentItem: '',
       id: 0,
@@ -52,7 +53,7 @@ export default class Post extends Component {
       content: '',
       payees: [],
       shares: [],
-      royaltyMultiplier: ''
+      royaltyMultiplier: '',
     }
 
     this.ref = React.createRef(null);
@@ -329,9 +330,83 @@ export default class Post extends Component {
     });
   }
 
+  async detailPost(state, item) {
+    this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
+
+    let contract = new ethers.Contract(item, Post_ABI, state.signer);
+    let _addressOfPoster = await contract.addressOfPoster();
+
+    let _id = await contract.id();
+    let _contractType = await contract.contractType();
+    let _contentType = await contract.contentType();
+    let _originalPostAddress = await contract.originalPost();
+    let _payees = await contract.getAllPayees();
+    let _shares = await contract.getAllShares();
+    let _royaltyMultiplier = await contract.royaltyMultiplier();
+    let _hashOfContent = await contract.hashOfContent();
+    let _content = await this.retrieveDataFromIPFS(_hashOfContent);
+
+    this.setState({
+      currentItem: item,
+      id: _id.toNumber(),
+      addressOfPoster: _addressOfPoster,
+      contractType: _contractType,
+      contentType: _contentType,
+      originalPostAddress: _originalPostAddress,
+      payees: _payees,
+      shares: _shares,
+      royaltyMultiplier: _royaltyMultiplier,
+      hashOfContent: _hashOfContent,
+      content: _content,
+      triggerDetailPostPopup: true
+    });
+  }
+
   resizeHeightOfElement(elem) {
     elem.target.style.height = '1px';
     elem.target.style.height = elem.target.scrollHeight + 'px';
+  }
+
+  contractTypeToString(contractType) {
+    switch (contractType) {
+      case 0:
+        return "ORIGINAL";
+      case 1:
+        return "RESHARE";
+      case 2:
+        return "REMIX";
+      default:
+        break;
+    }
+  }
+
+  contentTypeToString(contentType) {
+    switch (contentType) {
+      case 0:
+        return "TEXT";
+      case 1:
+        return "IMAGE";
+      default:
+        break;
+    }
+  }
+
+  createDataForChart(payees, shares) {
+    let amountOfOriginals = 0;
+    let amountOfReshares = 0;
+    let amountOfRemixes = 0;
+
+    for (let i = 0; i < payees.length; i++) {
+      if (shares[i].toNumber() == 5) {
+        amountOfOriginals += 5;
+      } else if (shares[i].toNumber() == 4) {
+        amountOfRemixes += 4;
+      } else if (shares[i].toNumber() == 2) {
+        amountOfReshares += 2;
+      }
+    }
+
+    return [amountOfOriginals, amountOfReshares, amountOfRemixes];
   }
 
   async retrievePostInfo(state, item) {
@@ -384,7 +459,7 @@ export default class Post extends Component {
                 borderWidth: "4px",
                 padding: "4px",
                 backgroundColor: "rgba(0, 0, 0, 0.9)",
-                
+
               }}>
                 <ViewportList viewportRef={this.ref} items={state.posts} itemMinSize={40} margin={8}>
                   {(item) => (
@@ -407,7 +482,7 @@ export default class Post extends Component {
                         </div>
                         <br />
                         <div className="post-buttons" style={{
-                        marginBottom: "2%"
+                          marginBottom: "2%"
                         }}>
                           <IconButton aria-label="reshare" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf", marginRight: "0.2em" }} onClick={() => { this.createResharePost(state, item) }}>
                             <ReshareIcon />
@@ -418,7 +493,7 @@ export default class Post extends Component {
                           <IconButton aria-label="view" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf", marginRight: "0.2em" }} onClick={() => { this.viewPost(state, item) }}>
                             <ViewIcon />
                           </IconButton>
-                          <IconButton aria-label="detail" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf", marginRight: "0.2em" }} onClick={() => { }}>
+                          <IconButton aria-label="detail" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf", marginRight: "0.2em" }} onClick={() => { this.detailPost(state, item) }}>
                             <DetailIcon />
                           </IconButton>
                         </div>
@@ -473,36 +548,6 @@ export default class Post extends Component {
                           )
                         }
                       })()}
-
-                      {/* <Pie data={{
-                        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                        datasets: [
-                          {
-                            label: '# of Votes',
-                            data: [12, 19, 3, 5, 2, 3],
-                            backgroundColor: [
-                              'rgba(255, 99, 132, 0.2)',
-                              'rgba(54, 162, 235, 0.2)',
-                              'rgba(255, 206, 86, 0.2)',
-                              'rgba(75, 192, 192, 0.2)',
-                              'rgba(153, 102, 255, 0.2)',
-                              'rgba(255, 159, 64, 0.2)',
-                            ],
-                            borderColor: [
-                              'rgba(255, 99, 132, 1)',
-                              'rgba(54, 162, 235, 1)',
-                              'rgba(255, 206, 86, 1)',
-                              'rgba(75, 192, 192, 1)',
-                              'rgba(153, 102, 255, 1)',
-                              'rgba(255, 159, 64, 1)',
-                            ],
-                            borderWidth: 1,
-                            maxWidth: "10px",
-                            maxHeight: "10px"
-                          },
-                        ],
-                      }} /> */}
-                      <br />
                     </label>
                     <input type="submit" value="Submit Post" />
                   </form>
@@ -667,6 +712,61 @@ export default class Post extends Component {
                   </div>
                 </Popup>
               </div>
+
+              <div className="detailTemplate">
+                <Popup trigger={this.state.triggerDetailPostPopup} setTrigger={() => {
+                  this.setState({
+                    triggerDetailPostPopup: false,
+                  });
+                }}>
+                  <h2>Details of the post:</h2>
+                  <div style={{
+                    maxHeight: window.innerHeight / 2,
+                    overflowY: "auto"
+                  }}>
+                    {/* Content of Post: */}
+                    <p style={{
+                      height: this.scrollHeight + 'px',
+                      maxHeight: window.innerHeight / 2,
+                      overflowY: "auto",
+                      justifyContent: "left",
+                      alignItems: "left",
+                      borderStyle: "solid",
+                      borderColor: "grey",
+                      borderWidth: '2px'
+                    }}>
+                      Link to the contract: https://sepolia.etherscan.io/address/{this.state.currentItem}<br />
+                      Wallet Address of Poster: {this.state.addressOfPoster}<br />
+                      Contract ID: {this.state.id}<br />
+                      Contract Type: {this.contractTypeToString(this.state.contractType)}<br />
+                      ContentType: {this.contentTypeToString(this.state.contentType)}<br />
+                      Original Creator: {this.state.originalPostAddress}<br />
+                      Hash of the content: {this.state.hashOfContent}<br />
+                    </p>
+                    <h3>
+                      Pie Chart of Royaltysplit:
+                    </h3>
+                    <Chart
+                      options={{
+                        labels: ["Original", "Reshare", "Remix"],
+                        colors: ["#bf1f13", "#1391bf", "#41b037"],
+                        legend: {
+                          fontSize: "20px",
+                          fontFamily: "PT Mono",
+                          fontWeight: 400,
+                          labels: {
+                            colors: ["#FFFFFF"]
+                          }
+                        }
+                      }}
+                      series={this.createDataForChart(this.state.payees, this.state.shares)}
+                      type="pie"
+                      width="500" />
+
+                  </div>
+                </Popup>
+              </div>
+
             </div>
           </React.Fragment >
         )
