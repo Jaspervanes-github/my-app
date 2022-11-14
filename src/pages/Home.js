@@ -34,7 +34,8 @@ export default class Home extends Component {
                 <Grid item xs={1} style={{
                   minWidth: "auto",
                   maxWidth: "20%",
-                  minHeight: "100%"
+                  minHeight: "100%",
+                  marginTop: "5%"
                 }}>
                   <NavBar />
                 </Grid>
