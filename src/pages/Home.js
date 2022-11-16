@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Navigate } from 'react-router-dom';
+import "../styles/Home.css";
 import Footer from '../components/Footer';
 import NavBar from '../components/NavBar';
 import IPFS from '../IPFS.js';
@@ -27,11 +28,11 @@ export default class Home extends Component {
           < React.Fragment >
             {this.checkState(state)}
             <div className="Home">
-              <Grid container spacing={1} style={{
+              <Grid container className="grid-container" spacing={1} style={{
                 maxWidth: "1500px",
                 maxHeight: "1080px"
               }}>
-                <Grid item xs={1} style={{
+                <Grid item  className="grid-item" xs={1} style={{
                   minWidth: "auto",
                   maxWidth: "20%",
                   minHeight: "100%",
@@ -40,7 +41,7 @@ export default class Home extends Component {
                   <NavBar />
                 </Grid>
                 {/* <IPFS /> */}
-                <Grid item xs={1} style={{
+                <Grid item className="grid-item" xs={1} style={{
                   minWidth: "80%",
                   maxWidth: "80%",
                   minHeight: "100%"
