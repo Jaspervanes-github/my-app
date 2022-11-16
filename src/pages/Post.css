@@ -12,6 +12,7 @@
 
 .main .button-container .create {
     margin-top: 1%;
+    margin-right: 2%;
     position: left;
     font-family: PT Mono;
     font-weight: bold;
@@ -33,19 +34,29 @@
 }
 
 .main .scroll-container .post {
+    padding: 2%;
     border-style: groove;
     max-width: 100%;
     max-height: 33%;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
 }
 
 .main .scroll-container .post .container {
     max-width: 100%;
     max-height: 20%;
-    overflow-y: auto;
+    overflow-y: auto;    
+    max-width: 75%;
+    font-style: italic;
 }
 
 .main .scroll-container .post .post-buttons {
-    margin-bottom: 2%;
+    margin-left: 4%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+
 }
 
 .main .scroll-container .post .post-buttons .button {

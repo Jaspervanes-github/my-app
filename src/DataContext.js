@@ -53,7 +53,7 @@ function dataReducer(state, action) {
       // console.log("In addPost: " + action.value.toString());
       let currentPostList = state.posts;
       if (!currentPostList.includes(action.value)) {
-        currentPostList.push(action.value);
+        currentPostList.unshift(action.value);
         localStorage.setItem("posts", JSON.stringify(currentPostList));
         return {
           provider: state.provider,

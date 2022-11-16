@@ -443,12 +443,16 @@ export default class Post extends Component {
                   {(item) => (
                     <React.Fragment key={state.posts.indexOf(item)}>
                       <div className="post">
-                        <h3>
+                        
+                        <div className="container">
+                          <h3>
                           Address of Contract: {item}
                         </h3>
-                        <div className="container">
                           {/* {this.retrievePostInfo()} */}
-                          To view the content of this post press "View"
+                          {/* To view the content of this post press "View" */}
+                          The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for quick jigs vex! Fox nymph...
+                          <br /><br /><br />
+                          <u>To view the full post click the "View" icon!</u>
                         </div>
                         <br />
                         <div className="post-buttons">
@@ -678,7 +682,7 @@ export default class Post extends Component {
                         Contract ID:<br />
                         Contract Type:<br />
                         ContentType:<br />
-                        Original Creator:<br />
+                        Original Post:<br />
                         Hash of the content:<br />
                       </p>
                       <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2 }}>
