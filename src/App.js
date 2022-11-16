@@ -55,11 +55,10 @@ export default class App extends Component {
               theme="dark"
             />
 
-              <h1 style={{
-                fontSize: "250%",
-              }}>Handpicked Media
-                <img src={logo} width="50px" height="50px" />
-              </h1>
+            <h1>
+              Handpicked Media
+              <img src={logo} width="50px" height="50px" />
+            </h1>
 
             <Routes>
               <Route exact path="/" element={<Login />} />

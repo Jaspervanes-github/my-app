@@ -5,6 +5,10 @@
   font-family: 'PT Mono';
 }
 
+.App h1 {
+  font-size: 250%;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

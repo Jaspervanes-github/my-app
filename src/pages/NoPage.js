@@ -1,6 +1,7 @@
 import React from "react";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
+import "./NoPage.css";
 import { DataConsumer } from '../DataContext';
 import { Navigate } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
@@ -19,27 +20,18 @@ const NoPage = () => {
       {({ state, dispatch }) => (
         <React.Fragment>
           {checkState(state)}
-          <Grid container spacing={1} style={{
-            maxWidth: "1500px",
-            maxHeight: "1080px"
-          }}>
-            <Grid item xs={1} style={{
-              minWidth: "auto",
-              maxWidth: "20%",
-              minHeight: "100%"
-            }}>
-              <NavBar />
+          <div className="NoPage">
+            <Grid container className="grid-container" spacing={1}>
+              <Grid item className="grid-navbar" xs={1}>
+                <NavBar />
+              </Grid>
+              <Grid item className="grid-text" xs={1}>
+                <h1>Error 404: Page Not Found</h1>
+                <h3>Something went wrong...</h3>
+                {/* <Footer /> */}
+              </Grid>
             </Grid>
-            <Grid item xs={1} style={{
-              minWidth: "80%",
-              maxWidth: "80%",
-              minHeight: "100%"
-            }}>
-              <h1>Error 404: Page Not Found</h1>
-              <h3>Something went wrong...</h3>
-              {/* <Footer /> */}
-            </Grid>
-          </Grid>
+          </div>
         </React.Fragment>
       )
       }

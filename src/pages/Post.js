@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import Chart from 'react-apexcharts';
 
+import "./Post.css";
 import Popup from "../components/Popup.js";
 import { DataConsumer } from '../DataContext';
 import Post_ABI from "../Post_ABI.json";
@@ -425,21 +426,8 @@ export default class Post extends Component {
         {({ state, dispatch }) => (
           <React.Fragment>
             <div className="main">
-              <Box style={{
-                marginRight: "1%",
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "flex-end"
-              }}>
-                <Button aria-label="create" startIcon={<CreatePostIcon />} style={{
-                  marginTop: "1%",
-                  position: "left",
-                  fontFamily: "PT Mono",
-                  fontWeight: "bold",
-                  border: "2px solid #4d4d4d",
-                  borderRadius: 15,
-                  backgroundColor: "#bfbfbf",
-                }}
+              <Box className="button-container">
+                <Button className="create" startIcon={<CreatePostIcon />}
                   onClick={() => { this.createNewPost() }}>
                   Create New Post
                 </Button>
@@ -449,51 +437,31 @@ export default class Post extends Component {
                 Clear the localStorage
               </Button> */}
               <div className="scroll-container" ref={this.ref} style={{
-                marginLeft: "3%",
-                marginRight: "3%",
-                marginTop: "1%",
-                marginBottom: "1%",
-                overflowY: "auto",
-                maxHeight: (window.innerHeight / 1.4) + 'px',
-                borderStyle: "solid",
-                borderWidth: "4px",
-                padding: "4px",
-                backgroundColor: "rgba(0, 0, 0, 0.9)",
-
+                maxHeight: (window.innerHeight / 1.4) + 'px'
               }}>
                 <ViewportList viewportRef={this.ref} items={state.posts} itemMinSize={40} margin={8}>
                   {(item) => (
                     <React.Fragment key={state.posts.indexOf(item)}>
-                      <div className="post" style={{
-                        borderStyle: "groove",
-                        maxWidth: window.innerWidth / 1,
-                        maxHeight: window.innerHeight / 3,
-                      }}>
+                      <div className="post">
                         <h3>
                           Address of Contract: {item}
                         </h3>
-                        <div style={{
-                          maxWidth: window.innerWidth / 1,
-                          maxHeight: window.innerHeight / 5,
-                          overflowY: "auto",
-                        }}>
+                        <div className="container">
                           {/* {this.retrievePostInfo()} */}
                           To view the content of this post press "View"
                         </div>
                         <br />
-                        <div className="post-buttons" style={{
-                          marginBottom: "2%"
-                        }}>
-                          <IconButton aria-label="reshare" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf", marginRight: "0.2em" }} onClick={() => { this.createResharePost(state, item) }}>
+                        <div className="post-buttons">
+                          <IconButton className="button" onClick={() => { this.createResharePost(state, item) }}>
                             <ReshareIcon />
                           </IconButton>
-                          <IconButton aria-label="remix" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf", marginRight: "0.2em" }} onClick={() => { this.createRemixPost(state, item) }}>
+                          <IconButton className="button" onClick={() => { this.createRemixPost(state, item) }}>
                             <RemixIcon />
                           </IconButton>
-                          <IconButton aria-label="view" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf", marginRight: "0.2em" }} onClick={() => { this.viewPost(state, item) }}>
+                          <IconButton className="button" onClick={() => { this.viewPost(state, item) }}>
                             <ViewIcon />
                           </IconButton>
-                          <IconButton aria-label="detail" style={{ border: "2px solid #4d4d4d", borderRadius: 15, backgroundColor: "#bfbfbf", marginRight: "0.2em" }} onClick={() => { this.detailPost(state, item) }}>
+                          <IconButton className="button" onClick={() => { this.detailPost(state, item) }}>
                             <DetailIcon />
                           </IconButton>
                         </div>
@@ -528,13 +496,9 @@ export default class Post extends Component {
                         //if contentType is TEXT
                         if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
                           return (
-                            <p style={{
+                            <p className="textbox" style={{
                               height: this.scrollHeight + 'px',
                               maxHeight: window.innerHeight / 2,
-                              overflowY: "auto",
-                              borderStyle: "solid",
-                              borderColor: "grey",
-                              borderWidth: '2px'
                             }}>
                               {this.state.content}
                             </p>
@@ -585,13 +549,9 @@ export default class Post extends Component {
                         //if contentType is TEXT
                         if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
                           return (
-                            <textarea name="content" rows="1" style={{
-                              width: '100%',
-                              minWidth: '100%',
-                              maxWidth: '100%',
+                            <textarea className="textarea" name="content" rows="1" style={{
                               height: this.scrollHeight + 'px',
-                              maxHeight: window.innerHeight / 2,
-                              resize: "none"
+                              maxHeight: window.innerHeight / 2
                             }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
                               {this.state.content}
                             </textarea>
@@ -644,13 +604,9 @@ export default class Post extends Component {
                         //if contentType is TEXT
                         if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
                           return (
-                            <textarea name="content" rows="1" style={{
-                              width: '100%',
-                              minWidth: '100%',
-                              maxWidth: '100%',
+                            <textarea className="textarea" name="content" rows="1" style={{
                               height: this.scrollHeight + 'px',
-                              maxHeight: window.innerHeight / 2,
-                              resize: "none"
+                              maxHeight: window.innerHeight / 2
                             }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
                               {this.state.content}
                             </textarea>
@@ -680,22 +636,15 @@ export default class Post extends Component {
                   <h3>
                     {this.state.addressOfPoster} - {this.state.id}
                   </h3>
-                  <div style={{
-                    maxHeight: window.innerHeight / 2,
-                    overflowY: "auto"
-                  }}>
+                  <div className="container">
                     Content of Post:
                     {(() => {
                       //if contentType is TEXT
                       if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
                         return (
-                          <p style={{
+                          <p className="textbox" style={{
                             height: this.scrollHeight + 'px',
-                            maxHeight: window.innerHeight / 2,
-                            overflowY: "auto",
-                            borderStyle: "solid",
-                            borderColor: "grey",
-                            borderWidth: '2px'
+                            maxHeight: window.innerHeight / 2
                           }}>
                             {this.state.content}
                           </p>
@@ -720,20 +669,11 @@ export default class Post extends Component {
                   });
                 }}>
                   <h2>Details of the post:</h2>
-                  <div style={{
-                    maxHeight: window.innerHeight / 2,
-                    overflowY: "auto"
-                  }}>
+                  <div className="container">
                     {/* Content of Post: */}
-                    <p style={{
+                    <p className="textbox" style={{
                       height: this.scrollHeight + 'px',
-                      maxHeight: window.innerHeight / 2,
-                      overflowY: "auto",
-                      justifyContent: "left",
-                      alignItems: "left",
-                      borderStyle: "solid",
-                      borderColor: "grey",
-                      borderWidth: '2px'
+                      maxHeight: window.innerHeight / 2
                     }}>
                       Link to the contract: https://sepolia.etherscan.io/address/{this.state.currentItem}<br />
                       Wallet Address of Poster: {this.state.addressOfPoster}<br />

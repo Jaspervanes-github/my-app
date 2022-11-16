@@ -1,0 +1,16 @@
+.NoPage .grid-container {
+    max-width: 1500px;
+    max-height: 1080px;
+}
+
+.NoPage .grid-navbar {
+    min-width: auto;
+    max-width: 20%;
+    min-height: 100%;
+}
+
+.NoPage .grid-text {
+    min-width: 80%;
+    max-width: 80%;
+    min-height: 100%;
+}

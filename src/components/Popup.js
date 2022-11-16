@@ -1,5 +1,5 @@
 import React from 'react';
-import "../styles/Popup.css";
+import "./Popup.css";   
 import { Button } from "@material-ui/core";
 
 

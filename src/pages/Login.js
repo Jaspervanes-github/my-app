@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { ethers } from "ethers";
-import { DataConsumer } from '../DataContext'
+import { DataConsumer } from '../DataContext';
+import "./Login.css";
 
 
 export default class Login extends Component {
@@ -37,16 +38,8 @@ export default class Login extends Component {
         if (!state.selectedAccount) {
             return (
                 <React.Fragment>
-                    <div className="main" style={{
-                        display: 'flex',
-                        flexDirection: "column",
-                    }}>
-                        <p style={{
-                            marginTop: "2%",
-                            marginBottom: "2%",
-                            marginLeft: "10%",
-                            marginRight: "10%"
-                        }}>
+                    <div className="main">
+                        <p className="textbox">
                             Welcome to the Handpicked Media application.
                             This application is created by Jasper van Es during an internship in 2022-2023.
                             This application simulates the workings of a social media platform in combination with the blockchain.
@@ -55,7 +48,7 @@ export default class Login extends Component {
                             Please click "Connect to MetaMask" to login to your cryptowallet account. Once connected you get navigated to the home page of the application.
                         </p>
                         <div className="container" >
-                            <Button variant='contained' style={{ marginTop: "3%", marginBottom: "3%", fontFamily: "PT Mono", fontWeight: "bold" }} onClick=
+                            <Button className="button" variant='contained' onClick=
                                 {
                                     () => this.connectToMetamask(state, dispatch)
                                 }>

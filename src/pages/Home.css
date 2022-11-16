@@ -1,0 +1,17 @@
+.Home .grid-container {
+    max-width: 1500px;
+    max-height: 1080px;
+}
+
+.Home .grid-navbar {
+    min-width: auto;
+    max-width: 20%;
+    min-height: 100%;
+    margin-top: 5%;
+}
+
+.Home .grid-post {
+    min-width: 80%;
+    max-width: 80%;
+    min-height: 100%;
+}
