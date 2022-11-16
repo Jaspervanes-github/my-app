@@ -15,7 +15,8 @@
     position: relative;
     padding: 32px;
     width: 100%;
-    max-width: 640px;
+    max-width: 45%;
+    max-height: 69%;
     background-color: #333333;
 }
 

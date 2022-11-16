@@ -621,6 +621,7 @@ export default class Post extends Component {
                         }
                       })()}
                     </label>
+                    <br />
                     <input type="submit" value="Submit Post" />
                   </form>
                 </Popup>
@@ -668,21 +669,30 @@ export default class Post extends Component {
                     triggerDetailPostPopup: false,
                   });
                 }}>
-                  <h2>Details of the post:</h2>
+                  <h2>Details of the post</h2>
                   <div className="container">
-                    {/* Content of Post: */}
-                    <p className="textbox" style={{
-                      height: this.scrollHeight + 'px',
-                      maxHeight: window.innerHeight / 2
-                    }}>
-                      Link to the contract: https://sepolia.etherscan.io/address/{this.state.currentItem}<br />
-                      Wallet Address of Poster: {this.state.addressOfPoster}<br />
-                      Contract ID: {this.state.id}<br />
-                      Contract Type: {this.contractTypeToString(this.state.contractType)}<br />
-                      ContentType: {this.contentTypeToString(this.state.contentType)}<br />
-                      Original Creator: {this.state.originalPostAddress}<br />
-                      Hash of the content: {this.state.hashOfContent}<br />
-                    </p>
+                    <div className="textbox-container">
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2, fontWeight: "bold", width: "35%" }}>
+                        Link to the contract:<br />
+                        Wallet Address of Poster:<br />
+                        Contract ID:<br />
+                        Contract Type:<br />
+                        ContentType:<br />
+                        Original Creator:<br />
+                        Hash of the content:<br />
+                      </p>
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2 }}>
+                        <a href={"https://sepolia.etherscan.io/address/" + this.state.currentItem} target="_blank">Click here to visit etherscan!</a><br />
+                        {this.state.addressOfPoster}<br />
+                        {this.state.id}<br />
+                        {this.contractTypeToString(this.state.contractType)}<br />
+                        {this.contentTypeToString(this.state.contentType)}<br />
+                        {this.state.originalPostAddress}<br />
+                        {this.state.hashOfContent}<br />
+                      </p>
+                    </div>
+
+                    <br />
                     <h3>
                       Pie Chart of Royaltysplit:
                     </h3>
@@ -701,8 +711,8 @@ export default class Post extends Component {
                       }}
                       series={this.createDataForChart(this.state.payees, this.state.shares)}
                       type="pie"
-                      width="500" />
-
+                      width="500"
+                    />
                   </div>
                 </Popup>
               </div>
