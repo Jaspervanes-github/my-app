@@ -491,32 +491,39 @@ export default class Post extends Component {
                     this.handleSubmit(event, state, dispatch, ContractType.RESHARE);
                     this.setState({ triggerResharePostPopup: false });
                   }}>
-                    <label>
-                      Address of Poster:
-                      <p>{state.selectedAccount}</p>
-                      <br />
-                      Content of Post:
-                      {(() => {
-                        //if contentType is TEXT
-                        if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
-                          return (
-                            <p className="textbox" style={{
-                              height: this.scrollHeight + 'px',
-                              maxHeight: window.innerHeight / 2,
-                            }}>
-                              {this.state.content}
-                            </p>
-                          )
-                        }
-                        //if contentType is IMAGE
-                        else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
-                          return (
-                            // render Image selection component here
-                            <div></div>
-                          )
-                        }
-                      })()}
-                    </label>
+                    <div className="textbox-container">
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2, fontWeight: "bold" }}>
+                        Address of Poster:<br /><br />
+                        Content Type:<br /><br />
+                        Content of Post:
+                      </p>
+
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2 }}>
+                        {state.selectedAccount} <br /><br />
+                        {this.contentTypeToString(this.state.contentType)}<br /><br />
+                        {(() => {
+                          //if contentType is TEXT
+                          if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                            return (
+                              <p className="textbox" style={{
+                                height: this.scrollHeight + 'px',
+                                maxHeight: window.innerHeight / 2,
+                              }}>
+                                {this.state.content}
+                              </p>
+                            )
+                          }
+                          //if contentType is IMAGE
+                          else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                            return (
+                              // render Image selection component here
+                              <div>
+                              </div>
+                            )
+                          }
+                        })()}
+                      </p>
+                    </div>
                     <input type="submit" value="Submit Post" />
                   </form>
                 </Popup>
