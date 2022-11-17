@@ -81,11 +81,42 @@
     resize: none;
 }
 
+.main .newPostTemplate h2 {
+    font-style: italic;
+}
+
+.main .newPostTemplate .textbox-container {
+    overflow-y: auto;
+    border-style: solid;
+    border-color: grey;
+    border-width: 2px;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-right: 5px;
+    padding: 5px;
+}
+
+.main .newPostTemplate .textbox-container .textbox {
+    margin: 0px;
+    margin-right: 2%;
+}
+
 .main .newPostTemplate .textarea {
     width: 100%;
     min-width: 100%;
     max-width: 100%;
     resize: none;
+}
+
+.main .newPostTemplate input {
+    margin-top: 2%;
+}
+
+.main .viewPostTemplate h2 {
+    font-style: italic;
 }
 
 .main .viewPostTemplate .container {

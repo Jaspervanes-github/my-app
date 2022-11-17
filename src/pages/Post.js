@@ -443,11 +443,11 @@ export default class Post extends Component {
                   {(item) => (
                     <React.Fragment key={state.posts.indexOf(item)}>
                       <div className="post">
-                        
+
                         <div className="container">
                           <h3>
-                          Address of Contract: {item}
-                        </h3>
+                            Address of Contract: {item}
+                          </h3>
                           {/* {this.retrievePostInfo()} */}
                           {/* To view the content of this post press "View" */}
                           The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for quick jigs vex! Fox nymph...
@@ -553,7 +553,7 @@ export default class Post extends Component {
                         //if contentType is TEXT
                         if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
                           return (
-                            <textarea className="textarea" name="content" rows="1" style={{
+                            <textarea className="textarea" name="content" rows="1" placeholder="Type text here..." style={{
                               height: this.scrollHeight + 'px',
                               maxHeight: window.innerHeight / 2
                             }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
@@ -593,39 +593,43 @@ export default class Post extends Component {
                     this.handleSubmit(event, state, dispatch, ContractType.ORIGINAL);
                     this.setState({ triggerNewPostPopup: false });
                   }}>
-                    <label>
-                      Address of Poster:
-                      <p>{state.selectedAccount}</p>
-                      <br />
-                      Content Type:
-                      <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
-                        <option value="0">TEXT</option>
-                        <option value="1">IMAGE</option>
-                      </select>
-                      <br />
-                      Content of Post:
-                      {(() => {
-                        //if contentType is TEXT
-                        if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
-                          return (
-                            <textarea className="textarea" name="content" rows="1" style={{
-                              height: this.scrollHeight + 'px',
-                              maxHeight: window.innerHeight / 2
-                            }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
-                              {this.state.content}
-                            </textarea>
-                          )
-                        }
-                        //if contentType is IMAGE
-                        else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
-                          return (
-                            // render Image selection component here
-                            <div></div>
-                          )
-                        }
-                      })()}
-                    </label>
-                    <br />
+                    <div className="textbox-container">
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2, fontWeight: "bold" }}>
+                        Address of Poster:<br /><br />
+                        Content Type:<br /><br />
+                        Content of Post:<br /><br />
+                      </p>
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2 }}>
+                        {state.selectedAccount}<br /><br />
+
+                        <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
+                          <option value="0">TEXT</option>
+                          <option value="1">IMAGE</option>
+                        </select><br /><br />
+
+                        {(() => {
+                          //if contentType is TEXT
+                          if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                            return (
+                              <textarea className="textarea" name="content" rows="1" placeholder="Type text here..." style={{
+                                height: this.scrollHeight + 'px',
+                                maxHeight: window.innerHeight / 2
+                              }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
+                                {this.state.content}
+                              </textarea>
+                            )
+                          }
+                          //if contentType is IMAGE
+                          else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                            return (
+                              // render Image selection component here
+                              <div></div>
+                            )
+                          }
+                        })()}
+                        <br /><br />
+                      </p>
+                    </div>
                     <input type="submit" value="Submit Post" />
                   </form>
                 </Popup>

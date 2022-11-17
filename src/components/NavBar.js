@@ -13,16 +13,16 @@ function NavBar(props) {
     return (
         <div className="navbar">
         <Toolbar className="bar">
-            <Button startIcon={<HomeIcon />} size="100%" className="menuItem" onClick={() => { navigate("/home") }}>
+            <Button startIcon={<HomeIcon />} size="large" className="menuItem" onClick={() => { navigate("/home") }}>
                 Home
             </Button>
-            <Button startIcon={<DiscoverIcon />} size="100%" className="menuItem" onClick={() => { navigate("/discover") }}>
+            <Button startIcon={<DiscoverIcon />} size="large" className="menuItem" onClick={() => { navigate("/discover") }}>
                 Discover
             </Button>
-            <Button startIcon={<NotificationsIcon />} size="100%" className="menuItem" onClick={() => { navigate("/notifications") }}>
+            <Button startIcon={<NotificationsIcon />} size="large" className="menuItem" onClick={() => { navigate("/notifications") }}>
                 Notifications
             </Button>
-            <Button startIcon={<LogoutIcon />} size="100%" className="menuItem" onClick={() => { window.location.reload(); }}>
+            <Button startIcon={<LogoutIcon />} size="large" className="menuItem" onClick={() => { window.location.reload(); }}>
                 Logout
             </Button>
         </Toolbar>
