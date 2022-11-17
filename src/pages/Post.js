@@ -39,7 +39,7 @@ export default class Post extends Component {
 
     this.state = {
       triggerResharePostPopup: false,
-      triggerRemixPostPopup: true,
+      triggerRemixPostPopup: false,
       triggerNewPostPopup: false,
       triggerViewPostPopup: false,
       triggerDetailPostPopup: false,
@@ -492,13 +492,13 @@ export default class Post extends Component {
                     this.setState({ triggerResharePostPopup: false });
                   }}>
                     <div className="textbox-container">
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2, fontWeight: "bold" }}>
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold" }}>
                         Address of Poster:<br /><br />
                         Content Type:<br /><br />
                         Content of Post:
                       </p>
 
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2 }}>
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20 }}>
                         {state.selectedAccount} <br /><br />
                         {this.contentTypeToString(this.state.contentType)}<br /><br />
                         {(() => {
@@ -546,12 +546,12 @@ export default class Post extends Component {
                     this.setState({ triggerRemixPostPopup: false });
                   }}>
                     <div className="textbox-container">
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2, fontWeight: "bold" }}>
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold" }}>
                         Address of Poster:<br /><br />
                         Content Type:<br /><br />
                         Content of Post:
                       </p>
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2 }}>
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20 }}>
                         {state.selectedAccount}<br /><br />
                         <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
                           <option value="0">TEXT</option>
@@ -601,12 +601,12 @@ export default class Post extends Component {
                     this.setState({ triggerNewPostPopup: false });
                   }}>
                     <div className="textbox-container">
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2, fontWeight: "bold" }}>
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold" }}>
                         Address of Poster:<br /><br />
                         Content Type:<br /><br />
                         Content of Post:<br /><br />
                       </p>
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2 }}>
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20 }}>
                         {state.selectedAccount}<br /><br />
 
                         <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
@@ -649,31 +649,38 @@ export default class Post extends Component {
                   });
                 }}>
                   <h2>View Post</h2>
-                  <h3>
-                    {this.state.addressOfPoster} - {this.state.id}
-                  </h3>
-                  <div className="container">
-                    Content of Post:
-                    {(() => {
-                      //if contentType is TEXT
-                      if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
-                        return (
-                          <p className="textbox" style={{
-                            height: this.scrollHeight + 'px',
-                            maxHeight: window.innerHeight / 2
-                          }}>
-                            {this.state.content}
-                          </p>
-                        )
-                      }
-                      //if contentType is IMAGE
-                      else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
-                        return (
-                          // render Image selection component here
-                          <div></div>
-                        )
-                      }
-                    })()}
+                  <div className="textbox-container">
+                    <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold" }}>
+                      Address of Poster:<br /><br />
+                      Contract ID:<br /><br />
+                      Content of Post:
+
+                    </p>
+                    <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20 }}>
+                      {this.state.addressOfPoster}<br /><br />
+                      {this.state.id}<br /><br />
+                      {(() => {
+                        //if contentType is TEXT
+                        if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                          return (
+                            <p className="textbox" style={{
+                              height: this.scrollHeight + 'px',
+                              maxHeight: window.innerHeight / 2
+                            }}>
+                              {this.state.content}
+                            </p>
+                          )
+                        }
+                        //if contentType is IMAGE
+                        else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                          return (
+                            // render Image selection component here
+                            <div></div>
+                          )
+                        }
+                      })()}
+                    </p>
+
                   </div>
                 </Popup>
               </div>
@@ -687,7 +694,7 @@ export default class Post extends Component {
                   <h2>Details of the post</h2>
                   <div className="container">
                     <div className="textbox-container">
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2, fontWeight: "bold", width: "35%" }}>
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold", width: "35%" }}>
                         Link to the contract:<br />
                         Wallet Address of Poster:<br />
                         Contract ID:<br />
@@ -696,7 +703,7 @@ export default class Post extends Component {
                         Original Post:<br />
                         Hash of the content:<br />
                       </p>
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2 }}>
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20 }}>
                         <a href={"https://sepolia.etherscan.io/address/" + this.state.currentItem} target="_blank">Click here to visit etherscan!</a><br />
                         {this.state.addressOfPoster}<br />
                         {this.state.id}<br />
