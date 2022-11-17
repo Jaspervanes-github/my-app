@@ -39,7 +39,7 @@ export default class Post extends Component {
 
     this.state = {
       triggerResharePostPopup: false,
-      triggerRemixPostPopup: false,
+      triggerRemixPostPopup: true,
       triggerNewPostPopup: false,
       triggerViewPostPopup: false,
       triggerDetailPostPopup: false,
@@ -545,40 +545,40 @@ export default class Post extends Component {
                     this.handleSubmit(event, state, dispatch, ContractType.REMIX);
                     this.setState({ triggerRemixPostPopup: false });
                   }}>
-                    <label>
-                      Address of Poster:
-                      <p>{state.selectedAccount}</p>
-                      <br />
-                      Content Type:
-                      <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
-                        <option value="0">TEXT</option>
-                        <option value="1">IMAGE</option>
-                      </select>
-                      <br />
-                      Content of Post:
-                      {(() => {
-                        //if contentType is TEXT
-                        if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
-                          return (
-                            <textarea className="textarea" name="content" rows="1" placeholder="Type text here..." style={{
-                              height: this.scrollHeight + 'px',
-                              maxHeight: window.innerHeight / 2
-                            }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
-                              {this.state.content}
-                            </textarea>
-                          )
-                        }
-                        //if contentType is IMAGE
-                        else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
-                          return (
-                            // render Image selection component here
-                            <div></div>
-                          )
-                        }
-                      })()}
-
-                      <br />
-                    </label>
+                    <div className="textbox-container">
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2, fontWeight: "bold" }}>
+                        Address of Poster:<br /><br />
+                        Content Type:<br /><br />
+                        Content of Post:
+                      </p>
+                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: window.innerHeight / 2 }}>
+                        {state.selectedAccount}<br /><br />
+                        <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
+                          <option value="0">TEXT</option>
+                          <option value="1">IMAGE</option>
+                        </select><br /><br />
+                        {(() => {
+                          //if contentType is TEXT
+                          if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                            return (
+                              <textarea className="textarea" name="content" rows="1" placeholder="Type text here..." style={{
+                                height: this.scrollHeight + 'px',
+                                maxHeight: window.innerHeight / 2
+                              }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
+                                {this.state.content}
+                              </textarea>
+                            )
+                          }
+                          //if contentType is IMAGE
+                          else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                            return (
+                              // render Image selection component here
+                              <div></div>
+                            )
+                          }
+                        })()}
+                      </p>
+                    </div>
                     <input type="submit" value="Submit Post" />
                   </form>
                 </Popup>
