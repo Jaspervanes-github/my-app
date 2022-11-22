@@ -23,6 +23,7 @@ export default class Login extends Component {
         dispatch({ type: 'setSigner', value: signer });
         dispatch({ type: 'setSelectedAccount', value: accounts[0] });
         dispatch({ type: 'setPosts', value: JSON.parse(localStorage.getItem("posts")) });
+        dispatch({ type: 'setPostData', value: JSON.parse(localStorage.getItem("postData")) });
 
         provider.provider.on('accountsChanged', function () {
             window.location.reload();

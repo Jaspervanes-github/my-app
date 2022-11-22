@@ -11,7 +11,9 @@ function dataReducer(state, action) {
         signer: state.signer,
         accounts: state.accounts,
         selectedAccount: state.selectedAccount,
-        posts: state.posts
+        posts: state.posts,
+        postData: state.postData
+
       }
     } case 'setAccounts': {
       // console.log("In setAccounts");
@@ -20,7 +22,8 @@ function dataReducer(state, action) {
         signer: state.signer,
         accounts: action.value,
         selectedAccount: state.selectedAccount,
-        posts: state.posts
+        posts: state.posts,
+        postData: state.postData
       }
     } case 'setSigner': {
       // console.log("In setSigner");
@@ -29,7 +32,8 @@ function dataReducer(state, action) {
         signer: action.value,
         accounts: state.accounts,
         selectedAccount: state.selectedAccount,
-        posts: state.posts
+        posts: state.posts,
+        postData: state.postData
       }
     } case 'setSelectedAccount': {
       // console.log("In setSelectedAccount");
@@ -38,7 +42,8 @@ function dataReducer(state, action) {
         signer: state.signer,
         accounts: state.accounts,
         selectedAccount: action.value,
-        posts: state.posts
+        posts: state.posts,
+        postData: state.postData
       }
     } case 'setPosts': {
       // console.log("In setPosts: " + action.value);
@@ -47,7 +52,8 @@ function dataReducer(state, action) {
         signer: state.signer,
         accounts: state.accounts,
         selectedAccount: state.selectedAccount,
-        posts: action.value
+        posts: action.value,
+        postData: state.postData
       }
     } case 'addPost': {
       // console.log("In addPost: " + action.value.toString());
@@ -60,15 +66,53 @@ function dataReducer(state, action) {
           signer: state.signer,
           accounts: state.accounts,
           selectedAccount: state.selectedAccount,
-          posts: currentPostList
+          posts: currentPostList,
+          postData: state.postData
         }
-      } else{
-        return{
+      } else {
+        return {
           provider: state.provider,
           signer: state.signer,
           accounts: state.accounts,
           selectedAccount: state.selectedAccount,
-          posts: state.posts
+          posts: state.posts,
+          postData: state.postData
+        }
+      }
+    }
+    case 'setPostData': {
+      // console.log("In setPostData: " + action.value);
+      return {
+        provider: state.provider,
+        signer: state.signer,
+        accounts: state.accounts,
+        selectedAccount: state.selectedAccount,
+        posts: state.posts,
+        postData: action.value
+      }
+    }
+    case 'addPostData': {
+      // console.log("In addPostData: " + action.value);
+      let currentPostDataList = state.postData;
+      if (!currentPostDataList.includes(action.value)) {
+        currentPostDataList.unshift(action.value);
+        localStorage.setItem("postData", JSON.stringify(currentPostDataList));
+        return {
+          provider: state.provider,
+          signer: state.signer,
+          accounts: state.accounts,
+          selectedAccount: state.selectedAccount,
+          posts: state.posts,
+          postData: currentPostDataList
+        }
+      } else {
+        return {
+          provider: state.provider,
+          signer: state.signer,
+          accounts: state.accounts,
+          selectedAccount: state.selectedAccount,
+          posts: state.posts,
+          postData: state.postData
         }
       }
     }

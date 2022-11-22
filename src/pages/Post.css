@@ -37,7 +37,7 @@
     padding: 2%;
     border-style: groove;
     max-width: 100%;
-    max-height: 33%;
+    /* max-height: 33%; */
     text-align: left;
     display: flex;
     flex-direction: row;
@@ -87,6 +87,7 @@
 .main .resharePostTemplate .textbox-container .textbox {
     margin: 0px;
     margin-right: 2%;
+    max-width: 70%;
 }
 
 .main .resharePostTemplate input {
@@ -182,6 +183,7 @@
 .main .viewPostTemplate .textbox-container .textbox {
     margin: 0px;
     margin-right: 2%;
+    max-width: 70%;
 }
 
 .main .detailTemplate {

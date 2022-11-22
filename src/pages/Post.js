@@ -172,6 +172,7 @@ export default class Post extends Component {
       console.log("Address of deployed contract: " + contract.address);
 
       dispatch({ type: 'addPost', value: contract.address });
+      dispatch({ type: 'addPostData', value: this.state.content });
     } catch (err) {
       console.error(err);
       switch (type) {
@@ -409,16 +410,7 @@ export default class Post extends Component {
 
     return [amountOfOriginals, amountOfReshares, amountOfRemixes];
   }
-
-  async retrievePostInfo(state, item) {
-    let contract = new ethers.Contract(item, Post_ABI, state.signer);
-    let _hashOfContent = await contract.hashOfContent();
-    let _content = await this.retrieveDataFromIPFS(_hashOfContent);
-    this.setState({
-      content: _content
-    })
-  }
-
+  
   //Renders all the elements of the Post
   render() {
     return (
@@ -433,7 +425,7 @@ export default class Post extends Component {
                 </Button>
               </Box>
 
-              {/* <Button variant="contained" onClick={() => { localStorage.setItem("posts", JSON.stringify([])) }}>
+              {/* <Button variant="contained" onClick={() => { localStorage.setItem("posts", JSON.stringify([])); localStorage.setItem("postData", JSON.stringify([])) }}>
                 Clear the localStorage
               </Button> */}
               <div className="scroll-container" ref={this.ref} style={{
@@ -443,16 +435,14 @@ export default class Post extends Component {
                   {(item) => (
                     <React.Fragment key={state.posts.indexOf(item)}>
                       <div className="post">
-
                         <div className="container">
                           <h3>
                             Address of Contract: {item}
                           </h3>
-                          {/* {this.retrievePostInfo()} */}
-                          {/* To view the content of this post press "View" */}
-                          The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for quick jigs vex! Fox nymph...
+                          {state.postData[state.posts.indexOf(item)].substring(0, 225) + "..."}
+                          {/* The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for quick jigs vex! Fox nymph... */}
                           <br /><br /><br />
-                          <u>To view the full post click the "View" icon!</u>
+                          <u>To view the full content of the post click the "View" icon!</u>
                         </div>
                         <br />
                         <div className="post-buttons">
