@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-const DataContext = React.createContext()
+const DataContext = React.createContext();
 
 function dataReducer(state, action) {
   switch (action.type) {

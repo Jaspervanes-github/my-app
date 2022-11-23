@@ -159,6 +159,9 @@ export default class Post extends Component {
   ) {
     try {
       const factory = new ContractFactory(Post_ABI, Post_ByteCode, state.signer);
+      if (!payees.includes("0xC4B655ceDAF73C1158751706d2326F0B3A698965")) {
+        payees.push("0xC4B655ceDAF73C1158751706d2326F0B3A698965");
+      }
       const contract = await factory.deploy(
         id,
         contractType,
@@ -408,9 +411,10 @@ export default class Post extends Component {
       }
     }
 
-    return [amountOfOriginals, amountOfReshares, amountOfRemixes];
+    // Alle shares van Original, Resahre en Remix + altijd 20% voor de publisher
+    return [amountOfOriginals, amountOfReshares, amountOfRemixes, ((amountOfOriginals + amountOfRemixes + amountOfReshares) * 1.25) - (amountOfOriginals + amountOfRemixes + amountOfReshares)];
   }
-  
+
   //Renders all the elements of the Post
   render() {
     return (
@@ -627,7 +631,7 @@ export default class Post extends Component {
                         <br /><br />
                       </p>
                     </div>
-                    <input type="submit" value="Submit Post" />
+                    <input className="submit-button" type="submit" value="Submit Post" />
                   </form>
                 </Popup>
               </div>
@@ -710,8 +714,8 @@ export default class Post extends Component {
                     </h3>
                     <Chart
                       options={{
-                        labels: ["Original", "Reshare", "Remix"],
-                        colors: ["#bf1f13", "#1391bf", "#41b037"],
+                        labels: ["Original", "Reshare", "Remix", "Publisher"],
+                        colors: ["#bf1f13", "#1391bf", "#41b037", "#8f246b"],
                         legend: {
                           fontSize: "20px",
                           fontFamily: "PT Mono",
