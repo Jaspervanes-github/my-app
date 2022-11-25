@@ -40,6 +40,11 @@
 				"internalType": "uint256",
 				"name": "_royaltyMultiplier",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_publisherAddress",
+				"type": "address"
 			}
 		],
 		"stateMutability": "nonpayable",

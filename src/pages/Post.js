@@ -159,23 +159,27 @@ export default class Post extends Component {
   ) {
     try {
       const factory = new ContractFactory(Post_ABI, Post_ByteCode, state.signer);
-      if (!payees.includes("0xC4B655ceDAF73C1158751706d2326F0B3A698965")) {
-        payees.push("0xC4B655ceDAF73C1158751706d2326F0B3A698965");
+      let copyPayees = [...payees];
+      let copyShares = [...shares];
+      if (copyPayees.includes("0xC4B655ceDAF73C1158751706d2326F0B3A698965")) {
+        copyPayees.pop();
+        copyShares.pop();
       }
+
       const contract = await factory.deploy(
         id,
         contractType,
         originalPostAddress,
         contentType,
         hashOfContent,
-        payees,
-        shares,
-        royaltyMultiplier
+        copyPayees,
+        copyShares,
+        royaltyMultiplier,
+        "0x1F871dC82BF9048946540Ac41231b50fE4Da883b"
       );
       console.log("Address of deployed contract: " + contract.address);
 
-      dispatch({ type: 'addPost', value: contract.address });
-      dispatch({ type: 'addPostData', value: this.state.content });
+      dispatch({ type: 'addPost', value: contract.address, data: this.state.content });
     } catch (err) {
       console.error(err);
       switch (type) {
@@ -400,19 +404,24 @@ export default class Post extends Component {
     let amountOfOriginals = 0;
     let amountOfReshares = 0;
     let amountOfRemixes = 0;
+    let amountOfPublisher = 0;
 
     for (let i = 0; i < payees.length; i++) {
-      if (shares[i].toNumber() == 5) {
-        amountOfOriginals += 5;
-      } else if (shares[i].toNumber() == 4) {
-        amountOfRemixes += 4;
-      } else if (shares[i].toNumber() == 2) {
-        amountOfReshares += 2;
+      if (i == payees.length - 1) {
+        amountOfPublisher = Number(shares[i]) / (1 * Math.pow(10, 18));
+      } else {
+        if (Number(shares[i]) / (1 * Math.pow(10, 18)) == 5) {
+          amountOfOriginals += 5;
+        } else if (Number(shares[i]) / (1 * Math.pow(10, 18)) == 4) {
+          amountOfRemixes += 4;
+        } else if (Number(shares[i]) / (1 * Math.pow(10, 18)) == 2) {
+          amountOfReshares += 2;
+        }
       }
     }
 
     // Alle shares van Original, Resahre en Remix + altijd 20% voor de publisher
-    return [amountOfOriginals, amountOfReshares, amountOfRemixes, ((amountOfOriginals + amountOfRemixes + amountOfReshares) * 1.25) - (amountOfOriginals + amountOfRemixes + amountOfReshares)];
+    return [amountOfOriginals, amountOfReshares, amountOfRemixes, amountOfPublisher];
   }
 
   //Renders all the elements of the Post
