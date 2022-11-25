@@ -15,3 +15,29 @@
     max-width: 80%;
     min-height: 100%;
 }
+
+.Home .infoBox {
+    text-align: left;
+    padding: 5%;
+    margin: 3%;
+    margin-left: 5%;
+    background: #666666;
+    position: center;
+    color: #FFFFFF;
+    border: solid;
+    border-width: 1;
+    border-radius: 8;
+    justify-content: left;
+    font-family: PT Mono;
+    font-weight: normal;
+    font-size: medium;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    margin-left: 7%;
+}
+
+.Home .title{
+    font-weight: bold;
+    text-align: center;
+}

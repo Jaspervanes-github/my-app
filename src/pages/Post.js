@@ -541,6 +541,23 @@ export default class Post extends Component {
                         })()}
                       </p>
                     </div>
+                    <p className="title">
+                      <br />COSTS<br />
+                    </p>
+                  <div className="infoBox">
+                    <p className="item" style={{fontWeight: "bold"}}>
+                      New Post:<br />
+                      Reshare:<br />
+                      Remix:<br />
+                      View:<br />
+                    </p>
+                    <p className="item">
+                      0.0057  &nbsp;ETH<br />
+                      0.0035  &nbsp;ETH<br />
+                      0.0035  &nbsp;ETH<br />
+                      0.00031 ETH<br />
+                    </p>
+                  </div>
                     <input type="submit" value="Submit Post" />
                   </form>
                 </Popup>
@@ -596,6 +613,23 @@ export default class Post extends Component {
                         })()}
                       </p>
                     </div>
+                    <p className="title">
+                      <br />COSTS<br />
+                    </p>
+                  <div className="infoBox">
+                    <p className="item" style={{fontWeight: "bold"}}>
+                      New Post:<br />
+                      Reshare:<br />
+                      Remix:<br />
+                      View:<br />
+                    </p>
+                    <p className="item">
+                      0.0057  &nbsp;ETH<br />
+                      0.0035  &nbsp;ETH<br />
+                      0.0035  &nbsp;ETH<br />
+                      0.00031 ETH<br />
+                    </p>
+                  </div>
                     <input type="submit" value="Submit Post" />
                   </form>
                 </Popup>

@@ -6,7 +6,7 @@
     justify-content: flex-start;
 }
 
-.navbar .menuItem {
+.navbar .menuButton {
     background: #666666;
     position: center;
     color: #FFFFFF;
@@ -23,13 +23,12 @@
     margin-bottom: 3%;
 }
     
-.navbar .menuItem:hover {
+.navbar .menuButton:hover {
     background: #262626
 }
 
-.navbar .menuItem:disabled {
+.navbar .menuButton:disabled {
     background: #666666;
     border-color: #FFFFFF;
     color: #FFFFFF;
-
 }

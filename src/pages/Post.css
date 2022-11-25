@@ -99,6 +99,33 @@
     font-family: PT Mono;
 }
 
+.main .resharePostTemplate .infoBox {
+    text-align: left;
+    margin: 0%;
+    background: #666666;
+    position: center;
+    color: #FFFFFF;
+    border: solid;
+    border-width: 1;
+    border-radius: 8;
+    justify-content: left;
+    font-family: PT Mono;
+    font-weight: normal;
+    font-size: medium;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.main .resharePostTemplate .infoBox .item {
+    margin-right: 5%;
+}
+
+.main .resharePostTemplate .title{
+    font-weight: bold;
+    text-align: left;
+}
+
 .main .remixPostTemplate h2 {
     font-style: italic;
 }
@@ -136,6 +163,33 @@
     background-color: #FFFFFF;
     margin-right: 0.2em;
     font-family: PT Mono;
+}
+
+.main .remixPostTemplate .infoBox {
+    text-align: left;
+    margin: 0%;
+    background: #666666;
+    position: center;
+    color: #FFFFFF;
+    border: solid;
+    border-width: 1;
+    border-radius: 8;
+    justify-content: left;
+    font-family: PT Mono;
+    font-weight: normal;
+    font-size: medium;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.main .remixPostTemplate .infoBox .item {
+    margin-right: 5%;
+}
+
+.main .remixPostTemplate .title{
+    font-weight: bold;
+    text-align: left;
 }
 
 .main .newPostTemplate h2 {

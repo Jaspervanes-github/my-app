@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Toolbar, Typography, Button } from '@material-ui/core';
 import HomeIcon from "@material-ui/icons/Home";
 import DiscoverIcon from "@material-ui/icons/Search";
@@ -12,21 +11,21 @@ function NavBar(props) {
     const navigate = useNavigate();
     return (
         <div className="navbar">
-        <Toolbar className="bar">
-            <Button startIcon={<HomeIcon />} size="large" className="menuItem" onClick={() => { navigate("/home") }}>
-                Home
-            </Button>
-            <Button startIcon={<DiscoverIcon />} size="large" disabled className="menuItem" onClick={() => { navigate("/discover") }}>
-                Discover
-            </Button>
-            <Button startIcon={<NotificationsIcon />} size="large" disabled className="menuItem" onClick={() => { navigate("/notifications") }}>
-                Notifications
-            </Button>
-            <Button startIcon={<LogoutIcon />} size="large" className="menuItem" onClick={() => { window.location.reload(); }}>
-                Logout
-            </Button>
-        </Toolbar>
-        </div>
+            <Toolbar className="bar">
+                <Button startIcon={<HomeIcon />} size="large" className="menuButton" onClick={() => { navigate("/home") }}>
+                    Home
+                </Button>
+                <Button startIcon={<DiscoverIcon />} size="large" disabled className="menuButton" onClick={() => { navigate("/discover") }}>
+                    Discover
+                </Button>
+                <Button startIcon={<NotificationsIcon />} size="large" disabled className="menuButton" onClick={() => { navigate("/notifications") }}>
+                    Notifications
+                </Button>
+                <Button startIcon={<LogoutIcon />} size="large" className="menuButton" onClick={() => { window.location.reload(); }}>
+                    Logout
+                </Button>
+            </Toolbar>
+        </div >
     )
 }
 
