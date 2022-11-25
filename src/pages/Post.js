@@ -241,8 +241,16 @@ export default class Post extends Component {
   //Fetches the data of the post it wants to reshare and opens the ResharePostPopup
   async createResharePost(state, item) {
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
-    let _addressOfPoster = await contract.addressOfPoster();
-    if (_addressOfPoster.toLowerCase() === state.selectedAccount) {
+    let _payees = await contract.getAllPayees();
+    let isAlreadyOwner = false;
+
+    for(let i = 0; i < _payees.length; i++){
+      if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
+        isAlreadyOwner = true;
+       break;
+      }
+    }
+    if (isAlreadyOwner) {
       this.createToastMessage("You can't reshare your own posts", false);
       return;
     }
@@ -251,7 +259,6 @@ export default class Post extends Component {
 
     let _contentType = await contract.contentType();
     let _originalPostAddress = await contract.originalPost();
-    let _payees = await contract.getAllPayees();
     let _shares = await contract.getAllShares();
     let _hashOfContent = await contract.hashOfContent();
     let _content = await this.retrieveDataFromIPFS(_hashOfContent);
@@ -273,9 +280,17 @@ export default class Post extends Component {
   //Fetches the data of the post it wants to remix and opens the RemixPostPopup
   async createRemixPost(state, item) {
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
-    let _addressOfPoster = await contract.addressOfPoster();
-    if (_addressOfPoster.toLowerCase() === state.selectedAccount) {
-      this.createToastMessage("You can't remix your own posts", 5000);
+    let _payees = await contract.getAllPayees();
+    let isAlreadyOwner = false;
+
+    for(let i = 0; i < _payees.length; i++){
+      if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
+        isAlreadyOwner = true;
+       break;
+      }
+    }
+    if (isAlreadyOwner) {
+      this.createToastMessage("You can't reshare your own posts", false);
       return;
     }
 
@@ -283,7 +298,6 @@ export default class Post extends Component {
 
     let _contentType = await contract.contentType();
     let _originalPostAddress = await contract.originalPost();
-    let _payees = await contract.getAllPayees();
     let _shares = await contract.getAllShares();
     let _hashOfContent = await contract.hashOfContent();
     let _content = await this.retrieveDataFromIPFS(_hashOfContent);
@@ -307,7 +321,7 @@ export default class Post extends Component {
     let contract = new ethers.Contract(item, Post_ABI, state.signer);
     let _addressOfPoster = await contract.addressOfPoster();
 
-    if (_addressOfPoster.toLowerCase() !== state.selectedAccount) {
+    if (_addressOfPoster.toLowerCase() !== state.selectedAccount.toLowerCase()) {
       try {
         this.createToastMessage("Awaiting transaction...", 3000);
 
