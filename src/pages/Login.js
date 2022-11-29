@@ -18,12 +18,15 @@ export default class Login extends Component {
         const accounts = await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner();
 
+        let posts = JSON.parse(localStorage.getItem("posts"));
+        let postData = JSON.parse(localStorage.getItem("postData"));
+
         dispatch({ type: 'setProvider', value: provider });
         dispatch({ type: 'setAccounts', value: accounts });
         dispatch({ type: 'setSigner', value: signer });
         dispatch({ type: 'setSelectedAccount', value: accounts[0] });
-        dispatch({ type: 'setPosts', value: JSON.parse(localStorage.getItem("posts")) });
-        dispatch({ type: 'setPostData', value: JSON.parse(localStorage.getItem("postData")) });
+        dispatch({ type: 'setPosts', value: ((posts !== null) ? posts : []) });
+        dispatch({ type: 'setPostData', value: ((postData !== null) ? postData : []) });
 
         provider.provider.on('accountsChanged', function () {
             window.location.reload();
