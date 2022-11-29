@@ -105,7 +105,7 @@ export default class Post extends Component {
       state,
       dispatch,
       type,
-      state.posts.length,
+      state.posts?.length || 0,
       this.state.contractType,
       this.state.originalPostAddress,
       this.state.contentType,
@@ -244,10 +244,10 @@ export default class Post extends Component {
     let _payees = await contract.getAllPayees();
     let isAlreadyOwner = false;
 
-    for(let i = 0; i < _payees.length; i++){
+    for (let i = 0; i < _payees.length; i++) {
       if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
         isAlreadyOwner = true;
-       break;
+        break;
       }
     }
     if (isAlreadyOwner) {
@@ -283,10 +283,10 @@ export default class Post extends Component {
     let _payees = await contract.getAllPayees();
     let isAlreadyOwner = false;
 
-    for(let i = 0; i < _payees.length; i++){
+    for (let i = 0; i < _payees.length; i++) {
       if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
         isAlreadyOwner = true;
-       break;
+        break;
       }
     }
     if (isAlreadyOwner) {
@@ -421,20 +421,20 @@ export default class Post extends Component {
     let amountOfPublisher = 0;
 
     for (let i = 0; i < payees.length; i++) {
-      if (i == payees.length - 1) {
+      if (i === payees.length - 1) {
         amountOfPublisher = Number(shares[i]) / (1 * Math.pow(10, 18));
       } else {
-        if (Number(shares[i]) / (1 * Math.pow(10, 18)) == 5) {
+        if (Number(shares[i]) / (1 * Math.pow(10, 18)) === 5) {
           amountOfOriginals += 5;
-        } else if (Number(shares[i]) / (1 * Math.pow(10, 18)) == 4) {
+        } else if (Number(shares[i]) / (1 * Math.pow(10, 18)) === 4) {
           amountOfRemixes += 4;
-        } else if (Number(shares[i]) / (1 * Math.pow(10, 18)) == 2) {
+        } else if (Number(shares[i]) / (1 * Math.pow(10, 18)) === 2) {
           amountOfReshares += 2;
         }
       }
     }
 
-    // Alle shares van Original, Resahre en Remix + altijd 20% voor de publisher
+    // Alle shares van Original, Reshare en Remix + altijd 20% voor de publisher
     return [amountOfOriginals, amountOfReshares, amountOfRemixes, amountOfPublisher];
   }
 
@@ -458,7 +458,7 @@ export default class Post extends Component {
               <div className="scroll-container" ref={this.ref} style={{
                 maxHeight: (window.innerHeight / 1.4) + 'px'
               }}>
-                <ViewportList viewportRef={this.ref} items={state.posts} itemMinSize={40} margin={8}>
+                <ViewportList viewportRef={this.ref} items={state.posts || []} itemMinSize={40} margin={8}>
                   {(item) => (
                     <React.Fragment key={state.posts.indexOf(item)}>
                       <div className="post">
@@ -473,16 +473,16 @@ export default class Post extends Component {
                         </div>
                         <br />
                         <div className="post-buttons">
-                          <IconButton className="button" onClick={() => { this.createResharePost(state, item) }}>
+                          <IconButton className="button" title="Reshare Post" onClick={() => { this.createResharePost(state, item) }}>
                             <ReshareIcon />
                           </IconButton>
-                          <IconButton className="button" onClick={() => { this.createRemixPost(state, item) }}>
+                          <IconButton className="button" title="Remix Post" onClick={() => { this.createRemixPost(state, item) }}>
                             <RemixIcon />
                           </IconButton>
-                          <IconButton className="button" onClick={() => { this.viewPost(state, item) }}>
+                          <IconButton className="button" title="View Post" onClick={() => { this.viewPost(state, item) }}>
                             <ViewIcon />
                           </IconButton>
-                          <IconButton className="button" onClick={() => { this.detailPost(state, item) }}>
+                          <IconButton className="button" title="Detail of the Post" onClick={() => { this.detailPost(state, item) }}>
                             <DetailIcon />
                           </IconButton>
                         </div>
@@ -544,20 +544,20 @@ export default class Post extends Component {
                     <p className="title">
                       <br />COSTS<br />
                     </p>
-                  <div className="infoBox">
-                    <p className="item" style={{fontWeight: "bold"}}>
-                      New Post:<br />
-                      Reshare:<br />
-                      Remix:<br />
-                      View:<br />
-                    </p>
-                    <p className="item">
-                      0.0057  &nbsp;ETH<br />
-                      0.0035  &nbsp;ETH<br />
-                      0.0035  &nbsp;ETH<br />
-                      0.00031 ETH<br />
-                    </p>
-                  </div>
+                    <div className="infoBox">
+                      <p className="item" style={{ fontWeight: "bold" }}>
+                        New Post:<br />
+                        Reshare:<br />
+                        Remix:<br />
+                        View:<br />
+                      </p>
+                      <p className="item">
+                        0.0057  &nbsp;ETH<br />
+                        0.0035  &nbsp;ETH<br />
+                        0.0035  &nbsp;ETH<br />
+                        0.00031 ETH<br />
+                      </p>
+                    </div>
                     <input type="submit" value="Submit Post" />
                   </form>
                 </Popup>
@@ -616,20 +616,20 @@ export default class Post extends Component {
                     <p className="title">
                       <br />COSTS<br />
                     </p>
-                  <div className="infoBox">
-                    <p className="item" style={{fontWeight: "bold"}}>
-                      New Post:<br />
-                      Reshare:<br />
-                      Remix:<br />
-                      View:<br />
-                    </p>
-                    <p className="item">
-                      0.0057  &nbsp;ETH<br />
-                      0.0035  &nbsp;ETH<br />
-                      0.0035  &nbsp;ETH<br />
-                      0.00031 ETH<br />
-                    </p>
-                  </div>
+                    <div className="infoBox">
+                      <p className="item" style={{ fontWeight: "bold" }}>
+                        New Post:<br />
+                        Reshare:<br />
+                        Remix:<br />
+                        View:<br />
+                      </p>
+                      <p className="item">
+                        0.0057  &nbsp;ETH<br />
+                        0.0035  &nbsp;ETH<br />
+                        0.0035  &nbsp;ETH<br />
+                        0.00031 ETH<br />
+                      </p>
+                    </div>
                     <input type="submit" value="Submit Post" />
                   </form>
                 </Popup>

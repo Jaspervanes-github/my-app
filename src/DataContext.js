@@ -94,31 +94,6 @@ function dataReducer(state, action) {
         postData: action.value
       }
     }
-    // case 'addPostData': {
-    //   // console.log("In addPostData: " + action.value);
-    //   let currentPostDataList = state.postData;
-    //   if (!currentPostDataList.includes(action.value)) {
-    //     currentPostDataList.unshift(action.value);
-    //     localStorage.setItem("postData", JSON.stringify(currentPostDataList));
-    //     return {
-    //       provider: state.provider,
-    //       signer: state.signer,
-    //       accounts: state.accounts,
-    //       selectedAccount: state.selectedAccount,
-    //       posts: state.posts,
-    //       postData: currentPostDataList
-    //     }
-    //   } else {
-    //     return {
-    //       provider: state.provider,
-    //       signer: state.signer,
-    //       accounts: state.accounts,
-    //       selectedAccount: state.selectedAccount,
-    //       posts: state.posts,
-    //       postData: state.postData
-    //     }
-    //   }
-    // }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`)
     }
