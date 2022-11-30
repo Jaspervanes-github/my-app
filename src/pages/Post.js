@@ -38,6 +38,8 @@ export default class Post extends Component {
     super(props);
 
     this.state = {
+      isBusy: false,
+
       triggerResharePostPopup: false,
       triggerRemixPostPopup: false,
       triggerNewPostPopup: false,
@@ -87,6 +89,15 @@ export default class Post extends Component {
       case 'select-one':
         value = target.value;
         break;
+      case 'file':
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (reader.readyState === 2) {
+            this.setState({ content: reader.result })
+          }
+        }
+        reader.readAsDataURL(event.target.files[0]);
+        break;
       default:
         break;
     }
@@ -99,7 +110,14 @@ export default class Post extends Component {
   //Handles the submittions of the form element of the popups
   async handleSubmit(event, state, dispatch, type) {
     this.createToastMessage("The post is being created, please wait...", 3000);
-    let _hashOfContent = await this.saveTextToIPFS(this.state.content);
+
+    let _hashOfContent;
+    if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+      _hashOfContent = await this.saveTextToIPFS(this.state.content);
+    } else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+      _hashOfContent = await this.saveImageToIPFS(this.state.content);
+    }
+    // let _hashOfContent = await this.saveDataToIPFS(this.state.contentType, this.state.content);
 
     this.deployNewPostContract(
       state,
@@ -117,6 +135,19 @@ export default class Post extends Component {
     event.preventDefault();
   }
 
+  //Determines what type the data is and call the correct method to save the data to the IPFS network
+  async saveDataToIPFS(contentType, data) {
+    switch (contentType) {
+      case 0:
+        return await this.saveTextToIPFS(data);
+        break;
+      case 1:
+        return await this.saveImageToIPFS(data);
+        break;
+      default: break;
+    }
+  }
+
   //Saves the text to the IPFS network and returns a hash of the content
   async saveTextToIPFS(text) {
     let node = await IPFS.create({ repo: 'ok' + Math.random() });
@@ -129,15 +160,25 @@ export default class Post extends Component {
     return textAdded;
   }
 
-  //Retrieves the data of the IPFS network using the given hash from the saveTextToIPFS()
-  async retrieveDataFromIPFS(hash) {
+  async saveImageToIPFS(image) {
     let node = await IPFS.create({ repo: 'ok' + Math.random() });
 
+    let imageAdded = await node.add(image);
+    console.log(
+      "CID of Added image:", imageAdded.cid.toString(),
+      "\nUrl is: ipfs.io/ipfs/" + imageAdded.cid.toString());
+
+    return imageAdded;
+  }
+
+  //Retrieves the data of the IPFS network using the given hash from the saveTextToIPFS()
+  async retrieveDataFromIPFS(hash, contentType) {
+    let node = await IPFS.create({ repo: 'ok' + Math.random() });
+
+    let dataReceived;
     let asyncitr = node.cat(hash);
     const decoder = new TextDecoder();
-    let dataReceived = '';
-
-    // decodeImageFromBuffer(asyncitr);
+    dataReceived = '';
 
     for await (const itr of asyncitr) {
       dataReceived += decoder.decode(itr, { stream: true })
@@ -240,149 +281,165 @@ export default class Post extends Component {
 
   //Fetches the data of the post it wants to reshare and opens the ResharePostPopup
   async createResharePost(state, item) {
-    let contract = new ethers.Contract(item, Post_ABI, state.signer);
-    let _payees = await contract.getAllPayees();
-    let isAlreadyOwner = false;
+    if (!this.state.isBusy) {
+      this.setState({ isBusy: true });
 
-    for (let i = 0; i < _payees.length; i++) {
-      if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
-        isAlreadyOwner = true;
-        break;
+      let contract = new ethers.Contract(item, Post_ABI, state.signer);
+      let _payees = await contract.getAllPayees();
+      let isAlreadyOwner = false;
+
+      for (let i = 0; i < _payees.length; i++) {
+        if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
+          isAlreadyOwner = true;
+          break;
+        }
       }
+      if (isAlreadyOwner) {
+        this.createToastMessage("You can't reshare your own posts", false);
+        return;
+      }
+
+      this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
+
+      let _contentType = await contract.contentType();
+      let _originalPostAddress = await contract.originalPost();
+      let _shares = await contract.getAllShares();
+      let _hashOfContent = await contract.hashOfContent();
+      let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
+
+      this.setState({
+        currentItem: item,
+        contractType: ContractType.RESHARE,
+        contentType: _contentType,
+        originalPostAddress: _originalPostAddress,
+        payees: _payees,
+        shares: _shares,
+        royaltyMultiplier: 2,
+        hashOfContent: _hashOfContent,
+        content: _content,
+        triggerResharePostPopup: true
+      });
     }
-    if (isAlreadyOwner) {
-      this.createToastMessage("You can't reshare your own posts", false);
-      return;
-    }
-
-    this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
-
-    let _contentType = await contract.contentType();
-    let _originalPostAddress = await contract.originalPost();
-    let _shares = await contract.getAllShares();
-    let _hashOfContent = await contract.hashOfContent();
-    let _content = await this.retrieveDataFromIPFS(_hashOfContent);
-
-    this.setState({
-      currentItem: item,
-      contractType: ContractType.RESHARE,
-      contentType: _contentType,
-      originalPostAddress: _originalPostAddress,
-      payees: _payees,
-      shares: _shares,
-      royaltyMultiplier: 2,
-      hashOfContent: _hashOfContent,
-      content: _content,
-      triggerResharePostPopup: true
-    });
   }
 
   //Fetches the data of the post it wants to remix and opens the RemixPostPopup
   async createRemixPost(state, item) {
-    let contract = new ethers.Contract(item, Post_ABI, state.signer);
-    let _payees = await contract.getAllPayees();
-    let isAlreadyOwner = false;
+    if (!this.state.isBusy) {
+      this.setState({ isBusy: true });
 
-    for (let i = 0; i < _payees.length; i++) {
-      if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
-        isAlreadyOwner = true;
-        break;
+      let contract = new ethers.Contract(item, Post_ABI, state.signer);
+      let _payees = await contract.getAllPayees();
+      let isAlreadyOwner = false;
+
+      for (let i = 0; i < _payees.length; i++) {
+        if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
+          isAlreadyOwner = true;
+          break;
+        }
       }
+      if (isAlreadyOwner) {
+        this.createToastMessage("You can't reshare your own posts", false);
+        return;
+      }
+
+      this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
+
+      let _contentType = await contract.contentType();
+      let _originalPostAddress = await contract.originalPost();
+      let _shares = await contract.getAllShares();
+      let _hashOfContent = await contract.hashOfContent();
+      let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
+
+      this.setState({
+        currentItem: item,
+        contractType: ContractType.REMIX,
+        contentType: _contentType,
+        originalPostAddress: _originalPostAddress,
+        payees: _payees,
+        shares: _shares,
+        royaltyMultiplier: 4,
+        hashOfContent: _hashOfContent,
+        content: _content,
+        triggerRemixPostPopup: true
+      });
     }
-    if (isAlreadyOwner) {
-      this.createToastMessage("You can't reshare your own posts", false);
-      return;
-    }
-
-    this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
-
-    let _contentType = await contract.contentType();
-    let _originalPostAddress = await contract.originalPost();
-    let _shares = await contract.getAllShares();
-    let _hashOfContent = await contract.hashOfContent();
-    let _content = await this.retrieveDataFromIPFS(_hashOfContent);
-
-    this.setState({
-      currentItem: item,
-      contractType: ContractType.REMIX,
-      contentType: _contentType,
-      originalPostAddress: _originalPostAddress,
-      payees: _payees,
-      shares: _shares,
-      royaltyMultiplier: 4,
-      hashOfContent: _hashOfContent,
-      content: _content,
-      triggerRemixPostPopup: true
-    });
   }
 
   //Let the user pay a certain amount to view the content of the post
   async viewPost(state, item) {
-    let contract = new ethers.Contract(item, Post_ABI, state.signer);
-    let _addressOfPoster = await contract.addressOfPoster();
+    if (!this.state.isBusy) {
+      this.setState({ isBusy: true });
 
-    if (_addressOfPoster.toLowerCase() !== state.selectedAccount.toLowerCase()) {
-      try {
-        this.createToastMessage("Awaiting transaction...", 3000);
+      let contract = new ethers.Contract(item, Post_ABI, state.signer);
+      let _addressOfPoster = await contract.addressOfPoster();
 
-        const transaction = await contract.viewPost({ value: ethers.utils.parseEther("0.00001") });
-        await transaction.wait();
-      } catch (err) {
-        this.createToastMessage("To view the content of the post you need to accept the transaction.", 5000);
-        console.error(err);
+      if (_addressOfPoster.toLowerCase() !== state.selectedAccount.toLowerCase()) {
+        try {
+          this.createToastMessage("Awaiting transaction...", 3000);
+
+          const transaction = await contract.viewPost({ value: ethers.utils.parseEther("0.00001") });
+          await transaction.wait();
+        } catch (err) {
+          this.createToastMessage("To view the content of the post you need to accept the transaction.", 5000);
+          console.error(err);
+          return;
+        }
+      } else {
+        this.createToastMessage("You can't view your own posts", 5000);
         return;
       }
-    } else {
-      this.createToastMessage("You can't view your own posts", 5000);
-      return;
+
+      let _contentType = await contract.contentType();
+      let _id = await contract.id();
+      let _hashOfContent = await contract.hashOfContent();
+      let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
+
+      this.setState({
+        currentItem: item,
+        id: _id.toNumber(),
+        addressOfPoster: _addressOfPoster,
+        contentType: _contentType,
+        hashOfContent: _hashOfContent,
+        content: _content,
+        triggerViewPostPopup: true
+      });
     }
-
-    let _contentType = await contract.contentType();
-    let _id = await contract.id();
-    let _hashOfContent = await contract.hashOfContent();
-    let _content = await this.retrieveDataFromIPFS(_hashOfContent);
-
-    this.setState({
-      currentItem: item,
-      id: _id.toNumber(),
-      addressOfPoster: _addressOfPoster,
-      contentType: _contentType,
-      hashOfContent: _hashOfContent,
-      content: _content,
-      triggerViewPostPopup: true
-    });
   }
 
   async detailPost(state, item) {
-    this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
+    if (!this.state.isBusy) {
+      this.setState({ isBusy: true });
 
-    let contract = new ethers.Contract(item, Post_ABI, state.signer);
-    let _addressOfPoster = await contract.addressOfPoster();
+      this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
 
-    let _id = await contract.id();
-    let _contractType = await contract.contractType();
-    let _contentType = await contract.contentType();
-    let _originalPostAddress = await contract.originalPost();
-    let _payees = await contract.getAllPayees();
-    let _shares = await contract.getAllShares();
-    let _royaltyMultiplier = await contract.royaltyMultiplier();
-    let _hashOfContent = await contract.hashOfContent();
-    let _content = await this.retrieveDataFromIPFS(_hashOfContent);
+      let contract = new ethers.Contract(item, Post_ABI, state.signer);
+      let _addressOfPoster = await contract.addressOfPoster();
 
-    this.setState({
-      currentItem: item,
-      id: _id.toNumber(),
-      addressOfPoster: _addressOfPoster,
-      contractType: _contractType,
-      contentType: _contentType,
-      originalPostAddress: _originalPostAddress,
-      payees: _payees,
-      shares: _shares,
-      royaltyMultiplier: _royaltyMultiplier,
-      hashOfContent: _hashOfContent,
-      content: _content,
-      triggerDetailPostPopup: true
-    });
+      let _id = await contract.id();
+      let _contractType = await contract.contractType();
+      let _contentType = await contract.contentType();
+      let _originalPostAddress = await contract.originalPost();
+      let _payees = await contract.getAllPayees();
+      let _shares = await contract.getAllShares();
+      let _royaltyMultiplier = await contract.royaltyMultiplier();
+      let _hashOfContent = await contract.hashOfContent();
+      let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
+
+      this.setState({
+        currentItem: item,
+        id: _id.toNumber(),
+        addressOfPoster: _addressOfPoster,
+        contractType: _contractType,
+        contentType: _contentType,
+        originalPostAddress: _originalPostAddress,
+        payees: _payees,
+        shares: _shares,
+        royaltyMultiplier: _royaltyMultiplier,
+        hashOfContent: _hashOfContent,
+        content: _content,
+        triggerDetailPostPopup: true
+      });
+    }
   }
 
   resizeHeightOfElement(elem) {
@@ -467,6 +524,7 @@ export default class Post extends Component {
                             Address of Contract: {item}
                           </h3>
                           {state.postData[state.posts.indexOf(item)].substring(0, 225) + "..."}
+                          <img src={state.postData[state.posts.indexOf(item)]} className="imageBox"></img>
                           {/* The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for quick jigs vex! Fox nymph... */}
                           <br /><br /><br />
                           <u>To view the full content of the post click the "View" icon!</u>
@@ -495,7 +553,8 @@ export default class Post extends Component {
               <div className="resharePostTemplate">
                 <Popup trigger={this.state.triggerResharePostPopup} setTrigger={() => {
                   this.setState({
-                    triggerResharePostPopup: false
+                    triggerResharePostPopup: false,
+                    isBusy: false
                   });
                 }}>
                   <h2>Reshare Post</h2>
@@ -506,7 +565,10 @@ export default class Post extends Component {
                       return;
                     }
                     this.handleSubmit(event, state, dispatch, ContractType.RESHARE);
-                    this.setState({ triggerResharePostPopup: false });
+                    this.setState({
+                      triggerResharePostPopup: false,
+                      isBusy: false
+                    });
                   }}>
                     <div className="textbox-container">
                       <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold" }}>
@@ -535,6 +597,7 @@ export default class Post extends Component {
                             return (
                               // render Image selection component here
                               <div>
+                                <img src={this.state.content} className="imageBox" />
                               </div>
                             )
                           }
@@ -566,7 +629,8 @@ export default class Post extends Component {
               <div className="remixPostTemplate">
                 <Popup trigger={this.state.triggerRemixPostPopup} setTrigger={() => {
                   this.setState({
-                    triggerRemixPostPopup: false
+                    triggerRemixPostPopup: false,
+                    isBusy: false
                   });
                 }}>
                   <h2>Remix Post</h2>
@@ -577,7 +641,10 @@ export default class Post extends Component {
                       return;
                     }
                     this.handleSubmit(event, state, dispatch, ContractType.REMIX);
-                    this.setState({ triggerRemixPostPopup: false });
+                    this.setState({
+                      triggerRemixPostPopup: false,
+                      isBusy: false
+                    });
                   }}>
                     <div className="textbox-container">
                       <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold" }}>
@@ -607,7 +674,10 @@ export default class Post extends Component {
                           else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
                             return (
                               // render Image selection component here
-                              <div></div>
+                              <div>
+                                <img src={this.state.content} className="imageBox" />
+                                <input type="file" name="content" id="input" accept="image/*" onChange={this.handleChange} />
+                              </div>
                             )
                           }
                         })()}
@@ -639,6 +709,7 @@ export default class Post extends Component {
                 <Popup trigger={this.state.triggerNewPostPopup} setTrigger={() => {
                   this.setState({
                     triggerNewPostPopup: false,
+                    isBusy: false
                   });
                 }}>
                   <h2>New Post</h2>
@@ -649,7 +720,10 @@ export default class Post extends Component {
                       return;
                     }
                     this.handleSubmit(event, state, dispatch, ContractType.ORIGINAL);
-                    this.setState({ triggerNewPostPopup: false });
+                    this.setState({
+                      triggerNewPostPopup: false,
+                      isBusy: false
+                    });
                   }}>
                     <div className="textbox-container">
                       <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold" }}>
@@ -681,7 +755,10 @@ export default class Post extends Component {
                           else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
                             return (
                               // render Image selection component here
-                              <div></div>
+                              <div className="image-container">
+                                <img src={this.state.content} className="imageBox" />
+                                <input type="file" name="content" id="input" accept="image/*" onChange={this.handleChange} />
+                              </div>
                             )
                           }
                         })()}
@@ -697,6 +774,7 @@ export default class Post extends Component {
                 <Popup trigger={this.state.triggerViewPostPopup} setTrigger={() => {
                   this.setState({
                     triggerViewPostPopup: false,
+                    isBusy: false
                   });
                 }}>
                   <h2>View Post</h2>
@@ -726,7 +804,9 @@ export default class Post extends Component {
                         else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
                           return (
                             // render Image selection component here
-                            <div></div>
+                            <div>
+                              <img src={this.state.content} className="imageBox" />
+                            </div>
                           )
                         }
                       })()}
@@ -740,6 +820,7 @@ export default class Post extends Component {
                 <Popup trigger={this.state.triggerDetailPostPopup} setTrigger={() => {
                   this.setState({
                     triggerDetailPostPopup: false,
+                    isBusy: false
                   });
                 }}>
                   <h2>Details of the post</h2>
