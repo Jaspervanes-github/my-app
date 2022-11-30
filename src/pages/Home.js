@@ -32,8 +32,8 @@ export default class Home extends Component {
                 <Grid item className="grid-navbar" xs={1}>
                   <NavBar />
                   <p className="title">
-                      COSTS<br />
-                    </p>
+                    COSTS<br />
+                  </p>
                   <div className="infoBox">
                     <p className="item">
                       New Post:<br />

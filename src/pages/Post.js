@@ -19,6 +19,7 @@ import { DataConsumer } from '../DataContext';
 import Post_ABI from "../Post_ABI.json";
 import Post_ByteCode from "../Post_ByteCode.json";
 
+const PUBLISHER_ADDRESS = "0x1F871dC82BF9048946540Ac41231b50fE4Da883b";
 
 const ContractType = {
   ORIGINAL: 0,
@@ -202,7 +203,7 @@ export default class Post extends Component {
       const factory = new ContractFactory(Post_ABI, Post_ByteCode, state.signer);
       let copyPayees = [...payees];
       let copyShares = [...shares];
-      if (copyPayees.includes("0xC4B655ceDAF73C1158751706d2326F0B3A698965")) {
+      if (copyPayees.includes(PUBLISHER_ADDRESS)) {
         copyPayees.pop();
         copyShares.pop();
       }
@@ -216,7 +217,7 @@ export default class Post extends Component {
         copyPayees,
         copyShares,
         royaltyMultiplier,
-        "0x1F871dC82BF9048946540Ac41231b50fE4Da883b"
+        PUBLISHER_ADDRESS
       );
       console.log("Address of deployed contract: " + contract.address);
 
@@ -281,164 +282,184 @@ export default class Post extends Component {
 
   //Fetches the data of the post it wants to reshare and opens the ResharePostPopup
   async createResharePost(state, item) {
-    if (!this.state.isBusy) {
-      this.setState({ isBusy: true });
+    try {
+      if (!this.state.isBusy) {
+        this.setState({ isBusy: true });
 
-      let contract = new ethers.Contract(item, Post_ABI, state.signer);
-      let _payees = await contract.getAllPayees();
-      let isAlreadyOwner = false;
+        let contract = new ethers.Contract(item, Post_ABI, state.signer);
+        let _payees = await contract.getAllPayees();
+        let isAlreadyOwner = false;
 
-      for (let i = 0; i < _payees.length; i++) {
-        if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
-          isAlreadyOwner = true;
-          break;
+        for (let i = 0; i < _payees.length; i++) {
+          if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
+            isAlreadyOwner = true;
+            break;
+          }
         }
+        if (isAlreadyOwner) {
+          this.createToastMessage("You can't reshare your own posts", false);
+          return;
+        }
+
+        this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
+
+        let _contentType = await contract.contentType();
+        let _originalPostAddress = await contract.originalPost();
+        let _shares = await contract.getAllShares();
+        let _hashOfContent = await contract.hashOfContent();
+        let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
+
+        this.setState({
+          currentItem: item,
+          contractType: ContractType.RESHARE,
+          contentType: _contentType,
+          originalPostAddress: _originalPostAddress,
+          payees: _payees,
+          shares: _shares,
+          royaltyMultiplier: 2,
+          hashOfContent: _hashOfContent,
+          content: _content,
+          triggerResharePostPopup: true
+        });
       }
-      if (isAlreadyOwner) {
-        this.createToastMessage("You can't reshare your own posts", false);
-        return;
-      }
-
-      this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
-
-      let _contentType = await contract.contentType();
-      let _originalPostAddress = await contract.originalPost();
-      let _shares = await contract.getAllShares();
-      let _hashOfContent = await contract.hashOfContent();
-      let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
-
-      this.setState({
-        currentItem: item,
-        contractType: ContractType.RESHARE,
-        contentType: _contentType,
-        originalPostAddress: _originalPostAddress,
-        payees: _payees,
-        shares: _shares,
-        royaltyMultiplier: 2,
-        hashOfContent: _hashOfContent,
-        content: _content,
-        triggerResharePostPopup: true
-      });
+    } catch (err) {
+      console.error(err);
+      this.setState({ isBusy: false });
     }
   }
 
   //Fetches the data of the post it wants to remix and opens the RemixPostPopup
   async createRemixPost(state, item) {
-    if (!this.state.isBusy) {
-      this.setState({ isBusy: true });
+    try {
+      if (!this.state.isBusy) {
+        this.setState({ isBusy: true });
 
-      let contract = new ethers.Contract(item, Post_ABI, state.signer);
-      let _payees = await contract.getAllPayees();
-      let isAlreadyOwner = false;
+        let contract = new ethers.Contract(item, Post_ABI, state.signer);
+        let _payees = await contract.getAllPayees();
+        let isAlreadyOwner = false;
 
-      for (let i = 0; i < _payees.length; i++) {
-        if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
-          isAlreadyOwner = true;
-          break;
+        for (let i = 0; i < _payees.length; i++) {
+          if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
+            isAlreadyOwner = true;
+            break;
+          }
         }
+        if (isAlreadyOwner) {
+          this.createToastMessage("You can't reshare your own posts", false);
+          return;
+        }
+
+        this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
+
+        let _contentType = await contract.contentType();
+        let _originalPostAddress = await contract.originalPost();
+        let _shares = await contract.getAllShares();
+        let _hashOfContent = await contract.hashOfContent();
+        let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
+
+        this.setState({
+          currentItem: item,
+          contractType: ContractType.REMIX,
+          contentType: _contentType,
+          originalPostAddress: _originalPostAddress,
+          payees: _payees,
+          shares: _shares,
+          royaltyMultiplier: 4,
+          hashOfContent: _hashOfContent,
+          content: _content,
+          triggerRemixPostPopup: true
+        });
       }
-      if (isAlreadyOwner) {
-        this.createToastMessage("You can't reshare your own posts", false);
-        return;
-      }
-
-      this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
-
-      let _contentType = await contract.contentType();
-      let _originalPostAddress = await contract.originalPost();
-      let _shares = await contract.getAllShares();
-      let _hashOfContent = await contract.hashOfContent();
-      let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
-
-      this.setState({
-        currentItem: item,
-        contractType: ContractType.REMIX,
-        contentType: _contentType,
-        originalPostAddress: _originalPostAddress,
-        payees: _payees,
-        shares: _shares,
-        royaltyMultiplier: 4,
-        hashOfContent: _hashOfContent,
-        content: _content,
-        triggerRemixPostPopup: true
-      });
+    } catch (err) {
+      console.error(err);
+      this.setState({ isBusy: false });
     }
   }
 
   //Let the user pay a certain amount to view the content of the post
   async viewPost(state, item) {
-    if (!this.state.isBusy) {
-      this.setState({ isBusy: true });
+    try {
+      if (!this.state.isBusy) {
+        this.setState({ isBusy: true });
 
-      let contract = new ethers.Contract(item, Post_ABI, state.signer);
-      let _addressOfPoster = await contract.addressOfPoster();
+        let contract = new ethers.Contract(item, Post_ABI, state.signer);
+        let _addressOfPoster = await contract.addressOfPoster();
 
-      if (_addressOfPoster.toLowerCase() !== state.selectedAccount.toLowerCase()) {
-        try {
-          this.createToastMessage("Awaiting transaction...", 3000);
+        if (_addressOfPoster.toLowerCase() !== state.selectedAccount.toLowerCase()) {
+          try {
+            this.createToastMessage("Awaiting transaction...", 3000);
 
-          const transaction = await contract.viewPost({ value: ethers.utils.parseEther("0.00001") });
-          await transaction.wait();
-        } catch (err) {
-          this.createToastMessage("To view the content of the post you need to accept the transaction.", 5000);
-          console.error(err);
+            const transaction = await contract.viewPost({ value: ethers.utils.parseEther("0.00001") });
+            await transaction.wait();
+          } catch (err) {
+            this.createToastMessage("To view the content of the post you need to accept the transaction.", 5000);
+            console.error(err);
+            return;
+          }
+        } else {
+          this.createToastMessage("You can't view your own posts", 5000);
           return;
         }
-      } else {
-        this.createToastMessage("You can't view your own posts", 5000);
-        return;
+
+        let _contentType = await contract.contentType();
+        let _id = await contract.id();
+        let _hashOfContent = await contract.hashOfContent();
+        let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
+
+        this.setState({
+          currentItem: item,
+          id: _id.toNumber(),
+          addressOfPoster: _addressOfPoster,
+          contentType: _contentType,
+          hashOfContent: _hashOfContent,
+          content: _content,
+          triggerViewPostPopup: true
+        });
       }
-
-      let _contentType = await contract.contentType();
-      let _id = await contract.id();
-      let _hashOfContent = await contract.hashOfContent();
-      let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
-
-      this.setState({
-        currentItem: item,
-        id: _id.toNumber(),
-        addressOfPoster: _addressOfPoster,
-        contentType: _contentType,
-        hashOfContent: _hashOfContent,
-        content: _content,
-        triggerViewPostPopup: true
-      });
+    } catch (err) {
+      console.error(err);
+      this.setState({ isBusy: false });
     }
   }
 
   async detailPost(state, item) {
-    if (!this.state.isBusy) {
-      this.setState({ isBusy: true });
+    try {
+      if (!this.state.isBusy) {
+        this.setState({ isBusy: true });
 
-      this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
+        this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
 
-      let contract = new ethers.Contract(item, Post_ABI, state.signer);
-      let _addressOfPoster = await contract.addressOfPoster();
+        let contract = new ethers.Contract(item, Post_ABI, state.signer);
+        let _addressOfPoster = await contract.addressOfPoster();
 
-      let _id = await contract.id();
-      let _contractType = await contract.contractType();
-      let _contentType = await contract.contentType();
-      let _originalPostAddress = await contract.originalPost();
-      let _payees = await contract.getAllPayees();
-      let _shares = await contract.getAllShares();
-      let _royaltyMultiplier = await contract.royaltyMultiplier();
-      let _hashOfContent = await contract.hashOfContent();
-      let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
+        let _id = await contract.id();
+        let _contractType = await contract.contractType();
+        let _contentType = await contract.contentType();
+        let _originalPostAddress = await contract.originalPost();
+        let _payees = await contract.getAllPayees();
+        let _shares = await contract.getAllShares();
+        let _royaltyMultiplier = await contract.royaltyMultiplier();
+        let _hashOfContent = await contract.hashOfContent();
+        let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
 
-      this.setState({
-        currentItem: item,
-        id: _id.toNumber(),
-        addressOfPoster: _addressOfPoster,
-        contractType: _contractType,
-        contentType: _contentType,
-        originalPostAddress: _originalPostAddress,
-        payees: _payees,
-        shares: _shares,
-        royaltyMultiplier: _royaltyMultiplier,
-        hashOfContent: _hashOfContent,
-        content: _content,
-        triggerDetailPostPopup: true
-      });
+        this.setState({
+          currentItem: item,
+          id: _id.toNumber(),
+          addressOfPoster: _addressOfPoster,
+          contractType: _contractType,
+          contentType: _contentType,
+          originalPostAddress: _originalPostAddress,
+          payees: _payees,
+          shares: _shares,
+          royaltyMultiplier: _royaltyMultiplier,
+          hashOfContent: _hashOfContent,
+          content: _content,
+          triggerDetailPostPopup: true
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      this.setState({ isBusy: false });
     }
   }
 
@@ -523,8 +544,7 @@ export default class Post extends Component {
                           <h3>
                             Address of Contract: {item}
                           </h3>
-
-                          {!state.postData[state.posts.indexOf(item)].includes('data:image/jpeg;base64')
+                          {state.postData[state.posts.indexOf(item)].substring(0, 11) !== "data:image/"
                             ? state.postData[state.posts.indexOf(item)].substring(0, 225) + "..."
                             : <img src={state.postData[state.posts.indexOf(item)]} className="imageBox" />}
                           <br /><br /><br />
