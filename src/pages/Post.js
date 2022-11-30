@@ -523,9 +523,10 @@ export default class Post extends Component {
                           <h3>
                             Address of Contract: {item}
                           </h3>
-                          {state.postData[state.posts.indexOf(item)].substring(0, 225) + "..."}
-                          <img src={state.postData[state.posts.indexOf(item)]} className="imageBox"></img>
-                          {/* The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for quick jigs vex! Fox nymph... */}
+
+                          {!state.postData[state.posts.indexOf(item)].includes('data:image/jpeg;base64')
+                            ? state.postData[state.posts.indexOf(item)].substring(0, 225) + "..."
+                            : <img src={state.postData[state.posts.indexOf(item)]} className="imageBox" />}
                           <br /><br /><br />
                           <u>To view the full content of the post click the "View" icon!</u>
                         </div>

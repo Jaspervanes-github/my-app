@@ -51,14 +51,15 @@
 }
 
 .main .scroll-container .post .imageBox{
-    width: 200px;
-    height: 200px;
+    width: 75px;
+    height: 75px;
     border-style: solid;
     border-color: white;
     border-width: 2px;
     background-image: url('Image_Placeholder.png');
     background-repeat: no-repeat;
     background-size: 100%;
+    filter: blur(4px);
 }
 
 .main .scroll-container .post .post-buttons {
