@@ -757,7 +757,7 @@ export default class Post extends Component {
                             return (
                               // render Image selection component here
                               <div className="image-container">
-                                <img src={this.state.content} className="imageBox" />
+                                <img src={this.state.content} className="imageBox" /><br />
                                 <input type="file" name="content" id="input" accept="image/*" onChange={this.handleChange} />
                               </div>
                             )
