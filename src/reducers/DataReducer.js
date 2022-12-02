@@ -1,4 +1,4 @@
-function dataReducer(state, action) {
+export function dataReducer(state, action) {
     switch (action.type) {
         case 'setProvider': {
             return { ...state, provider: action.value }

@@ -16,6 +16,30 @@ export const ContentType = {
     IMAGE: 1,
 };
 
+export function contractTypeToString(contractType) {
+    switch (contractType) {
+      case 0:
+        return "ORIGINAL";
+      case 1:
+        return "RESHARE";
+      case 2:
+        return "REMIX";
+      default:
+        break;
+    }
+  }
+
+  export function contentTypeToString(contentType) {
+    switch (contentType) {
+      case 0:
+        return "TEXT";
+      case 1:
+        return "IMAGE";
+      default:
+        break;
+    }
+  }
+
 //Deploys a new Post contract to the blockchain and adds it to to posts list
 export async function deployNewPostContract(
     state,

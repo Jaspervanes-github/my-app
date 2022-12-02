@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { ethers } from "ethers";
-import { DataConsumer } from '../../DataContext';
+import { DataConsumer } from '../../contexts//DataContext';
 import "./index.css";
 
 
@@ -64,7 +64,7 @@ export default class Login extends Component {
             )
         } else {
             return (
-                <Navigate to="/home" replace={false} />
+                <Navigate to="/" replace={false} />
             );
         }
     }

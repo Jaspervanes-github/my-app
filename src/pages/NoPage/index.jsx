@@ -1,24 +1,15 @@
 import React from "react";
 import NavBar from '../../components/Navbar';
 import "./index.css";
-import { DataConsumer } from '../../DataContext';
-import { Navigate } from 'react-router-dom';
+import { DataConsumer } from '../../contexts/DataContext';
 import { Grid } from '@material-ui/core';
 
-
-function checkState(state) {
-  //This means that the login page hasnt been visited so it doesnt have access to all the provider data
-  if (state.provider === '') {
-    return <Navigate to="/" replace={false} />
-  }
-}
 
 const NoPage = () => {
   return (
     <DataConsumer>
       {({ state, dispatch }) => (
         <React.Fragment>
-          {checkState(state)}
           <div className="NoPage">
             <Grid container className="grid-container" spacing={1}>
               <Grid item className="grid-navbar" xs={1}>

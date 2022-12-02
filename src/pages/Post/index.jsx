@@ -8,12 +8,10 @@ import CreatePostIcon from "@material-ui/icons/AddBox";
 import React, { Component } from "react";
 import ViewportList from "react-viewport-list";
 import { ethers } from "ethers";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import Chart from "react-apexcharts";
 
 import "./index.css";
 import Popup from "../../components/Popup";
-import { DataConsumer } from "../../DataContext";
+import { DataConsumer } from "../../contexts/DataContext";
 import {
   saveDataToIPFS,
   saveTextToIPFS,
@@ -23,6 +21,8 @@ import {
 import {
   ContractType,
   ContentType,
+  contractTypeToString,
+  contentTypeToString,
   deployNewPostContract,
   getPayees,
   getShares,
@@ -30,8 +30,7 @@ import {
 } from "../../utils/contract";
 import { createToastMessage } from "../../utils/toast";
 import Post_ABI from "../../assets/metadata/Post_ABI.json";
-
-ChartJS.register(ArcElement, Tooltip, Legend);
+import RoyaltieSplitDiagram from "../../components/RoyaltieSplitDiagram";
 
 export default class Post extends Component {
   constructor(props) {
@@ -350,59 +349,6 @@ export default class Post extends Component {
     elem.target.style.height = elem.target.scrollHeight + "px";
   }
 
-  contractTypeToString(contractType) {
-    switch (contractType) {
-      case 0:
-        return "ORIGINAL";
-      case 1:
-        return "RESHARE";
-      case 2:
-        return "REMIX";
-      default:
-        break;
-    }
-  }
-
-  contentTypeToString(contentType) {
-    switch (contentType) {
-      case 0:
-        return "TEXT";
-      case 1:
-        return "IMAGE";
-      default:
-        break;
-    }
-  }
-
-  createDataForChart(payees, shares) {
-    let amountOfOriginals = 0;
-    let amountOfReshares = 0;
-    let amountOfRemixes = 0;
-    let amountOfPublisher = 0;
-
-    for (let i = 0; i < payees.length; i++) {
-      if (i === payees.length - 1) {
-        amountOfPublisher = Number(shares[i]) / (1 * Math.pow(10, 18));
-      } else {
-        if (Number(shares[i]) / (1 * Math.pow(10, 18)) === 5) {
-          amountOfOriginals += 5;
-        } else if (Number(shares[i]) / (1 * Math.pow(10, 18)) === 4) {
-          amountOfRemixes += 4;
-        } else if (Number(shares[i]) / (1 * Math.pow(10, 18)) === 2) {
-          amountOfReshares += 2;
-        }
-      }
-    }
-
-    // Alle shares van Original, Reshare en Remix + altijd 20% voor de publisher
-    return [
-      amountOfOriginals,
-      amountOfReshares,
-      amountOfRemixes,
-      amountOfPublisher,
-    ];
-  }
-
   //Renders all the elements of the Post
   render() {
     return (
@@ -568,7 +514,7 @@ export default class Post extends Component {
                       >
                         {state.selectedAccount} <br />
                         <br />
-                        {this.contentTypeToString(this.state.contentType)}
+                        {contentTypeToString(this.state.contentType)}
                         <br />
                         <br />
                         {(() => {
@@ -1061,9 +1007,9 @@ export default class Post extends Component {
                         <br />
                         {this.state.id}
                         <br />
-                        {this.contractTypeToString(this.state.contractType)}
+                        {contractTypeToString(this.state.contractType)}
                         <br />
-                        {this.contentTypeToString(this.state.contentType)}
+                        {contentTypeToString(this.state.contentType)}
                         <br />
                         {this.state.originalPostAddress}
                         <br />
@@ -1073,26 +1019,9 @@ export default class Post extends Component {
                     </div>
 
                     <br />
-                    <h3>Pie Chart of Royaltysplit:</h3>
-                    <Chart
-                      options={{
-                        labels: ["Original", "Reshare", "Remix", "Publisher"],
-                        colors: ["#bf1f13", "#1391bf", "#41b037", "#8f246b"],
-                        legend: {
-                          fontSize: "20px",
-                          fontFamily: "PT Mono",
-                          fontWeight: 400,
-                          labels: {
-                            colors: ["#FFFFFF"],
-                          },
-                        },
-                      }}
-                      series={this.createDataForChart(
-                        this.state.payees,
-                        this.state.shares
-                      )}
-                      type="pie"
-                      width="500"
+                    <RoyaltieSplitDiagram
+                      payees={this.state.payees}
+                      shares={this.state.shares}
                     />
                   </div>
                 </Popup>
