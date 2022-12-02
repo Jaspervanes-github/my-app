@@ -5,58 +5,16 @@ const DataContext = React.createContext();
 function dataReducer(state, action) {
   switch (action.type) {
     case 'setProvider': {
-      // console.log("In setProvider");
-      return {
-        provider: action.value,
-        signer: state.signer,
-        accounts: state.accounts,
-        selectedAccount: state.selectedAccount,
-        posts: state.posts,
-        postData: state.postData
-
-      }
+      return { ...state, provider: action.value }
     } case 'setAccounts': {
-      // console.log("In setAccounts");
-      return {
-        provider: state.provider,
-        signer: state.signer,
-        accounts: action.value,
-        selectedAccount: state.selectedAccount,
-        posts: state.posts,
-        postData: state.postData
-      }
+      return { ...state, accounts: action.value }
     } case 'setSigner': {
-      // console.log("In setSigner");
-      return {
-        provider: state.provider,
-        signer: action.value,
-        accounts: state.accounts,
-        selectedAccount: state.selectedAccount,
-        posts: state.posts,
-        postData: state.postData
-      }
+      return { ...state, signer: action.value }
     } case 'setSelectedAccount': {
-      // console.log("In setSelectedAccount");
-      return {
-        provider: state.provider,
-        signer: state.signer,
-        accounts: state.accounts,
-        selectedAccount: action.value,
-        posts: state.posts,
-        postData: state.postData
-      }
+      return { ...state, selectedAccount: action.value }
     } case 'setPosts': {
-      // console.log("In setPosts: " + action.value);
-      return {
-        provider: state.provider,
-        signer: state.signer,
-        accounts: state.accounts,
-        selectedAccount: state.selectedAccount,
-        posts: action.value,
-        postData: state.postData
-      }
+      return { ...state, posts: action.value }
     } case 'addPost': {
-      // console.log("In addPost: " + action.value.toString());
       let currentPostList = state.posts;
       let currentPostDataList = state.postData;
       if (!currentPostList.includes(action.value)) {
@@ -64,35 +22,12 @@ function dataReducer(state, action) {
         localStorage.setItem("posts", JSON.stringify(currentPostList));
         currentPostDataList.unshift(action.data);
         localStorage.setItem("postData", JSON.stringify(currentPostDataList));
-        return {
-          provider: state.provider,
-          signer: state.signer,
-          accounts: state.accounts,
-          selectedAccount: state.selectedAccount,
-          posts: currentPostList,
-          postData: currentPostDataList
-        }
-      } else {
-        return {
-          provider: state.provider,
-          signer: state.signer,
-          accounts: state.accounts,
-          selectedAccount: state.selectedAccount,
-          posts: state.posts,
-          postData: state.postData
-        }
+        return { ...state, posts: currentPostList, postData: currentPostDataList }
       }
+      break;
     }
     case 'setPostData': {
-      // console.log("In setPostData: " + action.value);
-      return {
-        provider: state.provider,
-        signer: state.signer,
-        accounts: state.accounts,
-        selectedAccount: state.selectedAccount,
-        posts: state.posts,
-        postData: action.value
-      }
+      return { ...state, postData: action.value }
     }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`)
@@ -106,7 +41,8 @@ function DataProvider({ children }) {
     accounts: [],
     signer: '',
     selectedAccount: '',
-    posts: []
+    posts: [],
+    postData: []
   })
   const value = { state, dispatch }
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>

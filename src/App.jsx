@@ -4,6 +4,7 @@ import './App.css';
 import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { BrowserRouter } from 'react-router-dom';
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -64,11 +65,13 @@ export default class App extends Component {
               {/* <img src={logo} width="50px" height="50px" /> */}
             </h1>
 
+            <BrowserRouter>
             <Routes>
               <Route exact path="/" element={<Login />} />
               <Route path="/home" element={<Home />} />
               <Route path="*" element={<NoPage />} />
             </Routes>
+            </ BrowserRouter>
           </div>
         </DataProvider>
       </ThemeProvider>

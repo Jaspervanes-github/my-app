@@ -1,5 +1,4 @@
 import React from "react";
-import Footer from "../../components/Footer";
 import NavBar from '../../components/Navbar';
 import "./index.css";
 import { DataConsumer } from '../../DataContext';
@@ -28,7 +27,6 @@ const NoPage = () => {
               <Grid item className="grid-text" xs={1}>
                 <h1>Error 404: Page Not Found</h1>
                 <h3>Something went wrong...</h3>
-                {/* <Footer /> */}
               </Grid>
             </Grid>
           </div>

@@ -5,17 +5,17 @@ import RemixIcon from "@material-ui/icons/Edit";
 import ViewIcon from "@material-ui/icons/Visibility";
 import DetailIcon from "@material-ui/icons/Info";
 import CreatePostIcon from "@material-ui/icons/AddBox";
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import ViewportList from "react-viewport-list";
 import { ContractFactory, ethers } from "ethers";
-import * as IPFS from 'ipfs-core';
-import { toast } from 'react-toastify';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import Chart from 'react-apexcharts';
+import * as IPFS from "ipfs-core";
+import { toast } from "react-toastify";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import Chart from "react-apexcharts";
 
 import "./index.css";
 import Popup from "../../components/Popup";
-import { DataConsumer } from '../../DataContext';
+import { DataConsumer } from "../../DataContext";
 import Post_ABI from "../../assets/metadata/Post_ABI.json";
 import Post_ByteCode from "../../assets/metadata/Post_ByteCode.json";
 
@@ -24,13 +24,13 @@ const PUBLISHER_ADDRESS = "0x1F871dC82BF9048946540Ac41231b50fE4Da883b";
 const ContractType = {
   ORIGINAL: 0,
   RESHARE: 1,
-  REMIX: 2
-}
+  REMIX: 2,
+};
 
 const ContentType = {
   TEXT: 0,
-  IMAGE: 1
-}
+  IMAGE: 1,
+};
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -47,18 +47,18 @@ export default class Post extends Component {
       triggerViewPostPopup: false,
       triggerDetailPostPopup: false,
 
-      currentItem: '',
+      currentItem: "",
       id: 0,
-      contractType: '',
-      addressOfPoster: '',
-      originalPostAddress: '',
+      contractType: "",
+      addressOfPoster: "",
+      originalPostAddress: "",
       contentType: ContentType.TEXT,
-      hashOfContent: '',
-      content: '',
+      hashOfContent: "",
+      content: "",
       payees: [],
       shares: [],
-      royaltyMultiplier: '',
-    }
+      royaltyMultiplier: "",
+    };
 
     this.ref = React.createRef(null);
     this.handleChange = this.handleChange.bind(this);
@@ -74,7 +74,7 @@ export default class Post extends Component {
       pauseOnHover: true,
       draggable: false,
       progress: undefined,
-    })
+    });
   }
 
   //Handles the changes in the form element of the popups
@@ -84,19 +84,19 @@ export default class Post extends Component {
 
     let value;
     switch (target.type) {
-      case 'textarea':
+      case "textarea":
         value = target.value;
         break;
-      case 'select-one':
+      case "select-one":
         value = target.value;
         break;
-      case 'file':
+      case "file":
         const reader = new FileReader();
         reader.onload = () => {
           if (reader.readyState === 2) {
-            this.setState({ content: reader.result })
+            this.setState({ content: reader.result });
           }
-        }
+        };
         reader.readAsDataURL(event.target.files[0]);
         break;
       default:
@@ -104,7 +104,7 @@ export default class Post extends Component {
     }
 
     this.setState({
-      [name]: value
+      [name]: value,
     });
   }
 
@@ -113,9 +113,15 @@ export default class Post extends Component {
     this.createToastMessage("The post is being created, please wait...", 3000);
 
     let _hashOfContent;
-    if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+    if (
+      this.state.contentType === "0" ||
+      this.state.contentType === ContentType.TEXT
+    ) {
       _hashOfContent = await this.saveTextToIPFS(this.state.content);
-    } else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+    } else if (
+      this.state.contentType === "1" ||
+      this.state.contentType === ContentType.IMAGE
+    ) {
       _hashOfContent = await this.saveImageToIPFS(this.state.content);
     }
     // let _hashOfContent = await this.saveDataToIPFS(this.state.contentType, this.state.content);
@@ -141,55 +147,61 @@ export default class Post extends Component {
     switch (contentType) {
       case 0:
         return await this.saveTextToIPFS(data);
-        break;
       case 1:
         return await this.saveImageToIPFS(data);
+      default:
         break;
-      default: break;
     }
   }
 
   //Saves the text to the IPFS network and returns a hash of the content
   async saveTextToIPFS(text) {
-    let node = await IPFS.create({ repo: 'ok' + Math.random() });
+    let node = await IPFS.create({ repo: "ok" + Math.random() });
 
     let textAdded = await node.add(text);
     console.log(
-      "CID of Added text:", textAdded.cid.toString(),
-      "\nUrl is: ipfs.io/ipfs/" + textAdded.cid.toString());
+      "CID of Added text:",
+      textAdded.cid.toString(),
+      "\nUrl is: ipfs.io/ipfs/" + textAdded.cid.toString()
+    );
 
     return textAdded;
   }
 
   async saveImageToIPFS(image) {
-    let node = await IPFS.create({ repo: 'ok' + Math.random() });
+    let node = await IPFS.create({ repo: "ok" + Math.random() });
 
     let imageAdded = await node.add(image);
     console.log(
-      "CID of Added image:", imageAdded.cid.toString(),
-      "\nUrl is: ipfs.io/ipfs/" + imageAdded.cid.toString());
+      "CID of Added image:",
+      imageAdded.cid.toString(),
+      "\nUrl is: ipfs.io/ipfs/" + imageAdded.cid.toString()
+    );
 
     return imageAdded;
   }
 
   //Retrieves the data of the IPFS network using the given hash from the saveTextToIPFS()
   async retrieveDataFromIPFS(hash, contentType) {
-    let node = await IPFS.create({ repo: 'ok' + Math.random() });
+    let node = await IPFS.create({ repo: "ok" + Math.random() });
 
     let dataReceived;
     let asyncitr = node.cat(hash);
     const decoder = new TextDecoder();
-    dataReceived = '';
+    dataReceived = "";
 
     for await (const itr of asyncitr) {
-      dataReceived += decoder.decode(itr, { stream: true })
+      dataReceived += decoder.decode(itr, { stream: true });
       console.log("Data received: " + dataReceived);
     }
     return dataReceived;
   }
 
   //Deploys a new Post contract to the blockchain and adds it to to posts list
-  async deployNewPostContract(state, dispatch, type,
+  async deployNewPostContract(
+    state,
+    dispatch,
+    type,
     id,
     contractType,
     originalPostAddress,
@@ -200,7 +212,11 @@ export default class Post extends Component {
     royaltyMultiplier
   ) {
     try {
-      const factory = new ContractFactory(Post_ABI, Post_ByteCode, state.signer);
+      const factory = new ContractFactory(
+        Post_ABI,
+        Post_ByteCode,
+        state.signer
+      );
       let copyPayees = [...payees];
       let copyShares = [...shares];
       if (copyPayees.includes(PUBLISHER_ADDRESS)) {
@@ -221,7 +237,11 @@ export default class Post extends Component {
       );
       console.log("Address of deployed contract: " + contract.address);
 
-      dispatch({ type: 'addPost', value: contract.address, data: this.state.content });
+      dispatch({
+        type: "addPost",
+        value: contract.address,
+        data: this.state.content,
+      });
     } catch (err) {
       console.error(err);
       switch (type) {
@@ -234,9 +254,13 @@ export default class Post extends Component {
         case ContractType.ORIGINAL:
           this.setState({ triggerNewPostPopup: true });
           break;
-        default: break;
+        default:
+          break;
       }
-      this.createToastMessage("To submit the post you need to accept the transaction.", 5000);
+      this.createToastMessage(
+        "To submit the post you need to accept the transaction.",
+        5000
+      );
     }
   }
 
@@ -275,8 +299,8 @@ export default class Post extends Component {
       payees: [],
       shares: [],
       royaltyMultiplier: 5,
-      content: '',
-      triggerNewPostPopup: true
+      content: "",
+      triggerNewPostPopup: true,
     });
   }
 
@@ -291,7 +315,9 @@ export default class Post extends Component {
         let isAlreadyOwner = false;
 
         for (let i = 0; i < _payees.length; i++) {
-          if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
+          if (
+            _payees[i].toUpperCase() === state.selectedAccount.toUpperCase()
+          ) {
             isAlreadyOwner = true;
             break;
           }
@@ -301,13 +327,19 @@ export default class Post extends Component {
           return;
         }
 
-        this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
+        this.createToastMessage(
+          "The data of the contract is being retrieved, please wait...",
+          3000
+        );
 
         let _contentType = await contract.contentType();
         let _originalPostAddress = await contract.originalPost();
         let _shares = await contract.getAllShares();
         let _hashOfContent = await contract.hashOfContent();
-        let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
+        let _content = await this.retrieveDataFromIPFS(
+          _hashOfContent,
+          _contentType
+        );
 
         this.setState({
           currentItem: item,
@@ -319,7 +351,7 @@ export default class Post extends Component {
           royaltyMultiplier: 2,
           hashOfContent: _hashOfContent,
           content: _content,
-          triggerResharePostPopup: true
+          triggerResharePostPopup: true,
         });
       }
     } catch (err) {
@@ -339,7 +371,9 @@ export default class Post extends Component {
         let isAlreadyOwner = false;
 
         for (let i = 0; i < _payees.length; i++) {
-          if (_payees[i].toUpperCase() === state.selectedAccount.toUpperCase()) {
+          if (
+            _payees[i].toUpperCase() === state.selectedAccount.toUpperCase()
+          ) {
             isAlreadyOwner = true;
             break;
           }
@@ -349,13 +383,19 @@ export default class Post extends Component {
           return;
         }
 
-        this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
+        this.createToastMessage(
+          "The data of the contract is being retrieved, please wait...",
+          3000
+        );
 
         let _contentType = await contract.contentType();
         let _originalPostAddress = await contract.originalPost();
         let _shares = await contract.getAllShares();
         let _hashOfContent = await contract.hashOfContent();
-        let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
+        let _content = await this.retrieveDataFromIPFS(
+          _hashOfContent,
+          _contentType
+        );
 
         this.setState({
           currentItem: item,
@@ -367,7 +407,7 @@ export default class Post extends Component {
           royaltyMultiplier: 4,
           hashOfContent: _hashOfContent,
           content: _content,
-          triggerRemixPostPopup: true
+          triggerRemixPostPopup: true,
         });
       }
     } catch (err) {
@@ -385,14 +425,21 @@ export default class Post extends Component {
         let contract = new ethers.Contract(item, Post_ABI, state.signer);
         let _addressOfPoster = await contract.addressOfPoster();
 
-        if (_addressOfPoster.toLowerCase() !== state.selectedAccount.toLowerCase()) {
+        if (
+          _addressOfPoster.toLowerCase() !== state.selectedAccount.toLowerCase()
+        ) {
           try {
             this.createToastMessage("Awaiting transaction...", 3000);
 
-            const transaction = await contract.viewPost({ value: ethers.utils.parseEther("0.00001") });
+            const transaction = await contract.viewPost({
+              value: ethers.utils.parseEther("0.00001"),
+            });
             await transaction.wait();
           } catch (err) {
-            this.createToastMessage("To view the content of the post you need to accept the transaction.", 5000);
+            this.createToastMessage(
+              "To view the content of the post you need to accept the transaction.",
+              5000
+            );
             console.error(err);
             return;
           }
@@ -404,7 +451,10 @@ export default class Post extends Component {
         let _contentType = await contract.contentType();
         let _id = await contract.id();
         let _hashOfContent = await contract.hashOfContent();
-        let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
+        let _content = await this.retrieveDataFromIPFS(
+          _hashOfContent,
+          _contentType
+        );
 
         this.setState({
           currentItem: item,
@@ -413,7 +463,7 @@ export default class Post extends Component {
           contentType: _contentType,
           hashOfContent: _hashOfContent,
           content: _content,
-          triggerViewPostPopup: true
+          triggerViewPostPopup: true,
         });
       }
     } catch (err) {
@@ -427,7 +477,10 @@ export default class Post extends Component {
       if (!this.state.isBusy) {
         this.setState({ isBusy: true });
 
-        this.createToastMessage("The data of the contract is being retrieved, please wait...", 3000);
+        this.createToastMessage(
+          "The data of the contract is being retrieved, please wait...",
+          3000
+        );
 
         let contract = new ethers.Contract(item, Post_ABI, state.signer);
         let _addressOfPoster = await contract.addressOfPoster();
@@ -440,7 +493,10 @@ export default class Post extends Component {
         let _shares = await contract.getAllShares();
         let _royaltyMultiplier = await contract.royaltyMultiplier();
         let _hashOfContent = await contract.hashOfContent();
-        let _content = await this.retrieveDataFromIPFS(_hashOfContent, _contentType);
+        let _content = await this.retrieveDataFromIPFS(
+          _hashOfContent,
+          _contentType
+        );
 
         this.setState({
           currentItem: item,
@@ -454,7 +510,7 @@ export default class Post extends Component {
           royaltyMultiplier: _royaltyMultiplier,
           hashOfContent: _hashOfContent,
           content: _content,
-          triggerDetailPostPopup: true
+          triggerDetailPostPopup: true,
         });
       }
     } catch (err) {
@@ -464,8 +520,8 @@ export default class Post extends Component {
   }
 
   resizeHeightOfElement(elem) {
-    elem.target.style.height = '1px';
-    elem.target.style.height = elem.target.scrollHeight + 'px';
+    elem.target.style.height = "1px";
+    elem.target.style.height = elem.target.scrollHeight + "px";
   }
 
   contractTypeToString(contractType) {
@@ -513,7 +569,12 @@ export default class Post extends Component {
     }
 
     // Alle shares van Original, Reshare en Remix + altijd 20% voor de publisher
-    return [amountOfOriginals, amountOfReshares, amountOfRemixes, amountOfPublisher];
+    return [
+      amountOfOriginals,
+      amountOfReshares,
+      amountOfRemixes,
+      amountOfPublisher,
+    ];
   }
 
   //Renders all the elements of the Post
@@ -524,8 +585,13 @@ export default class Post extends Component {
           <React.Fragment>
             <div className="main">
               <Box className="button-container">
-                <Button className="create" startIcon={<CreatePostIcon />}
-                  onClick={() => { this.createNewPost() }}>
+                <Button
+                  className="create"
+                  startIcon={<CreatePostIcon />}
+                  onClick={() => {
+                    this.createNewPost();
+                  }}
+                >
                   Create New Post
                 </Button>
               </Box>
@@ -533,35 +599,83 @@ export default class Post extends Component {
               {/* <Button variant="contained" onClick={() => { localStorage.setItem("posts", JSON.stringify([])); localStorage.setItem("postData", JSON.stringify([])) }}>
                 Clear the localStorage
               </Button> */}
-              <div className="scroll-container" ref={this.ref} style={{
-                maxHeight: (window.innerHeight / 1.4) + 'px'
-              }}>
-                <ViewportList viewportRef={this.ref} items={state.posts || []} itemMinSize={40} margin={8}>
+              <div
+                className="scroll-container"
+                ref={this.ref}
+                style={{
+                  maxHeight: window.innerHeight / 1.4 + "px",
+                }}
+              >
+                <ViewportList
+                  viewportRef={this.ref}
+                  items={state.posts || []}
+                  itemMinSize={40}
+                  margin={8}
+                >
                   {(item) => (
                     <React.Fragment key={state.posts.indexOf(item)}>
                       <div className="post">
                         <div className="container">
-                          <h3>
-                            Address of Contract: {item}
-                          </h3>
-                          {state.postData[state.posts.indexOf(item)].substring(0, 11) !== "data:image/"
-                            ? state.postData[state.posts.indexOf(item)].substring(0, 225) + "..."
-                            : <img src={state.postData[state.posts.indexOf(item)]} alt="" className="imageBox" />}
-                          <br /><br /><br />
-                          <u>To view the full content of the post click the "View" icon!</u>
+                          <h3>Address of Contract: {item}</h3>
+                          {state.postData[state.posts.indexOf(item)].substring(
+                            0,
+                            11
+                          ) !== "data:image/" ? (
+                            state.postData[state.posts.indexOf(item)].substring(
+                              0,
+                              225
+                            ) + "..."
+                          ) : (
+                            <img
+                              src={state.postData[state.posts.indexOf(item)]}
+                              alt=""
+                              className="imageBox"
+                            />
+                          )}
+                          <br />
+                          <br />
+                          <br />
+                          <u>
+                            To view the full content of the post click the
+                            "View" icon!
+                          </u>
                         </div>
                         <br />
                         <div className="post-buttons">
-                          <IconButton className="button" title="Reshare Post" onClick={() => { this.createResharePost(state, item) }}>
+                          <IconButton
+                            className="button"
+                            title="Reshare Post"
+                            onClick={() => {
+                              this.createResharePost(state, item);
+                            }}
+                          >
                             <ReshareIcon />
                           </IconButton>
-                          <IconButton className="button" title="Remix Post" onClick={() => { this.createRemixPost(state, item) }}>
+                          <IconButton
+                            className="button"
+                            title="Remix Post"
+                            onClick={() => {
+                              this.createRemixPost(state, item);
+                            }}
+                          >
                             <RemixIcon />
                           </IconButton>
-                          <IconButton className="button" title="View Post" onClick={() => { this.viewPost(state, item) }}>
+                          <IconButton
+                            className="button"
+                            title="View Post"
+                            onClick={() => {
+                              this.viewPost(state, item);
+                            }}
+                          >
                             <ViewIcon />
                           </IconButton>
-                          <IconButton className="button" title="Detail of the Post" onClick={() => { this.detailPost(state, item) }}>
+                          <IconButton
+                            className="button"
+                            title="Detail of the Post"
+                            onClick={() => {
+                              this.detailPost(state, item);
+                            }}
+                          >
                             <DetailIcon />
                           </IconButton>
                         </div>
@@ -572,74 +686,130 @@ export default class Post extends Component {
               </div>
 
               <div className="resharePostTemplate">
-                <Popup trigger={this.state.triggerResharePostPopup} setTrigger={() => {
-                  this.setState({
-                    triggerResharePostPopup: false,
-                    isBusy: false
-                  });
-                }}>
-                  <h2>Reshare Post</h2>
-                  <form onSubmit={(event) => {
-                    if (this.state.content === '') {
-                      this.createToastMessage("Please enter a valid text", 5000);
-                      event.preventDefault();
-                      return;
-                    }
-                    this.handleSubmit(event, state, dispatch, ContractType.RESHARE);
+                <Popup
+                  trigger={this.state.triggerResharePostPopup}
+                  setTrigger={() => {
                     this.setState({
                       triggerResharePostPopup: false,
-                      isBusy: false
+                      isBusy: false,
                     });
-                  }}>
+                  }}
+                >
+                  <h2>Reshare Post</h2>
+                  <form
+                    onSubmit={(event) => {
+                      if (this.state.content === "") {
+                        this.createToastMessage(
+                          "Please enter a valid text",
+                          5000
+                        );
+                        event.preventDefault();
+                        return;
+                      }
+                      this.handleSubmit(
+                        event,
+                        state,
+                        dispatch,
+                        ContractType.RESHARE
+                      );
+                      this.setState({
+                        triggerResharePostPopup: false,
+                        isBusy: false,
+                      });
+                    }}
+                  >
                     <div className="textbox-container">
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold" }}>
-                        Address of Poster:<br /><br />
-                        Content Type:<br /><br />
+                      <p
+                        className="textbox"
+                        style={{
+                          height: this.scrollHeight + "px",
+                          maxHeight: window.innerHeight / 2 + 20,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Address of Poster:
+                        <br />
+                        <br />
+                        Content Type:
+                        <br />
+                        <br />
                         Content of Post:
                       </p>
 
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20 }}>
-                        {state.selectedAccount} <br /><br />
-                        {this.contentTypeToString(this.state.contentType)}<br /><br />
+                      <p
+                        className="textbox"
+                        style={{
+                          height: this.scrollHeight + "px",
+                          maxHeight: window.innerHeight / 2 + 20,
+                        }}
+                      >
+                        {state.selectedAccount} <br />
+                        <br />
+                        {this.contentTypeToString(this.state.contentType)}
+                        <br />
+                        <br />
                         {(() => {
                           //if contentType is TEXT
-                          if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                          if (
+                            this.state.contentType === "0" ||
+                            this.state.contentType === ContentType.TEXT
+                          ) {
                             return (
-                              <p className="textbox" style={{
-                                height: this.scrollHeight + 'px',
-                                maxHeight: window.innerHeight / 2,
-                              }}>
+                              <p
+                                className="textbox"
+                                style={{
+                                  height: this.scrollHeight + "px",
+                                  maxHeight: window.innerHeight / 2,
+                                }}
+                              >
                                 {this.state.content}
                               </p>
-                            )
+                            );
                           }
                           //if contentType is IMAGE
-                          else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                          else if (
+                            this.state.contentType === "1" ||
+                            this.state.contentType === ContentType.IMAGE
+                          ) {
                             return (
                               // render Image selection component here
                               <div>
-                                <img src={this.state.content} alt="" className="imageBox" />
+                                <img
+                                  src={this.state.content}
+                                  alt=""
+                                  className="imageBox"
+                                />
                               </div>
-                            )
+                            );
                           }
                         })()}
                       </p>
                     </div>
                     <p className="title">
-                      <br />COSTS<br />
+                      <br />
+                      COSTS
+                      <br />
                     </p>
                     <div className="infoBox">
                       <p className="item" style={{ fontWeight: "bold" }}>
-                        New Post:<br />
-                        Reshare:<br />
-                        Remix:<br />
-                        View:<br />
+                        New Post:
+                        <br />
+                        Reshare:
+                        <br />
+                        Remix:
+                        <br />
+                        View:
+                        <br />
                       </p>
                       <p className="item">
-                        0.0057  &nbsp;ETH<br />
-                        0.0035  &nbsp;ETH<br />
-                        0.0035  &nbsp;ETH<br />
-                        0.00031 ETH<br />
+                        0.0057 &nbsp;ETH
+                        <br />
+                        0.0035 &nbsp;ETH
+                        <br />
+                        0.0035 &nbsp;ETH
+                        <br />
+                        0.00031 ETH
+                        <br />
                       </p>
                     </div>
                     <input type="submit" value="Submit Post" />
@@ -648,75 +818,150 @@ export default class Post extends Component {
               </div>
 
               <div className="remixPostTemplate">
-                <Popup trigger={this.state.triggerRemixPostPopup} setTrigger={() => {
-                  this.setState({
-                    triggerRemixPostPopup: false,
-                    isBusy: false
-                  });
-                }}>
-                  <h2>Remix Post</h2>
-                  <form onSubmit={(event) => {
-                    if (this.state.content === '') {
-                      this.createToastMessage("Please enter a valid text", 5000);
-                      event.preventDefault();
-                      return;
-                    }
-                    this.handleSubmit(event, state, dispatch, ContractType.REMIX);
+                <Popup
+                  trigger={this.state.triggerRemixPostPopup}
+                  setTrigger={() => {
                     this.setState({
                       triggerRemixPostPopup: false,
-                      isBusy: false
+                      isBusy: false,
                     });
-                  }}>
+                  }}
+                >
+                  <h2>Remix Post</h2>
+                  <form
+                    onSubmit={(event) => {
+                      if (this.state.content === "") {
+                        this.createToastMessage(
+                          "Please enter a valid text",
+                          5000
+                        );
+                        event.preventDefault();
+                        return;
+                      }
+                      this.handleSubmit(
+                        event,
+                        state,
+                        dispatch,
+                        ContractType.REMIX
+                      );
+                      this.setState({
+                        triggerRemixPostPopup: false,
+                        isBusy: false,
+                      });
+                    }}
+                  >
                     <div className="textbox-container">
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold" }}>
-                        Address of Poster:<br /><br />
-                        Content Type:<br /><br />
+                      <p
+                        className="textbox"
+                        style={{
+                          height: this.scrollHeight + "px",
+                          maxHeight: window.innerHeight / 2 + 20,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Address of Poster:
+                        <br />
+                        <br />
+                        Content Type:
+                        <br />
+                        <br />
                         Content of Post:
                       </p>
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20 }}>
-                        {state.selectedAccount}<br /><br />
-                        <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
+                      <p
+                        className="textbox"
+                        style={{
+                          height: this.scrollHeight + "px",
+                          maxHeight: window.innerHeight / 2 + 20,
+                        }}
+                      >
+                        {state.selectedAccount}
+                        <br />
+                        <br />
+                        <select
+                          type="select"
+                          name="contentType"
+                          value={this.state.contentType}
+                          onChange={this.handleChange}
+                        >
                           <option value="0">TEXT</option>
                           <option value="1">IMAGE</option>
-                        </select><br /><br />
+                        </select>
+                        <br />
+                        <br />
                         {(() => {
                           //if contentType is TEXT
-                          if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                          if (
+                            this.state.contentType === "0" ||
+                            this.state.contentType === ContentType.TEXT
+                          ) {
                             return (
-                              <textarea className="textarea" name="content" rows="1" placeholder="Type text here..." value={this.state.content} style={{
-                                height: this.scrollHeight + 'px',
-                                maxHeight: window.innerHeight / 2
-                              }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange} />
-                            )
+                              <textarea
+                                className="textarea"
+                                name="content"
+                                rows="1"
+                                placeholder="Type text here..."
+                                value={this.state.content}
+                                style={{
+                                  height: this.scrollHeight + "px",
+                                  maxHeight: window.innerHeight / 2,
+                                }}
+                                onInput={this.resizeHeightOfElement}
+                                onSelect={this.resizeHeightOfElement}
+                                onChange={this.handleChange}
+                              />
+                            );
                           }
                           //if contentType is IMAGE
-                          else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                          else if (
+                            this.state.contentType === "1" ||
+                            this.state.contentType === ContentType.IMAGE
+                          ) {
                             return (
                               // render Image selection component here
                               <div>
-                                <img src={this.state.content}  alt="" className="imageBox" />
-                                <input type="file" name="content" id="input" accept="image/*" onChange={this.handleChange} />
+                                <img
+                                  src={this.state.content}
+                                  alt=""
+                                  className="imageBox"
+                                />
+                                <input
+                                  type="file"
+                                  name="content"
+                                  id="input"
+                                  accept="image/*"
+                                  onChange={this.handleChange}
+                                />
                               </div>
-                            )
+                            );
                           }
                         })()}
                       </p>
                     </div>
                     <p className="title">
-                      <br />COSTS<br />
+                      <br />
+                      COSTS
+                      <br />
                     </p>
                     <div className="infoBox">
                       <p className="item" style={{ fontWeight: "bold" }}>
-                        New Post:<br />
-                        Reshare:<br />
-                        Remix:<br />
-                        View:<br />
+                        New Post:
+                        <br />
+                        Reshare:
+                        <br />
+                        Remix:
+                        <br />
+                        View:
+                        <br />
                       </p>
                       <p className="item">
-                        0.0057  &nbsp;ETH<br />
-                        0.0035  &nbsp;ETH<br />
-                        0.0035  &nbsp;ETH<br />
-                        0.00031 ETH<br />
+                        0.0057 &nbsp;ETH
+                        <br />
+                        0.0035 &nbsp;ETH
+                        <br />
+                        0.0035 &nbsp;ETH
+                        <br />
+                        0.00031 ETH
+                        <br />
                       </p>
                     </div>
                     <input type="submit" value="Submit Post" />
@@ -725,148 +970,293 @@ export default class Post extends Component {
               </div>
 
               <div className="newPostTemplate">
-                <Popup trigger={this.state.triggerNewPostPopup} setTrigger={() => {
-                  this.setState({
-                    triggerNewPostPopup: false,
-                    isBusy: false
-                  });
-                }}>
-                  <h2>New Post</h2>
-                  <form onSubmit={(event) => {
-                    if (this.state.content === '') {
-                      this.createToastMessage("Please enter a valid text", 5000);
-                      event.preventDefault();
-                      return;
-                    }
-                    this.handleSubmit(event, state, dispatch, ContractType.ORIGINAL);
+                <Popup
+                  trigger={this.state.triggerNewPostPopup}
+                  setTrigger={() => {
                     this.setState({
                       triggerNewPostPopup: false,
-                      isBusy: false
+                      isBusy: false,
                     });
-                  }}>
+                  }}
+                >
+                  <h2>New Post</h2>
+                  <form
+                    onSubmit={(event) => {
+                      if (this.state.content === "") {
+                        this.createToastMessage(
+                          "Please enter a valid text",
+                          5000
+                        );
+                        event.preventDefault();
+                        return;
+                      }
+                      this.handleSubmit(
+                        event,
+                        state,
+                        dispatch,
+                        ContractType.ORIGINAL
+                      );
+                      this.setState({
+                        triggerNewPostPopup: false,
+                        isBusy: false,
+                      });
+                    }}
+                  >
                     <div className="textbox-container">
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold" }}>
-                        Address of Poster:<br /><br />
-                        Content Type:<br /><br />
-                        Content of Post:<br /><br />
+                      <p
+                        className="textbox"
+                        style={{
+                          height: this.scrollHeight + "px",
+                          maxHeight: window.innerHeight / 2 + 20,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Address of Poster:
+                        <br />
+                        <br />
+                        Content Type:
+                        <br />
+                        <br />
+                        Content of Post:
+                        <br />
+                        <br />
                       </p>
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20 }}>
-                        {state.selectedAccount}<br /><br />
+                      <p
+                        className="textbox"
+                        style={{
+                          height: this.scrollHeight + "px",
+                          maxHeight: window.innerHeight / 2 + 20,
+                        }}
+                      >
+                        {state.selectedAccount}
+                        <br />
+                        <br />
 
-                        <select type="select" name="contentType" value={this.state.contentType} onChange={this.handleChange}>
+                        <select
+                          type="select"
+                          name="contentType"
+                          value={this.state.contentType}
+                          onChange={this.handleChange}
+                        >
                           <option value="0">TEXT</option>
                           <option value="1">IMAGE</option>
-                        </select><br /><br />
+                        </select>
+                        <br />
+                        <br />
 
                         {(() => {
                           //if contentType is TEXT
-                          if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                          if (
+                            this.state.contentType === "0" ||
+                            this.state.contentType === ContentType.TEXT
+                          ) {
                             return (
-                              <textarea className="textarea" name="content" rows="1" placeholder="Type text here..." value={this.state.content} style={{
-                                height: this.scrollHeight + 'px',
-                                maxHeight: window.innerHeight / 2
-                              }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange} />
-                            )
+                              <textarea
+                                className="textarea"
+                                name="content"
+                                rows="1"
+                                placeholder="Type text here..."
+                                value={this.state.content}
+                                style={{
+                                  height: this.scrollHeight + "px",
+                                  maxHeight: window.innerHeight / 2,
+                                }}
+                                onInput={this.resizeHeightOfElement}
+                                onSelect={this.resizeHeightOfElement}
+                                onChange={this.handleChange}
+                              />
+                            );
                           }
                           //if contentType is IMAGE
-                          else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                          else if (
+                            this.state.contentType === "1" ||
+                            this.state.contentType === ContentType.IMAGE
+                          ) {
                             return (
                               // render Image selection component here
                               <span className="image-container">
-                                <img src={this.state.content}  alt="" className="imageBox" /><br />
-                                <input type="file" name="content" id="input" accept="image/*" onChange={this.handleChange} />
+                                <img
+                                  src={this.state.content}
+                                  alt=""
+                                  className="imageBox"
+                                />
+                                <br />
+                                <input
+                                  type="file"
+                                  name="content"
+                                  id="input"
+                                  accept="image/*"
+                                  onChange={this.handleChange}
+                                />
                               </span>
-                            )
+                            );
                           }
                         })()}
-                        <br /><br />
+                        <br />
+                        <br />
                       </p>
                     </div>
-                    <input className="submit-button" type="submit" value="Submit Post" />
+                    <input
+                      className="submit-button"
+                      type="submit"
+                      value="Submit Post"
+                    />
                   </form>
                 </Popup>
               </div>
 
               <div className="viewPostTemplate">
-                <Popup trigger={this.state.triggerViewPostPopup} setTrigger={() => {
-                  this.setState({
-                    triggerViewPostPopup: false,
-                    isBusy: false
-                  });
-                }}>
+                <Popup
+                  trigger={this.state.triggerViewPostPopup}
+                  setTrigger={() => {
+                    this.setState({
+                      triggerViewPostPopup: false,
+                      isBusy: false,
+                    });
+                  }}
+                >
                   <h2>View Post</h2>
                   <div className="textbox-container">
-                    <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold" }}>
-                      Address of Poster:<br /><br />
-                      Contract ID:<br /><br />
+                    <p
+                      className="textbox"
+                      style={{
+                        height: this.scrollHeight + "px",
+                        maxHeight: window.innerHeight / 2 + 20,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Address of Poster:
+                      <br />
+                      <br />
+                      Contract ID:
+                      <br />
+                      <br />
                       Content of Post:
-
                     </p>
-                    <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20 }}>
-                      {this.state.addressOfPoster}<br /><br />
-                      {this.state.id}<br /><br />
+                    <p
+                      className="textbox"
+                      style={{
+                        height: this.scrollHeight + "px",
+                        maxHeight: window.innerHeight / 2 + 20,
+                      }}
+                    >
+                      {this.state.addressOfPoster}
+                      <br />
+                      <br />
+                      {this.state.id}
+                      <br />
+                      <br />
                       {(() => {
                         //if contentType is TEXT
-                        if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
+                        if (
+                          this.state.contentType === "0" ||
+                          this.state.contentType === ContentType.TEXT
+                        ) {
                           return (
-                            <p className="textbox" style={{
-                              height: this.scrollHeight + 'px',
-                              maxHeight: window.innerHeight / 2
-                            }}>
+                            <p
+                              className="textbox"
+                              style={{
+                                height: this.scrollHeight + "px",
+                                maxHeight: window.innerHeight / 2,
+                              }}
+                            >
                               {this.state.content}
                             </p>
-                          )
+                          );
                         }
                         //if contentType is IMAGE
-                        else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
+                        else if (
+                          this.state.contentType === "1" ||
+                          this.state.contentType === ContentType.IMAGE
+                        ) {
                           return (
                             // render Image selection component here
                             <div>
-                              <img src={this.state.content} alt="" className="imageBox" />
+                              <img
+                                src={this.state.content}
+                                alt=""
+                                className="imageBox"
+                              />
                             </div>
-                          )
+                          );
                         }
                       })()}
                     </p>
-
                   </div>
                 </Popup>
               </div>
 
               <div className="detailTemplate">
-                <Popup trigger={this.state.triggerDetailPostPopup} setTrigger={() => {
-                  this.setState({
-                    triggerDetailPostPopup: false,
-                    isBusy: false
-                  });
-                }}>
+                <Popup
+                  trigger={this.state.triggerDetailPostPopup}
+                  setTrigger={() => {
+                    this.setState({
+                      triggerDetailPostPopup: false,
+                      isBusy: false,
+                    });
+                  }}
+                >
                   <h2>Details of the post</h2>
                   <div className="container">
                     <div className="textbox-container">
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20, fontWeight: "bold", width: "35%" }}>
-                        Link to the contract:<br />
-                        Wallet Address of Poster:<br />
-                        Contract ID:<br />
-                        Contract Type:<br />
-                        ContentType:<br />
-                        Original Post:<br />
-                        Hash of the content:<br />
+                      <p
+                        className="textbox"
+                        style={{
+                          height: this.scrollHeight + "px",
+                          maxHeight: window.innerHeight / 2 + 20,
+                          fontWeight: "bold",
+                          width: "35%",
+                        }}
+                      >
+                        Link to the contract:
+                        <br />
+                        Wallet Address of Poster:
+                        <br />
+                        Contract ID:
+                        <br />
+                        Contract Type:
+                        <br />
+                        ContentType:
+                        <br />
+                        Original Post:
+                        <br />
+                        Hash of the content:
+                        <br />
                       </p>
-                      <p className="textbox" style={{ height: this.scrollHeight + 'px', maxHeight: (window.innerHeight / 2) + 20 }}>
-                        <a href={"https://sepolia.etherscan.io/address/" + this.state.currentItem} target="_blank">Click here to visit etherscan!</a><br />
-                        {this.state.addressOfPoster}<br />
-                        {this.state.id}<br />
-                        {this.contractTypeToString(this.state.contractType)}<br />
-                        {this.contentTypeToString(this.state.contentType)}<br />
-                        {this.state.originalPostAddress}<br />
-                        {this.state.hashOfContent}<br />
+                      <p
+                        className="textbox"
+                        style={{
+                          height: this.scrollHeight + "px",
+                          maxHeight: window.innerHeight / 2 + 20,
+                        }}
+                      >
+                        <a
+                          href={
+                            "https://sepolia.etherscan.io/address/" +
+                            this.state.currentItem
+                          }
+                          target="_blank"
+                        >
+                          Click here to visit etherscan!
+                        </a>
+                        <br />
+                        {this.state.addressOfPoster}
+                        <br />
+                        {this.state.id}
+                        <br />
+                        {this.contractTypeToString(this.state.contractType)}
+                        <br />
+                        {this.contentTypeToString(this.state.contentType)}
+                        <br />
+                        {this.state.originalPostAddress}
+                        <br />
+                        {this.state.hashOfContent}
+                        <br />
                       </p>
                     </div>
 
                     <br />
-                    <h3>
-                      Pie Chart of Royaltysplit:
-                    </h3>
+                    <h3>Pie Chart of Royaltysplit:</h3>
                     <Chart
                       options={{
                         labels: ["Original", "Reshare", "Remix", "Publisher"],
@@ -876,23 +1266,24 @@ export default class Post extends Component {
                           fontFamily: "PT Mono",
                           fontWeight: 400,
                           labels: {
-                            colors: ["#FFFFFF"]
-                          }
-                        }
+                            colors: ["#FFFFFF"],
+                          },
+                        },
                       }}
-                      series={this.createDataForChart(this.state.payees, this.state.shares)}
+                      series={this.createDataForChart(
+                        this.state.payees,
+                        this.state.shares
+                      )}
                       type="pie"
                       width="500"
                     />
                   </div>
                 </Popup>
               </div>
-
             </div>
-          </React.Fragment >
-        )
-        }
+          </React.Fragment>
+        )}
       </DataConsumer>
-    )
+    );
   }
 }
