@@ -161,6 +161,7 @@ export default class Post extends Component {
         }
         if (isAlreadyOwner) {
           createToastMessage("You can't reshare your own posts", false);
+          this.setState({ isBusy: false });
           return;
         }
 
@@ -214,6 +215,7 @@ export default class Post extends Component {
         }
         if (isAlreadyOwner) {
           createToastMessage("You can't reshare your own posts", false);
+          this.setState({ isBusy: false });
           return;
         }
 
@@ -272,10 +274,12 @@ export default class Post extends Component {
               5000
             );
             console.error(err);
+            this.setState({ isBusy: false });
             return;
           }
         } else {
           createToastMessage("You can't view your own posts", 5000);
+          this.setState({ isBusy: false });
           return;
         }
 

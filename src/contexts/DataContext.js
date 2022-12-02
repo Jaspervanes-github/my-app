@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { dataReducer } from '../reducers/DataReducer';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const DataContext = React.createContext();
@@ -16,12 +16,12 @@ function DataProvider({ children }) {
     })
     const navigate = useNavigate();
 
-    useEffect(()=>{
-        if(window.location.pathname === "/login")
+    useEffect(() => {
+        if (window.location.pathname === "/login")
             return;
-            if(state.provider === '')
+        if (state.provider === '')
             navigate("/login");
-            } , [state])
+    }, [state])
 
     const value = { state, dispatch }
     return <DataContext.Provider value={value}>
