@@ -6,7 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   
-  background-image: url("HP_Background.png");
+  background-image: url("./assets/images/HP_Background.png");
   color: white;
 }
 

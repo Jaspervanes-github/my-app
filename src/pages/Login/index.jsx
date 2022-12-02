@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { ethers } from "ethers";
-import { DataConsumer } from '../DataContext';
-import "./Login.css";
+import { DataConsumer } from '../../DataContext';
+import "./index.css";
 
 
 export default class Login extends Component {
@@ -49,14 +49,14 @@ export default class Login extends Component {
                             This application simulates the workings of a social media platform in combination with the blockchain.
                             <br />
                             <br />
-                            Please click "Connect to MetaMask" to login to your cryptowallet account. Once connected you get navigated to the home page of the application.
+                            Please click "Sign in with MetaMask" to login to your cryptowallet account. Once connected you get navigated to the home page of the application.
                         </p>
                         <div className="container" >
                             <Button className="button" variant='contained' onClick=
                                 {
                                     () => this.connectToMetamask(state, dispatch)
                                 }>
-                                Connect to Metamask
+                                Sign in with Metamask
                             </Button>
                         </div>
                     </div>

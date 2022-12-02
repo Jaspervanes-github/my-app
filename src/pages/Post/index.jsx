@@ -13,11 +13,11 @@ import { toast } from 'react-toastify';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import Chart from 'react-apexcharts';
 
-import "./Post.css";
-import Popup from "../components/Popup.js";
-import { DataConsumer } from '../DataContext';
-import Post_ABI from "../Post_ABI.json";
-import Post_ByteCode from "../Post_ByteCode.json";
+import "./index.css";
+import Popup from "../../components/Popup";
+import { DataConsumer } from '../../DataContext';
+import Post_ABI from "../../assets/metadata/Post_ABI.json";
+import Post_ByteCode from "../../assets/metadata/Post_ByteCode.json";
 
 const PUBLISHER_ADDRESS = "0x1F871dC82BF9048946540Ac41231b50fE4Da883b";
 
@@ -546,7 +546,7 @@ export default class Post extends Component {
                           </h3>
                           {state.postData[state.posts.indexOf(item)].substring(0, 11) !== "data:image/"
                             ? state.postData[state.posts.indexOf(item)].substring(0, 225) + "..."
-                            : <img src={state.postData[state.posts.indexOf(item)]} className="imageBox" />}
+                            : <img src={state.postData[state.posts.indexOf(item)]} alt="" className="imageBox" />}
                           <br /><br /><br />
                           <u>To view the full content of the post click the "View" icon!</u>
                         </div>
@@ -618,7 +618,7 @@ export default class Post extends Component {
                             return (
                               // render Image selection component here
                               <div>
-                                <img src={this.state.content} className="imageBox" />
+                                <img src={this.state.content} alt="" className="imageBox" />
                               </div>
                             )
                           }
@@ -683,12 +683,10 @@ export default class Post extends Component {
                           //if contentType is TEXT
                           if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
                             return (
-                              <textarea className="textarea" name="content" rows="1" placeholder="Type text here..." style={{
+                              <textarea className="textarea" name="content" rows="1" placeholder="Type text here..." value={this.state.content} style={{
                                 height: this.scrollHeight + 'px',
                                 maxHeight: window.innerHeight / 2
-                              }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
-                                {this.state.content}
-                              </textarea>
+                              }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange} />
                             )
                           }
                           //if contentType is IMAGE
@@ -696,7 +694,7 @@ export default class Post extends Component {
                             return (
                               // render Image selection component here
                               <div>
-                                <img src={this.state.content} className="imageBox" />
+                                <img src={this.state.content}  alt="" className="imageBox" />
                                 <input type="file" name="content" id="input" accept="image/*" onChange={this.handleChange} />
                               </div>
                             )
@@ -764,22 +762,20 @@ export default class Post extends Component {
                           //if contentType is TEXT
                           if (this.state.contentType === '0' || this.state.contentType === ContentType.TEXT) {
                             return (
-                              <textarea className="textarea" name="content" rows="1" placeholder="Type text here..." style={{
+                              <textarea className="textarea" name="content" rows="1" placeholder="Type text here..." value={this.state.content} style={{
                                 height: this.scrollHeight + 'px',
                                 maxHeight: window.innerHeight / 2
-                              }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange}>
-                                {this.state.content}
-                              </textarea>
+                              }} onInput={this.resizeHeightOfElement} onSelect={this.resizeHeightOfElement} onChange={this.handleChange} />
                             )
                           }
                           //if contentType is IMAGE
                           else if (this.state.contentType === '1' || this.state.contentType === ContentType.IMAGE) {
                             return (
                               // render Image selection component here
-                              <div className="image-container">
-                                <img src={this.state.content} className="imageBox" /><br />
+                              <span className="image-container">
+                                <img src={this.state.content}  alt="" className="imageBox" /><br />
                                 <input type="file" name="content" id="input" accept="image/*" onChange={this.handleChange} />
-                              </div>
+                              </span>
                             )
                           }
                         })()}
@@ -826,7 +822,7 @@ export default class Post extends Component {
                           return (
                             // render Image selection component here
                             <div>
-                              <img src={this.state.content} className="imageBox" />
+                              <img src={this.state.content} alt="" className="imageBox" />
                             </div>
                           )
                         }

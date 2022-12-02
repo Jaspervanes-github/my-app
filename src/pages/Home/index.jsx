@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Navigate } from 'react-router-dom';
-import "./Home.css";
-import Footer from '../components/Footer';
-import NavBar from '../components/NavBar';
-import IPFS from '../IPFS.js';
-import Post from './Post.js';
-import { DataConsumer } from '../DataContext';
+import Footer from '../../components/Footer';
+import NavBar from '../../components/Navbar';
+import IPFS from '../../IPFS.js';
+import Post from '../Post'
+import { DataConsumer } from '../../DataContext';
 import { Grid } from '@material-ui/core';
+import "./index.css";
 
 
 export default class Home extends Component {

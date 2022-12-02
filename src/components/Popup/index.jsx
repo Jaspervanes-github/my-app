@@ -1,7 +1,6 @@
 import React from 'react';
-import "./Popup.css";   
 import { Button } from "@material-ui/core";
-
+import "./index.css";
 
 function Popup(props) {
     return (props.trigger) ? (

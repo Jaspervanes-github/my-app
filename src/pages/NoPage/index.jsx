@@ -1,8 +1,8 @@
 import React from "react";
-import Footer from "../components/Footer";
-import NavBar from "../components/NavBar";
-import "./NoPage.css";
-import { DataConsumer } from '../DataContext';
+import Footer from "../../components/Footer";
+import NavBar from '../../components/Navbar';
+import "./index.css";
+import { DataConsumer } from '../../DataContext';
 import { Navigate } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 

@@ -5,7 +5,7 @@ import DiscoverIcon from "@material-ui/icons/Search";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { useNavigate } from "react-router-dom";
-import "./NavBar.css";
+import "./index.css";
 
 function NavBar(props) {
     const navigate = useNavigate();
