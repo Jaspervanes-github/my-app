@@ -7,30 +7,29 @@ import DetailIcon from "@material-ui/icons/Info";
 import CreatePostIcon from "@material-ui/icons/AddBox";
 import React, { Component } from "react";
 import ViewportList from "react-viewport-list";
-import { ContractFactory, ethers } from "ethers";
-import * as IPFS from "ipfs-core";
-import { toast } from "react-toastify";
+import { ethers } from "ethers";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import Chart from "react-apexcharts";
 
 import "./index.css";
 import Popup from "../../components/Popup";
 import { DataConsumer } from "../../DataContext";
+import {
+  saveDataToIPFS,
+  saveTextToIPFS,
+  saveImageToIPFS,
+  retrieveDataFromIPFS,
+} from "../../utils/ipfs";
+import {
+  ContractType,
+  ContentType,
+  deployNewPostContract,
+  getPayees,
+  getShares,
+  payoutUser,
+} from "../../utils/contract";
+import { createToastMessage } from "../../utils/toast";
 import Post_ABI from "../../assets/metadata/Post_ABI.json";
-import Post_ByteCode from "../../assets/metadata/Post_ByteCode.json";
-
-const PUBLISHER_ADDRESS = "0x1F871dC82BF9048946540Ac41231b50fE4Da883b";
-
-const ContractType = {
-  ORIGINAL: 0,
-  RESHARE: 1,
-  REMIX: 2,
-};
-
-const ContentType = {
-  TEXT: 0,
-  IMAGE: 1,
-};
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -63,18 +62,6 @@ export default class Post extends Component {
     this.ref = React.createRef(null);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  //Creates a Toast message at the top of the screen
-  createToastMessage(text, autoClose) {
-    toast(text, {
-      autoClose: autoClose,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: false,
-      progress: undefined,
-    });
   }
 
   //Handles the changes in the form element of the popups
@@ -110,23 +97,22 @@ export default class Post extends Component {
 
   //Handles the submittions of the form element of the popups
   async handleSubmit(event, state, dispatch, type) {
-    this.createToastMessage("The post is being created, please wait...", 3000);
+    createToastMessage("The post is being created, please wait...", 3000);
 
     let _hashOfContent;
     if (
       this.state.contentType === "0" ||
       this.state.contentType === ContentType.TEXT
     ) {
-      _hashOfContent = await this.saveTextToIPFS(this.state.content);
+      _hashOfContent = await saveTextToIPFS(this.state.content);
     } else if (
       this.state.contentType === "1" ||
       this.state.contentType === ContentType.IMAGE
     ) {
-      _hashOfContent = await this.saveImageToIPFS(this.state.content);
+      _hashOfContent = await saveImageToIPFS(this.state.content);
     }
-    // let _hashOfContent = await this.saveDataToIPFS(this.state.contentType, this.state.content);
 
-    this.deployNewPostContract(
+    deployNewPostContract(
       state,
       dispatch,
       type,
@@ -140,154 +126,6 @@ export default class Post extends Component {
       this.state.royaltyMultiplier
     );
     event.preventDefault();
-  }
-
-  //Determines what type the data is and call the correct method to save the data to the IPFS network
-  async saveDataToIPFS(contentType, data) {
-    switch (contentType) {
-      case 0:
-        return await this.saveTextToIPFS(data);
-      case 1:
-        return await this.saveImageToIPFS(data);
-      default:
-        break;
-    }
-  }
-
-  //Saves the text to the IPFS network and returns a hash of the content
-  async saveTextToIPFS(text) {
-    let node = await IPFS.create({ repo: "ok" + Math.random() });
-
-    let textAdded = await node.add(text);
-    console.log(
-      "CID of Added text:",
-      textAdded.cid.toString(),
-      "\nUrl is: ipfs.io/ipfs/" + textAdded.cid.toString()
-    );
-
-    return textAdded;
-  }
-
-  async saveImageToIPFS(image) {
-    let node = await IPFS.create({ repo: "ok" + Math.random() });
-
-    let imageAdded = await node.add(image);
-    console.log(
-      "CID of Added image:",
-      imageAdded.cid.toString(),
-      "\nUrl is: ipfs.io/ipfs/" + imageAdded.cid.toString()
-    );
-
-    return imageAdded;
-  }
-
-  //Retrieves the data of the IPFS network using the given hash from the saveTextToIPFS()
-  async retrieveDataFromIPFS(hash, contentType) {
-    let node = await IPFS.create({ repo: "ok" + Math.random() });
-
-    let dataReceived;
-    let asyncitr = node.cat(hash);
-    const decoder = new TextDecoder();
-    dataReceived = "";
-
-    for await (const itr of asyncitr) {
-      dataReceived += decoder.decode(itr, { stream: true });
-      console.log("Data received: " + dataReceived);
-    }
-    return dataReceived;
-  }
-
-  //Deploys a new Post contract to the blockchain and adds it to to posts list
-  async deployNewPostContract(
-    state,
-    dispatch,
-    type,
-    id,
-    contractType,
-    originalPostAddress,
-    contentType,
-    hashOfContent,
-    payees,
-    shares,
-    royaltyMultiplier
-  ) {
-    try {
-      const factory = new ContractFactory(
-        Post_ABI,
-        Post_ByteCode,
-        state.signer
-      );
-      let copyPayees = [...payees];
-      let copyShares = [...shares];
-      if (copyPayees.includes(PUBLISHER_ADDRESS)) {
-        copyPayees.pop();
-        copyShares.pop();
-      }
-
-      const contract = await factory.deploy(
-        id,
-        contractType,
-        originalPostAddress,
-        contentType,
-        hashOfContent,
-        copyPayees,
-        copyShares,
-        royaltyMultiplier,
-        PUBLISHER_ADDRESS
-      );
-      console.log("Address of deployed contract: " + contract.address);
-
-      dispatch({
-        type: "addPost",
-        value: contract.address,
-        data: this.state.content,
-      });
-    } catch (err) {
-      console.error(err);
-      switch (type) {
-        case ContractType.RESHARE:
-          this.setState({ triggerResharePostPopup: true });
-          break;
-        case ContractType.REMIX:
-          this.setState({ triggerRemixPostPopup: true });
-          break;
-        case ContractType.ORIGINAL:
-          this.setState({ triggerNewPostPopup: true });
-          break;
-        default:
-          break;
-      }
-      this.createToastMessage(
-        "To submit the post you need to accept the transaction.",
-        5000
-      );
-    }
-  }
-
-  async getPayees(state, indexOfContract) {
-    try {
-      let payees = await state.posts[indexOfContract].getAllPayees();
-      return payees;
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async getShares(state, indexOfContract) {
-    try {
-      let shares = await state.posts[indexOfContract].getAllShares();
-      return shares;
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async payoutUser(state, indexOfContract) {
-    try {
-      await state.posts[indexOfContract].payoutUser();
-    } catch (err) {
-      console.error(err);
-    }
   }
 
   //Sets all the correct data to create a new Post and opens the NewPostPopup
@@ -323,11 +161,11 @@ export default class Post extends Component {
           }
         }
         if (isAlreadyOwner) {
-          this.createToastMessage("You can't reshare your own posts", false);
+          createToastMessage("You can't reshare your own posts", false);
           return;
         }
 
-        this.createToastMessage(
+        createToastMessage(
           "The data of the contract is being retrieved, please wait...",
           3000
         );
@@ -336,10 +174,7 @@ export default class Post extends Component {
         let _originalPostAddress = await contract.originalPost();
         let _shares = await contract.getAllShares();
         let _hashOfContent = await contract.hashOfContent();
-        let _content = await this.retrieveDataFromIPFS(
-          _hashOfContent,
-          _contentType
-        );
+        let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
 
         this.setState({
           currentItem: item,
@@ -379,11 +214,11 @@ export default class Post extends Component {
           }
         }
         if (isAlreadyOwner) {
-          this.createToastMessage("You can't reshare your own posts", false);
+          createToastMessage("You can't reshare your own posts", false);
           return;
         }
 
-        this.createToastMessage(
+        createToastMessage(
           "The data of the contract is being retrieved, please wait...",
           3000
         );
@@ -392,10 +227,7 @@ export default class Post extends Component {
         let _originalPostAddress = await contract.originalPost();
         let _shares = await contract.getAllShares();
         let _hashOfContent = await contract.hashOfContent();
-        let _content = await this.retrieveDataFromIPFS(
-          _hashOfContent,
-          _contentType
-        );
+        let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
 
         this.setState({
           currentItem: item,
@@ -429,14 +261,14 @@ export default class Post extends Component {
           _addressOfPoster.toLowerCase() !== state.selectedAccount.toLowerCase()
         ) {
           try {
-            this.createToastMessage("Awaiting transaction...", 3000);
+            createToastMessage("Awaiting transaction...", 3000);
 
             const transaction = await contract.viewPost({
               value: ethers.utils.parseEther("0.00001"),
             });
             await transaction.wait();
           } catch (err) {
-            this.createToastMessage(
+            createToastMessage(
               "To view the content of the post you need to accept the transaction.",
               5000
             );
@@ -444,17 +276,14 @@ export default class Post extends Component {
             return;
           }
         } else {
-          this.createToastMessage("You can't view your own posts", 5000);
+          createToastMessage("You can't view your own posts", 5000);
           return;
         }
 
         let _contentType = await contract.contentType();
         let _id = await contract.id();
         let _hashOfContent = await contract.hashOfContent();
-        let _content = await this.retrieveDataFromIPFS(
-          _hashOfContent,
-          _contentType
-        );
+        let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
 
         this.setState({
           currentItem: item,
@@ -477,7 +306,7 @@ export default class Post extends Component {
       if (!this.state.isBusy) {
         this.setState({ isBusy: true });
 
-        this.createToastMessage(
+        createToastMessage(
           "The data of the contract is being retrieved, please wait...",
           3000
         );
@@ -493,10 +322,7 @@ export default class Post extends Component {
         let _shares = await contract.getAllShares();
         let _royaltyMultiplier = await contract.royaltyMultiplier();
         let _hashOfContent = await contract.hashOfContent();
-        let _content = await this.retrieveDataFromIPFS(
-          _hashOfContent,
-          _contentType
-        );
+        let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
 
         this.setState({
           currentItem: item,
@@ -699,10 +525,7 @@ export default class Post extends Component {
                   <form
                     onSubmit={(event) => {
                       if (this.state.content === "") {
-                        this.createToastMessage(
-                          "Please enter a valid text",
-                          5000
-                        );
+                        createToastMessage("Please enter a valid text", 5000);
                         event.preventDefault();
                         return;
                       }
@@ -831,10 +654,7 @@ export default class Post extends Component {
                   <form
                     onSubmit={(event) => {
                       if (this.state.content === "") {
-                        this.createToastMessage(
-                          "Please enter a valid text",
-                          5000
-                        );
+                        createToastMessage("Please enter a valid text", 5000);
                         event.preventDefault();
                         return;
                       }
@@ -983,10 +803,7 @@ export default class Post extends Component {
                   <form
                     onSubmit={(event) => {
                       if (this.state.content === "") {
-                        this.createToastMessage(
-                          "Please enter a valid text",
-                          5000
-                        );
+                        createToastMessage("Please enter a valid text", 5000);
                         event.preventDefault();
                         return;
                       }
