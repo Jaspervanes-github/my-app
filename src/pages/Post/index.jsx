@@ -21,16 +21,13 @@ import {
 import {
   ContractType,
   ContentType,
-  contractTypeToString,
-  contentTypeToString,
   deployNewPostContract,
-  getPayees,
-  getShares,
-  payoutUser,
 } from "../../utils/contract";
 import { createToastMessage } from "../../utils/toast";
 import Post_ABI from "../../assets/metadata/Post_ABI.json";
 import RoyaltieSplitDiagram from "../../components/RoyaltieSplitDiagram";
+import PopupWrapper from "../../components/Popups/PopupWrapper";
+import { PopupState } from "../../utils/enums";
 
 export default class Post extends Component {
   constructor(props) {
@@ -38,12 +35,13 @@ export default class Post extends Component {
 
     this.state = {
       isBusy: false,
+      currentPopup: PopupState.CLOSED,
 
-      triggerResharePostPopup: false,
-      triggerRemixPostPopup: false,
-      triggerNewPostPopup: false,
-      triggerViewPostPopup: false,
-      triggerDetailPostPopup: false,
+      // triggerResharePostPopup: false,
+      // triggerRemixPostPopup: false,
+      // triggerNewPostPopup: false,
+      // triggerViewPostPopup: false,
+      // triggerDetailPostPopup: false,
 
       currentItem: "",
       id: 0,
@@ -59,73 +57,73 @@ export default class Post extends Component {
     };
 
     this.ref = React.createRef(null);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  //Handles the changes in the form element of the popups
-  handleChange(event) {
-    const target = event.target;
-    const name = target.name;
+  // //Handles the changes in the form element of the popups
+  // handleChange(event) {
+  //   const target = event.target;
+  //   const name = target.name;
 
-    let value;
-    switch (target.type) {
-      case "textarea":
-        value = target.value;
-        break;
-      case "select-one":
-        value = target.value;
-        break;
-      case "file":
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (reader.readyState === 2) {
-            this.setState({ content: reader.result });
-          }
-        };
-        reader.readAsDataURL(event.target.files[0]);
-        break;
-      default:
-        break;
-    }
+  //   let value;
+  //   switch (target.type) {
+  //     case "textarea":
+  //       value = target.value;
+  //       break;
+  //     case "select-one":
+  //       value = target.value;
+  //       break;
+  //     case "file":
+  //       const reader = new FileReader();
+  //       reader.onload = () => {
+  //         if (reader.readyState === 2) {
+  //           this.setState({ content: reader.result });
+  //         }
+  //       };
+  //       reader.readAsDataURL(event.target.files[0]);
+  //       break;
+  //     default:
+  //       break;
+  //   }
 
-    this.setState({
-      [name]: value,
-    });
-  }
+  //   this.setState({
+  //     [name]: value,
+  //   });
+  // }
 
-  //Handles the submittions of the form element of the popups
-  async handleSubmit(event, state, dispatch, type) {
-    createToastMessage("The post is being created, please wait...", 3000);
+  // //Handles the submittions of the form element of the popups
+  // async handleSubmit(event, state, dispatch, type) {
+  //   createToastMessage("The post is being created, please wait...", 3000);
 
-    let _hashOfContent;
-    if (
-      this.state.contentType === "0" ||
-      this.state.contentType === ContentType.TEXT
-    ) {
-      _hashOfContent = await saveTextToIPFS(this.state.content);
-    } else if (
-      this.state.contentType === "1" ||
-      this.state.contentType === ContentType.IMAGE
-    ) {
-      _hashOfContent = await saveImageToIPFS(this.state.content);
-    }
+  //   let _hashOfContent;
+  //   if (
+  //     this.state.contentType === "0" ||
+  //     this.state.contentType === ContentType.TEXT
+  //   ) {
+  //     _hashOfContent = await saveTextToIPFS(this.state.content);
+  //   } else if (
+  //     this.state.contentType === "1" ||
+  //     this.state.contentType === ContentType.IMAGE
+  //   ) {
+  //     _hashOfContent = await saveImageToIPFS(this.state.content);
+  //   }
 
-    deployNewPostContract(
-      state,
-      dispatch,
-      type,
-      state.posts?.length || 0,
-      this.state.contractType,
-      this.state.originalPostAddress,
-      this.state.contentType,
-      _hashOfContent.cid.toString(),
-      this.state.payees,
-      this.state.shares,
-      this.state.royaltyMultiplier
-    );
-    event.preventDefault();
-  }
+  //   deployNewPostContract(
+  //     state,
+  //     dispatch,
+  //     type,
+  //     state.posts?.length || 0,
+  //     this.state.contractType,
+  //     this.state.originalPostAddress,
+  //     this.state.contentType,
+  //     _hashOfContent.cid.toString(),
+  //     this.state.payees,
+  //     this.state.shares,
+  //     this.state.royaltyMultiplier
+  //   );
+  //   event.preventDefault();
+  // }
 
   //Sets all the correct data to create a new Post and opens the NewPostPopup
   createNewPost() {
@@ -137,7 +135,7 @@ export default class Post extends Component {
       shares: [],
       royaltyMultiplier: 5,
       content: "",
-      triggerNewPostPopup: true,
+      currentPopup: PopupState.NEWPOST,
     });
   }
 
@@ -186,7 +184,7 @@ export default class Post extends Component {
           royaltyMultiplier: 2,
           hashOfContent: _hashOfContent,
           content: _content,
-          triggerResharePostPopup: true,
+          currentPopup: PopupState.RESHARING,
         });
       }
     } catch (err) {
@@ -240,7 +238,7 @@ export default class Post extends Component {
           royaltyMultiplier: 4,
           hashOfContent: _hashOfContent,
           content: _content,
-          triggerRemixPostPopup: true,
+          currentPopup: PopupState.REMIXING,
         });
       }
     } catch (err) {
@@ -295,7 +293,7 @@ export default class Post extends Component {
           contentType: _contentType,
           hashOfContent: _hashOfContent,
           content: _content,
-          triggerViewPostPopup: true,
+          currentPopup: PopupState.VIEWING,
         });
       }
     } catch (err) {
@@ -339,7 +337,7 @@ export default class Post extends Component {
           royaltyMultiplier: _royaltyMultiplier,
           hashOfContent: _hashOfContent,
           content: _content,
-          triggerDetailPostPopup: true,
+          currentPopup: PopupState.DETAILS,
         });
       }
     } catch (err) {
@@ -461,6 +459,21 @@ export default class Post extends Component {
                 </ViewportList>
               </div>
 
+              <div className="popup-container">
+                <PopupWrapper
+                  state={state}
+                  dispatch={dispatch}
+                  currentState={this.state.currentPopup}
+                  setPopupClosed={() => {
+                    this.setState({
+                      isBusy: false,
+                      currentPopup: PopupState.CLOSED,
+                    });
+                  }}
+                />
+              </div>
+              
+              {/* 
               <div className="resharePostTemplate">
                 <Popup
                   trigger={this.state.triggerResharePostPopup}
@@ -1029,7 +1042,7 @@ export default class Post extends Component {
                     />
                   </div>
                 </Popup>
-              </div>
+              </div> */}
             </div>
           </React.Fragment>
         )}
