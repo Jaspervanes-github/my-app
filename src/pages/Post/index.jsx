@@ -28,13 +28,14 @@ import Post_ABI from "../../assets/metadata/Post_ABI.json";
 import RoyaltieSplitDiagram from "../../components/RoyaltieSplitDiagram";
 import PopupWrapper from "../../components/Popups/PopupWrapper";
 import { PopupState } from "../../utils/enums";
+import LoadingScreen from "../../components/LoadingScreen";
 
 export default class Post extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isBusy: false,
+      isLoading: false,
       currentPopup: PopupState.CLOSED,
 
       // triggerResharePostPopup: false,
@@ -142,8 +143,7 @@ export default class Post extends Component {
   //Fetches the data of the post it wants to reshare and opens the ResharePostPopup
   async createResharePost(state, item) {
     try {
-      if (!this.state.isBusy) {
-        this.setState({ isBusy: true });
+        this.setState({ isLoading: true });
 
         let contract = new ethers.Contract(item, Post_ABI, state.signer);
         let _payees = await contract.getAllPayees();
@@ -159,7 +159,7 @@ export default class Post extends Component {
         }
         if (isAlreadyOwner) {
           createToastMessage("You can't reshare your own posts", false);
-          this.setState({ isBusy: false });
+          this.setState({ isLoading: false });
           return;
         }
 
@@ -175,6 +175,7 @@ export default class Post extends Component {
         let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
 
         this.setState({
+          isLoading: false,
           currentItem: item,
           contractType: ContractType.RESHARE,
           contentType: _contentType,
@@ -186,18 +187,16 @@ export default class Post extends Component {
           content: _content,
           currentPopup: PopupState.RESHARING,
         });
-      }
     } catch (err) {
       console.error(err);
-      this.setState({ isBusy: false });
+      this.setState({ isLoading: false });
     }
   }
 
   //Fetches the data of the post it wants to remix and opens the RemixPostPopup
   async createRemixPost(state, item) {
     try {
-      if (!this.state.isBusy) {
-        this.setState({ isBusy: true });
+        this.setState({ isLoading: true });
 
         let contract = new ethers.Contract(item, Post_ABI, state.signer);
         let _payees = await contract.getAllPayees();
@@ -213,7 +212,7 @@ export default class Post extends Component {
         }
         if (isAlreadyOwner) {
           createToastMessage("You can't reshare your own posts", false);
-          this.setState({ isBusy: false });
+          this.setState({ isLoading: false });
           return;
         }
 
@@ -229,6 +228,7 @@ export default class Post extends Component {
         let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
 
         this.setState({
+          isLoading: false,
           currentItem: item,
           contractType: ContractType.REMIX,
           contentType: _contentType,
@@ -240,18 +240,16 @@ export default class Post extends Component {
           content: _content,
           currentPopup: PopupState.REMIXING,
         });
-      }
     } catch (err) {
       console.error(err);
-      this.setState({ isBusy: false });
+      this.setState({ isLoading: false });
     }
   }
 
   //Let the user pay a certain amount to view the content of the post
   async viewPost(state, item) {
     try {
-      if (!this.state.isBusy) {
-        this.setState({ isBusy: true });
+        this.setState({ isLoading: true });
 
         let contract = new ethers.Contract(item, Post_ABI, state.signer);
         let _addressOfPoster = await contract.addressOfPoster();
@@ -272,12 +270,12 @@ export default class Post extends Component {
               5000
             );
             console.error(err);
-            this.setState({ isBusy: false });
+            this.setState({ isLoading: false });
             return;
           }
         } else {
           createToastMessage("You can't view your own posts", 5000);
-          this.setState({ isBusy: false });
+          this.setState({ isLoading: false });
           return;
         }
 
@@ -287,6 +285,7 @@ export default class Post extends Component {
         let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
 
         this.setState({
+          isLoading: false,
           currentItem: item,
           id: _id.toNumber(),
           addressOfPoster: _addressOfPoster,
@@ -295,17 +294,15 @@ export default class Post extends Component {
           content: _content,
           currentPopup: PopupState.VIEWING,
         });
-      }
     } catch (err) {
       console.error(err);
-      this.setState({ isBusy: false });
+      this.setState({ isLoading: false });
     }
   }
 
   async detailPost(state, item) {
     try {
-      if (!this.state.isBusy) {
-        this.setState({ isBusy: true });
+        this.setState({ isLoading: true });
 
         createToastMessage(
           "The data of the contract is being retrieved, please wait...",
@@ -326,6 +323,7 @@ export default class Post extends Component {
         let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
 
         this.setState({
+          isLoading: false,
           currentItem: item,
           id: _id.toNumber(),
           addressOfPoster: _addressOfPoster,
@@ -339,10 +337,9 @@ export default class Post extends Component {
           content: _content,
           currentPopup: PopupState.DETAILS,
         });
-      }
     } catch (err) {
       console.error(err);
-      this.setState({ isBusy: false });
+      this.setState({ isLoading: false });
     }
   }
 
@@ -466,13 +463,15 @@ export default class Post extends Component {
                   currentState={this.state.currentPopup}
                   setPopupClosed={() => {
                     this.setState({
-                      isBusy: false,
+                      isLoading: false,
                       currentPopup: PopupState.CLOSED,
                     });
                   }}
                 />
               </div>
               
+              <LoadingScreen trigger={this.state.isLoading}/>
+
                
               {/* <div className="resharePostTemplate">
                 <Popup
