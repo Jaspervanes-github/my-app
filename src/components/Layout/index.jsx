@@ -1,7 +1,8 @@
 import React from "react";
 import "./index.css";
+import { Button } from "@material-ui/core";
 
-function PopupLayout(props) {
+function PopupWrapperLayout(props) {
   return (
     <React.Fragment>
       <div className="popup">
@@ -20,4 +21,4 @@ function PopupLayout(props) {
   );
 }
 
-export default PopupLayout;
+export default PopupWrapperLayout;

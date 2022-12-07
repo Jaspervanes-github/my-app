@@ -473,8 +473,8 @@ export default class Post extends Component {
                 />
               </div>
               
-              {/* 
-              <div className="resharePostTemplate">
+               
+              {/* <div className="resharePostTemplate">
                 <Popup
                   trigger={this.state.triggerResharePostPopup}
                   setTrigger={() => {

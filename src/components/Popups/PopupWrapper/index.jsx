@@ -1,7 +1,6 @@
 import React from "react";
-import { Button } from "@material-ui/core";
 import "./index.css";
-import PopupLayout from "../../Layout";
+import PopupWrapperLayout from "../../Layout";
 import NewPostPopup from "../NewPostPopup";
 import ResharePopup from "../ResharePopup";
 import RemixPopup from "../RemixPopup";
@@ -83,48 +82,48 @@ function PopupWrapper(props) {
       return "";
     case PopupState.NEWPOST:
       return (
-        <PopupLayout>
+        <PopupWrapperLayout>
           <NewPostPopup
             handleChange={handleChange}
             handleSubmit={handleSubmit}
           />
-        </PopupLayout>
+        </PopupWrapperLayout>
       );
     case PopupState.RESHARING:
       return (
-        <PopupLayout>
+        <PopupWrapperLayout>
           <ResharePopup
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />
-        </PopupLayout>
+        </PopupWrapperLayout>
       );
     case PopupState.REMIXING:
       return (
-        <PopupLayout>
+        <PopupWrapperLayout>
           <RemixPopup
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />
-        </PopupLayout>
+        </PopupWrapperLayout>
       );
     case PopupState.VIEWING:
       return (
-        <PopupLayout>
+        <PopupWrapperLayout>
           <ViewPopup
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />
-        </PopupLayout>
+        </PopupWrapperLayout>
       );
     case PopupState.DETAILS:
       return (
-        <PopupLayout>
+        <PopupWrapperLayout>
           <DetailsPopup
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />
-        </PopupLayout>
+        </PopupWrapperLayout>
       );
   }
 }
