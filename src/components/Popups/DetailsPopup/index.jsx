@@ -17,7 +17,7 @@ function DetailsPopup(props) {
               <p
                 className="textbox"
                 style={{
-                  height: this.scrollHeight + "px",
+                  height:  125 + "px",
                   maxHeight: window.innerHeight / 2 + 20,
                   fontWeight: "bold",
                   width: "35%",
@@ -41,7 +41,7 @@ function DetailsPopup(props) {
               <p
                 className="textbox"
                 style={{
-                  height: this.scrollHeight + "px",
+                  height: 125 + "px",
                   maxHeight: window.innerHeight / 2 + 20,
                 }}
               >

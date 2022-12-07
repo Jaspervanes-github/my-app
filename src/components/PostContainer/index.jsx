@@ -20,7 +20,16 @@ function PostContainer(props) {
         itemMinSize={40}
         margin={8}
       >
-        {(item) => <Post item={item} state={state} />}
+        {(item) => (
+          <Post
+            setPopupData={props.setPopupData}
+            setIsLoading={props.setIsLoading}
+            currentPopup={props.currentPopup}
+            item={item}
+            state={state}
+            setCurrentPopup={props.setCurrentPopup}
+          />
+        )}
       </ViewportList>
     </div>
   );

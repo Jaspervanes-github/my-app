@@ -5,6 +5,8 @@ import ReshareIcon from "@material-ui/icons/Share";
 import RemixIcon from "@material-ui/icons/Edit";
 import ViewIcon from "@material-ui/icons/Visibility";
 import DetailIcon from "@material-ui/icons/Info";
+import { PopupState } from "../../utils/enums";
+import setData from "../../hooks/popupHooks";
 
 function Post(props) {
   let item = props.item;
@@ -35,7 +37,9 @@ function Post(props) {
             className="button"
             title="Reshare Post"
             onClick={() => {
-              this.createResharePost(state, item);
+              props.setCurrentPopup(PopupState.RESHARING);
+              setData(props.setPopupData, props.setIsLoading, props.currentPopup, state, item);
+              // this.createResharePost(state, item);
             }}
           >
             <ReshareIcon />
@@ -44,7 +48,9 @@ function Post(props) {
             className="button"
             title="Remix Post"
             onClick={() => {
-              this.createRemixPost(state, item);
+              props.setCurrentPopup(PopupState.REMIXING);
+              setData(props.setPopupData, props.setIsLoading, props.currentPopup, state, item);
+              // this.createRemixPost(state, item);
             }}
           >
             <RemixIcon />
@@ -53,7 +59,9 @@ function Post(props) {
             className="button"
             title="View Post"
             onClick={() => {
-              this.viewPost(state, item);
+              props.setCurrentPopup(PopupState.VIEWING);
+              setData(props.setPopupData, props.setIsLoading, props.currentPopup, state, item);
+              // this.viewPost(state, item);
             }}
           >
             <ViewIcon />
@@ -62,7 +70,9 @@ function Post(props) {
             className="button"
             title="Detail of the Post"
             onClick={() => {
-              this.detailPost(state, item);
+              props.setCurrentPopup(PopupState.DETAILS);
+              setData(props.setPopupData, props.setIsLoading, props.currentPopup, state, item);
+              // this.detailPost(state, item);
             }}
           >
             <DetailIcon />

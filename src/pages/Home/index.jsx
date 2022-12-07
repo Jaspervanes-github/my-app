@@ -12,8 +12,8 @@ import LoadingScreen from "../../components/LoadingScreen";
 import PostContainer from "../../components/PostContainer";
 import { useState } from "react";
 import { ContractType, ContentType } from "../../utils/contract";
-import setResharePopup from "../../hooks/popupHooks";
 import { useEffect } from "react";
+import setData from "../../hooks/popupHooks";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -32,10 +32,6 @@ function Home() {
     hashOfContent: "No hash",
   });
 
-  useEffect(() => {
-    //Set the popupData to the correct values based on the currentPopup
-  }, [currentPopup]);
-
   return (
     <DataConsumer>
       {({ state, dispatch }) => (
@@ -53,19 +49,34 @@ function Home() {
                     className="create"
                     startIcon={<CreatePostIcon />}
                     onClick={() => {
-                      this.createNewPost();
+                      setCurrentPopup(PopupState.NEWPOST);
+                      setData(
+                        setPopupData,
+                        setIsLoading,
+                        currentPopup,
+                        state,
+                        "No item"
+                      );
+                      // this.createNewPost();
                     }}
                   >
                     Create New Post
                   </Button>
                 </Box>
-                <PostContainer state={state} />
+                <PostContainer
+                  setPopupData={setPopupData}
+                  setIsLoading={setIsLoading}
+                  currentPopup={currentPopup}
+                  state={state}
+                  setCurrentPopup={setCurrentPopup}
+                />
                 <PopupWrapper
                   state={state}
                   dispatch={dispatch}
                   popupData={popupData}
                   currentState={currentPopup}
                   setPopupClosed={() => {
+                    console.log("I am in the setPopupClosed function!!!!!!")
                     setIsLoading(false);
                     setCurrentPopup(PopupState.CLOSED);
                   }}

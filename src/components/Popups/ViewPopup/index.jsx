@@ -15,7 +15,7 @@ function ViewPopup(props) {
             <p
               className="textbox"
               style={{
-                height: this.scrollHeight + "px",
+                height: 135 + "px",
                 maxHeight: window.innerHeight / 2 + 20,
                 fontWeight: "bold",
               }}
@@ -31,7 +31,7 @@ function ViewPopup(props) {
             <p
               className="textbox"
               style={{
-                height: this.scrollHeight + "px",
+                height: 135 + "px",
                 maxHeight: window.innerHeight / 2 + 20,
               }}
             >
@@ -51,7 +51,7 @@ function ViewPopup(props) {
                     <p
                       className="textbox"
                       style={{
-                        height: this.scrollHeight + "px",
+                        height: 135 + "px",
                         maxHeight: window.innerHeight / 2,
                       }}
                     >

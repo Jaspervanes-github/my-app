@@ -35,7 +35,7 @@ function ResharePopup(props) {
             <p
               className="textbox"
               style={{
-                height: this.scrollHeight + "px",
+                height: 135 + "px",
                 maxHeight: window.innerHeight / 2 + 20,
                 fontWeight: "bold",
               }}
@@ -52,7 +52,7 @@ function ResharePopup(props) {
             <p
               className="textbox"
               style={{
-                height: this.scrollHeight + "px",
+                height: 135 + "px",
                 maxHeight: window.innerHeight / 2 + 20,
               }}
             >
@@ -71,7 +71,7 @@ function ResharePopup(props) {
                     <p
                       className="textbox"
                       style={{
-                        height: this.scrollHeight + "px",
+                        height: 135 + "px",
                         maxHeight: window.innerHeight / 2,
                       }}
                     >

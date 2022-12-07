@@ -3,6 +3,7 @@ import "./index.css";
 import { ContractType, ContentType } from "../../../utils/contract";
 import { createToastMessage } from "../../../utils/toast";
 import { PopupState } from "../../../utils/enums";
+import resizeHeightOfElement from "../../../utils/resizeElement";
 
 function NewPostPopup(props) {
   let state = props.state;
@@ -31,7 +32,7 @@ function NewPostPopup(props) {
             <p
               className="textbox"
               style={{
-                height: this.scrollHeight + "px",
+                height: 135 + "px",
                 maxHeight: window.innerHeight / 2 + 20,
                 fontWeight: "bold",
               }}
@@ -49,7 +50,7 @@ function NewPostPopup(props) {
             <p
               className="textbox"
               style={{
-                height: this.scrollHeight + "px",
+                height: 135 + "px",
                 maxHeight: window.innerHeight / 2 + 20,
               }}
             >
@@ -83,11 +84,11 @@ function NewPostPopup(props) {
                       placeholder="Type text here..."
                       value={popupData.content}
                       style={{
-                        height: this.scrollHeight + "px",
+                        height: 135 + "px",
                         maxHeight: window.innerHeight / 2,
                       }}
-                      onInput={this.resizeHeightOfElement}
-                      onSelect={this.resizeHeightOfElement}
+                      onInput={resizeHeightOfElement}
+                      onSelect={resizeHeightOfElement}
                       onChange={this.handleChange}
                     />
                   );

@@ -86,19 +86,19 @@ function PopupWrapper(props) {
       return "";
     case PopupState.NEWPOST:
       return (
-        <PopupWrapperLayout onClick={props.onClick}>
+        <PopupWrapperLayout setPopupClosed={props.setPopupClosed}>
           <NewPostPopup
             state={state}
             dispatch={dispatch}
             popupData={popupData}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
+            handleChange={handleChange.bind(this)}
+            handleSubmit={handleSubmit.bind(this)}
           />
         </PopupWrapperLayout>
       );
     case PopupState.RESHARING:
       return (
-        <PopupWrapperLayout onClick={props.onClick}>
+        <PopupWrapperLayout setPopupClosed={props.setPopupClosed}>
           <ResharePopup
             state={state}
             dispatch={dispatch}
@@ -110,7 +110,7 @@ function PopupWrapper(props) {
       );
     case PopupState.REMIXING:
       return (
-        <PopupWrapperLayout onClick={props.onClick}>
+        <PopupWrapperLayout setPopupClosed={props.setPopupClosed}>
           <RemixPopup
             state={state}
             dispatch={dispatch}
@@ -122,7 +122,7 @@ function PopupWrapper(props) {
       );
     case PopupState.VIEWING:
       return (
-        <PopupWrapperLayout onClick={props.onClick}>
+        <PopupWrapperLayout setPopupClosed={props.setPopupClosed}>
           <ViewPopup
             state={state}
             dispatch={dispatch}
@@ -134,7 +134,7 @@ function PopupWrapper(props) {
       );
     case PopupState.DETAILS:
       return (
-        <PopupWrapperLayout onClick={props.onClick}>
+        <PopupWrapperLayout setPopupClosed={props.setPopupClosed}>
           <DetailsPopup
             state={state}
             dispatch={dispatch}
