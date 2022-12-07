@@ -1,0 +1,11 @@
+.scroll-container {
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    overflow-y: auto;
+    border-style: solid;
+    border-width: 4px;
+    padding: 4px;
+    background-color: rgba(0, 0, 0, 0.9);
+}

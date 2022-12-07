@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
+import './index.css';
 
 const Posts = () => {
     const [contracts, setContracts] = useState([])

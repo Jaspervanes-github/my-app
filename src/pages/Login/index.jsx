@@ -7,13 +7,9 @@ import { DataConsumer } from '../../contexts//DataContext';
 import "./index.css";
 
 
-export default class Login extends Component {
-    constructor(props) {
-        super(props);
-    }
-
+function Login() {
     //Connects with the MetaMask plugin and loads the existing posts
-    async connectToMetamask(state, dispatch) {
+    async function connectToMetamask(state, dispatch) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const accounts = await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner();
@@ -38,7 +34,7 @@ export default class Login extends Component {
     }
 
     //Renders all the ellements of the Login page
-    renderMetamask(state, dispatch) {
+    function renderMetamask(state, dispatch) {
         if (!state.selectedAccount) {
             return (
                 <React.Fragment>
@@ -54,7 +50,7 @@ export default class Login extends Component {
                         <div className="container" >
                             <Button className="button" variant='contained' onClick=
                                 {
-                                    () => this.connectToMetamask(state, dispatch)
+                                    () => connectToMetamask(state, dispatch)
                                 }>
                                 Sign in with Metamask
                             </Button>
@@ -69,17 +65,17 @@ export default class Login extends Component {
         }
     }
 
-    render() {
-        return (
-            <DataConsumer>
+    return (
+        <DataConsumer>
                 {({ state, dispatch }) => (
                     <React.Fragment>
                         <div>
-                            {this.renderMetamask(state, dispatch)}
+                            {renderMetamask(state, dispatch)}
                         </div>
                     </React.Fragment>
                 )}
             </DataConsumer>
-        )
-    }
+    )
 }
+
+export default Login

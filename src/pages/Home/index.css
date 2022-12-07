@@ -15,3 +15,21 @@
     max-width: 80%;
     min-height: 100%;
 }
+
+.Home .grid-post .button-container {
+    margin-right: 1%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.Home .grid-post .button-container .create {
+    margin-top: 1%;
+    margin-right: 2%;
+    position: left;
+    font-family: PT Mono;
+    font-weight: bold;
+    border: 2px solid #4d4d4d;
+    border-radius: 15px;
+    background-color: #bfbfbf;
+}

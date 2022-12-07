@@ -34,38 +34,34 @@ const theme = createTheme({
   },
 });
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-  }
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <ToastContainer
+          position="top-center"
+          autoClose={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable={false}
+          theme="dark"
+        />
 
-  render() {
-    return (
-      <ThemeProvider theme={theme}>
-        <div className="App">
-          <ToastContainer
-            position="top-center"
-            autoClose={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss={false}
-            draggable={false}
-            theme="dark"
-          />
-
-          <Header />
-          <BrowserRouter>
-            <DataProvider>
-              <Routes>
-                <Route exact path="/login" element={<Login />} />
-                <Route exact path="/" element={<Home />} />
-                <Route path="*" element={<NoPage />} />
-              </Routes>
-            </DataProvider>
-          </BrowserRouter>
-        </div>
-      </ThemeProvider>
-    );
-  }
+        <Header />
+        <BrowserRouter>
+          <DataProvider>
+            <Routes>
+              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/" element={<Home />} />
+              <Route path="*" element={<NoPage />} />
+            </Routes>
+          </DataProvider>
+        </BrowserRouter>
+      </div>
+    </ThemeProvider>
+  );
 }
+
+export default App;
