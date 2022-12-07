@@ -12,7 +12,7 @@ function NavBar(props) {
     return (
         <div className="navbar">
             <Toolbar className="bar">
-                <Button startIcon={<HomeIcon />} size="large" className="menuButton" onClick={() => { navigate("/home") }}>
+                <Button startIcon={<HomeIcon />} size="large" className="menuButton" onClick={() => { navigate("/") }}>
                     Home
                 </Button>
                 <Button startIcon={<DiscoverIcon />} size="large" disabled className="menuButton" onClick={() => { navigate("/discover") }}>

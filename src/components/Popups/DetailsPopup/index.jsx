@@ -3,7 +3,11 @@ import "./index.css";
 import { contractTypeToString, contentTypeToString } from "../../../utils/contract";
 import RoyaltieSplitDiagram from "../../RoyaltieSplitDiagram";
 
-function DetailsPopup() {
+function DetailsPopup(props) {
+  let state = props.state;
+  let dispatch = props.dispatch;
+  let popupData = props.popupData;
+
   return (
     <React.Fragment>
       <div className="detailTemplate"> 
@@ -44,32 +48,32 @@ function DetailsPopup() {
                 <a
                   href={
                     "https://sepolia.etherscan.io/address/" +
-                    this.state.currentItem
+                    popupData.currentItem
                   }
                   target="_blank"
                 >
                   Click here to visit etherscan!
                 </a>
                 <br />
-                {this.state.addressOfPoster}
+                {popupData.addressOfPoster}
                 <br />
-                {this.state.id}
+                {popupData.id}
                 <br />
-                {contractTypeToString(this.state.contractType)}
+                {contractTypeToString(popupData.contractType)}
                 <br />
-                {contentTypeToString(this.state.contentType)}
+                {contentTypeToString(popupData.contentType)}
                 <br />
-                {this.state.originalPostAddress}
+                {popupData.originalPostAddress}
                 <br />
-                {this.state.hashOfContent}
+                {popupData.hashOfContent}
                 <br />
               </p>
             </div>
 
             <br />
             <RoyaltieSplitDiagram
-              payees={this.state.payees}
-              shares={this.state.shares}
+              payees={popupData.payees}
+              shares={popupData.shares}
             />
           </div>
       </div>

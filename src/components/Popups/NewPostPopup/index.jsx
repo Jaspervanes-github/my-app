@@ -7,6 +7,7 @@ import { PopupState } from "../../../utils/enums";
 function NewPostPopup(props) {
   let state = props.state;
   let dispatch = props.dispatch;
+  let popupData = props.popupData;
 
   return (
     <React.Fragment>
@@ -14,7 +15,7 @@ function NewPostPopup(props) {
         <h2>New Post</h2>
         <form
           onSubmit={(event) => {
-            if (this.state.content === "") {
+            if (popupData.content === "") {
               createToastMessage("Please enter a valid text", 5000);
               event.preventDefault();
               return;
@@ -22,7 +23,7 @@ function NewPostPopup(props) {
             this.handleSubmit(event, state, dispatch, ContractType.ORIGINAL);
             this.setState({
               currentPopup: PopupState.CLOSED,
-              isBusy: false,
+              IsLoading: false,
             });
           }}
         >
@@ -59,7 +60,7 @@ function NewPostPopup(props) {
               <select
                 type="select"
                 name="contentType"
-                value={this.state.contentType}
+                value={popupData.contentType}
                 onChange={this.handleChange}
               >
                 <option value="0">TEXT</option>
@@ -71,8 +72,8 @@ function NewPostPopup(props) {
               {(() => {
                 //if contentType is TEXT
                 if (
-                  this.state.contentType === "0" ||
-                  this.state.contentType === ContentType.TEXT
+                  popupData.contentType === "0" ||
+                  popupData.contentType === ContentType.TEXT
                 ) {
                   return (
                     <textarea
@@ -80,7 +81,7 @@ function NewPostPopup(props) {
                       name="content"
                       rows="1"
                       placeholder="Type text here..."
-                      value={this.state.content}
+                      value={popupData.content}
                       style={{
                         height: this.scrollHeight + "px",
                         maxHeight: window.innerHeight / 2,
@@ -93,14 +94,14 @@ function NewPostPopup(props) {
                 }
                 //if contentType is IMAGE
                 else if (
-                  this.state.contentType === "1" ||
-                  this.state.contentType === ContentType.IMAGE
+                  popupData.contentType === "1" ||
+                  popupData.contentType === ContentType.IMAGE
                 ) {
                   return (
                     // render Image selection component here
                     <span className="image-container">
                       <img
-                        src={this.state.content}
+                        src={popupData.content}
                         alt=""
                         className="imageBox"
                       />

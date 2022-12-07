@@ -2,7 +2,11 @@ import React from "react";
 import "./index.css";
 import { ContentType } from "../../../utils/contract";
 
-function ViewPopup() {
+function ViewPopup(props) {
+  let state = props.state;
+  let dispatch = props.dispatch;
+  let popupData = props.popupData;
+
   return (
     <React.Fragment>
       <div className="viewPostTemplate">
@@ -31,17 +35,17 @@ function ViewPopup() {
                 maxHeight: window.innerHeight / 2 + 20,
               }}
             >
-              {this.state.addressOfPoster}
+              {popupData.addressOfPoster}
               <br />
               <br />
-              {this.state.id}
+              {popupData.id}
               <br />
               <br />
               {(() => {
                 //if contentType is TEXT
                 if (
-                  this.state.contentType === "0" ||
-                  this.state.contentType === ContentType.TEXT
+                  popupData.contentType === "0" ||
+                  popupData.contentType === ContentType.TEXT
                 ) {
                   return (
                     <p
@@ -51,20 +55,20 @@ function ViewPopup() {
                         maxHeight: window.innerHeight / 2,
                       }}
                     >
-                      {this.state.content}
+                      {popupData.content}
                     </p>
                   );
                 }
                 //if contentType is IMAGE
                 else if (
-                  this.state.contentType === "1" ||
-                  this.state.contentType === ContentType.IMAGE
+                  popupData.contentType === "1" ||
+                  popupData.contentType === ContentType.IMAGE
                 ) {
                   return (
                     // render Image selection component here
                     <div>
                       <img
-                        src={this.state.content}
+                        src={popupData.content}
                         alt=""
                         className="imageBox"
                       />

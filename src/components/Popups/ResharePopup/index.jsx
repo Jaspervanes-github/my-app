@@ -1,17 +1,25 @@
 import React from "react";
 import "./index.css";
-import { ContractType, ContentType, contentTypeToString } from "../../../utils/contract";
+import {
+  ContractType,
+  ContentType,
+  contentTypeToString,
+} from "../../../utils/contract";
 import { createToastMessage } from "../../../utils/toast";
 import { PopupState } from "../../../utils/enums";
 
-function ResharePopup() {
+function ResharePopup(props) {
+  let state = props.state;
+  let dispatch = props.dispatch;
+  let popupData = props.popupData;
+
   return (
     <React.Fragment>
       <div className="resharePostTemplate">
         <h2>Reshare Post</h2>
         <form
           onSubmit={(event) => {
-            if (this.state.content === "") {
+            if (popupData.content === "") {
               createToastMessage("Please enter a valid text", 5000);
               event.preventDefault();
               return;
@@ -19,7 +27,7 @@ function ResharePopup() {
             this.handleSubmit(event, state, dispatch, ContractType.RESHARE);
             this.setState({
               currentPopup: PopupState.CLOSED,
-              isBusy: false,
+              isLoading: false,
             });
           }}
         >
@@ -50,14 +58,14 @@ function ResharePopup() {
             >
               {state.selectedAccount} <br />
               <br />
-              {contentTypeToString(this.state.contentType)}
+              {contentTypeToString(popupData.contentType)}
               <br />
               <br />
               {(() => {
                 //if contentType is TEXT
                 if (
-                  this.state.contentType === "0" ||
-                  this.state.contentType === ContentType.TEXT
+                  popupData.contentType === "0" ||
+                  popupData.contentType === ContentType.TEXT
                 ) {
                   return (
                     <p
@@ -67,20 +75,20 @@ function ResharePopup() {
                         maxHeight: window.innerHeight / 2,
                       }}
                     >
-                      {this.state.content}
+                      {popupData.content}
                     </p>
                   );
                 }
                 //if contentType is IMAGE
                 else if (
-                  this.state.contentType === "1" ||
-                  this.state.contentType === ContentType.IMAGE
+                  popupData.contentType === "1" ||
+                  popupData.contentType === ContentType.IMAGE
                 ) {
                   return (
                     // render Image selection component here
                     <div>
                       <img
-                        src={this.state.content}
+                        src={popupData.content}
                         alt=""
                         className="imageBox"
                       />

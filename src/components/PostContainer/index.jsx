@@ -5,16 +5,17 @@ import Post from "../../components/Post";
 
 function PostContainer(props) {
   let state = props.state;
+  let ref = React.createRef(null);
   return (
     <div
       className="scroll-container"
-      ref={this.ref}
+      ref={ref}
       style={{
         maxHeight: window.innerHeight / 1.4 + "px",
       }}
     >
       <ViewportList
-        viewportRef={this.ref}
+        viewportRef={ref}
         items={state.posts || []}
         itemMinSize={40}
         margin={8}

@@ -4,14 +4,18 @@ import { ContractType, ContentType } from "../../../utils/contract";
 import { createToastMessage } from "../../../utils/toast";
 import { PopupState } from "../../../utils/enums";
 
-function RemixPopup() {
+function RemixPopup(props) {
+  let state = props.state;
+  let dispatch = props.dispatch;
+  let popupData = props.popupData;
+
   return (
     <React.Fragment>
       <div className="remixPostTemplate">
         <h2>Remix Post</h2>
         <form
           onSubmit={(event) => {
-            if (this.state.content === "") {
+            if (popupData.content === "") {
               createToastMessage("Please enter a valid text", 5000);
               event.preventDefault();
               return;
@@ -19,7 +23,7 @@ function RemixPopup() {
             this.handleSubmit(event, state, dispatch, ContractType.REMIX);
             this.setState({
               currentPopup: PopupState.CLOSED,
-              isBusy: false,
+              isLoading: false,
             });
           }}
         >
@@ -53,7 +57,7 @@ function RemixPopup() {
               <select
                 type="select"
                 name="contentType"
-                value={this.state.contentType}
+                value={popupData.contentType}
                 onChange={this.handleChange}
               >
                 <option value="0">TEXT</option>
@@ -64,8 +68,8 @@ function RemixPopup() {
               {(() => {
                 //if contentType is TEXT
                 if (
-                  this.state.contentType === "0" ||
-                  this.state.contentType === ContentType.TEXT
+                  popupData.contentType === "0" ||
+                  popupData.contentType === ContentType.TEXT
                 ) {
                   return (
                     <textarea
@@ -73,7 +77,7 @@ function RemixPopup() {
                       name="content"
                       rows="1"
                       placeholder="Type text here..."
-                      value={this.state.content}
+                      value={popupData.content}
                       style={{
                         height: this.scrollHeight + "px",
                         maxHeight: window.innerHeight / 2,
@@ -86,14 +90,14 @@ function RemixPopup() {
                 }
                 //if contentType is IMAGE
                 else if (
-                  this.state.contentType === "1" ||
-                  this.state.contentType === ContentType.IMAGE
+                  popupData.contentType === "1" ||
+                  popupData.contentType === ContentType.IMAGE
                 ) {
                   return (
                     // render Image selection component here
                     <div>
                       <img
-                        src={this.state.content}
+                        src={popupData.content}
                         alt=""
                         className="imageBox"
                       />

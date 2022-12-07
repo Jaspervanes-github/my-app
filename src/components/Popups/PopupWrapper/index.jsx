@@ -76,14 +76,21 @@ async function handleSubmit(event, state, dispatch, type) {
 }
 
 function PopupWrapper(props) {
+  let state = props.state;
+  let dispatch = props.dispatch;
+  let popupData = props.popupData;
   let currentState = props.currentState;
+
   switch (currentState) {
     case PopupState.CLOSED:
       return "";
     case PopupState.NEWPOST:
       return (
-        <PopupWrapperLayout>
+        <PopupWrapperLayout onClick={props.onClick}>
           <NewPostPopup
+            state={state}
+            dispatch={dispatch}
+            popupData={popupData}
             handleChange={handleChange}
             handleSubmit={handleSubmit}
           />
@@ -91,8 +98,11 @@ function PopupWrapper(props) {
       );
     case PopupState.RESHARING:
       return (
-        <PopupWrapperLayout>
+        <PopupWrapperLayout onClick={props.onClick}>
           <ResharePopup
+            state={state}
+            dispatch={dispatch}
+            popupData={popupData}
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />
@@ -100,8 +110,11 @@ function PopupWrapper(props) {
       );
     case PopupState.REMIXING:
       return (
-        <PopupWrapperLayout>
+        <PopupWrapperLayout onClick={props.onClick}>
           <RemixPopup
+            state={state}
+            dispatch={dispatch}
+            popupData={popupData}
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />
@@ -109,8 +122,11 @@ function PopupWrapper(props) {
       );
     case PopupState.VIEWING:
       return (
-        <PopupWrapperLayout>
+        <PopupWrapperLayout onClick={props.onClick}>
           <ViewPopup
+            state={state}
+            dispatch={dispatch}
+            popupData={popupData}
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />
@@ -118,8 +134,11 @@ function PopupWrapper(props) {
       );
     case PopupState.DETAILS:
       return (
-        <PopupWrapperLayout>
+        <PopupWrapperLayout onClick={props.onClick}>
           <DetailsPopup
+            state={state}
+            dispatch={dispatch}
+            popupData={popupData}
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />
