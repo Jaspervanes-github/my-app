@@ -74,7 +74,8 @@ function Home() {
                   state={state}
                   dispatch={dispatch}
                   popupData={popupData}
-                  currentState={currentPopup}
+                  currentPopup={currentPopup}
+                  setCurrentPopup={setCurrentPopup}
                   setPopupClosed={() => {
                     console.log("I am in the setPopupClosed function!!!!!!")
                     setIsLoading(false);

@@ -1,6 +1,7 @@
 import { ContractFactory } from "ethers";
 import Post_ABI from "../assets/metadata/Post_ABI.json";
 import Post_ByteCode from "../assets/metadata/Post_ByteCode.json";
+import { PopupState } from "./enums";
 import { createToastMessage } from "./toast";
 
 const PUBLISHER_ADDRESS = "0x1F871dC82BF9048946540Ac41231b50fE4Da883b";
@@ -18,27 +19,27 @@ export const ContentType = {
 
 export function contractTypeToString(contractType) {
     switch (contractType) {
-      case 0:
-        return "ORIGINAL";
-      case 1:
-        return "RESHARE";
-      case 2:
-        return "REMIX";
-      default:
-        break;
+        case 0:
+            return "ORIGINAL";
+        case 1:
+            return "RESHARE";
+        case 2:
+            return "REMIX";
+        default:
+            break;
     }
-  }
+}
 
-  export function contentTypeToString(contentType) {
+export function contentTypeToString(contentType) {
     switch (contentType) {
-      case 0:
-        return "TEXT";
-      case 1:
-        return "IMAGE";
-      default:
-        break;
+        case 0:
+            return "TEXT";
+        case 1:
+            return "IMAGE";
+        default:
+            break;
     }
-  }
+}
 
 //Deploys a new Post contract to the blockchain and adds it to to posts list
 export async function deployNewPostContract(
@@ -53,7 +54,8 @@ export async function deployNewPostContract(
     payees,
     shares,
     royaltyMultiplier,
-    setState
+    setCurrentPopup,
+    popupData
 ) {
     try {
         const factory = new ContractFactory(
@@ -84,19 +86,19 @@ export async function deployNewPostContract(
         dispatch({
             type: "addPost",
             value: contract.address,
-            data: this.state.content,
+            data: popupData.content,
         });
     } catch (err) {
         console.error(err);
         switch (type) {
+            case ContractType.ORIGINAL:
+                setCurrentPopup(PopupState.NEWPOST)
+                break;
             case ContractType.RESHARE:
-                // TODO:setState({ triggerResharePostPopup: true });
+                setCurrentPopup(PopupState.RESHARING)
                 break;
             case ContractType.REMIX:
-                // TODO:setState({ triggerRemixPostPopup: true });
-                break;
-            case ContractType.ORIGINAL:
-                // TODO:setState({ triggerNewPostPopup: true });
+                setCurrentPopup(PopupState.REMIXING)
                 break;
             default:
                 break;

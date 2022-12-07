@@ -12,7 +12,7 @@ import { ContentType, deployNewPostContract } from "../../../utils/contract";
 import { saveTextToIPFS, saveImageToIPFS } from "../../../utils/ipfs";
 
 //Handles the changes in the form element of the popups
-function handleChange(event) {
+function handleChange(event, setPopupData, popupData) {
   const target = event.target;
   const name = target.name;
 
@@ -28,7 +28,8 @@ function handleChange(event) {
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.readyState === 2) {
-          this.setState({ content: reader.result });
+          setPopupData({...popupData, content: reader.result});
+          // this.setState({ content: reader.result });
         }
       };
       reader.readAsDataURL(event.target.files[0]);
@@ -36,27 +37,27 @@ function handleChange(event) {
     default:
       break;
   }
-
-  this.setState({
-    [name]: value,
-  });
+setPopupData({...popupData, [name]: value});
+  // this.setState({
+  //   [name]: value,
+  // });
 }
 
 //Handles the submittions of the form element of the popups
-async function handleSubmit(event, state, dispatch, type) {
+async function handleSubmit(event, state, dispatch, type, setCurrentPopup, popupData) {
   createToastMessage("The post is being created, please wait...", 3000);
 
   let _hashOfContent;
   if (
-    this.state.contentType === "0" ||
-    this.state.contentType === ContentType.TEXT
+    popupData.contentType === "0" ||
+    popupData.contentType === ContentType.TEXT
   ) {
-    _hashOfContent = await saveTextToIPFS(this.state.content);
+    _hashOfContent = await saveTextToIPFS(popupData.content);
   } else if (
-    this.state.contentType === "1" ||
-    this.state.contentType === ContentType.IMAGE
+    popupData.contentType === "1" ||
+    popupData.contentType === ContentType.IMAGE
   ) {
-    _hashOfContent = await saveImageToIPFS(this.state.content);
+    _hashOfContent = await saveImageToIPFS(popupData.content);
   }
 
   deployNewPostContract(
@@ -64,13 +65,14 @@ async function handleSubmit(event, state, dispatch, type) {
     dispatch,
     type,
     state.posts?.length || 0,
-    this.state.contractType,
-    this.state.originalPostAddress,
-    this.state.contentType,
+    popupData.contractType,
+    popupData.originalPostAddress,
+    popupData.contentType,
     _hashOfContent.cid.toString(),
-    this.state.payees,
-    this.state.shares,
-    this.state.royaltyMultiplier
+    popupData.payees,
+    popupData.shares,
+    popupData.royaltyMultiplier,
+    setCurrentPopup
   );
   event.preventDefault();
 }
@@ -79,9 +81,9 @@ function PopupWrapper(props) {
   let state = props.state;
   let dispatch = props.dispatch;
   let popupData = props.popupData;
-  let currentState = props.currentState;
+  let currentPopup = props.currentPopup;
 
-  switch (currentState) {
+  switch (currentPopup) {
     case PopupState.CLOSED:
       return "";
     case PopupState.NEWPOST:
@@ -91,6 +93,7 @@ function PopupWrapper(props) {
             state={state}
             dispatch={dispatch}
             popupData={popupData}
+            setCurrentPopup={props.setCurrentPopup}
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />
@@ -103,6 +106,7 @@ function PopupWrapper(props) {
             state={state}
             dispatch={dispatch}
             popupData={popupData}
+            setCurrentPopup={props.setCurrentPopup}
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />
@@ -115,6 +119,7 @@ function PopupWrapper(props) {
             state={state}
             dispatch={dispatch}
             popupData={popupData}
+            setCurrentPopup={props.setCurrentPopup}
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />
@@ -127,6 +132,7 @@ function PopupWrapper(props) {
             state={state}
             dispatch={dispatch}
             popupData={popupData}
+            setCurrentPopup={props.setCurrentPopup}
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />
@@ -139,6 +145,7 @@ function PopupWrapper(props) {
             state={state}
             dispatch={dispatch}
             popupData={popupData}
+            setCurrentPopup={props.setCurrentPopup}
             handleChange={handleChange.bind(this)}
             handleSubmit={handleSubmit.bind(this)}
           />

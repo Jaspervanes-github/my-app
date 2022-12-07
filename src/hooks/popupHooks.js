@@ -62,7 +62,7 @@ async function setResharePopup(setPopupData, setIsLoading, state, item) {
         }
         if (isAlreadyOwner) {
             createToastMessage("You can't reshare your own posts", false);
-            this.setState({ isLoading: false });
+            setIsLoading(false);
             return;
         }
 
@@ -113,7 +113,7 @@ async function setRemixPopup(setPopupData, setIsLoading, state, item) {
         }
         if (isAlreadyOwner) {
             createToastMessage("You can't reshare your own posts", false);
-            this.setState({ isLoading: false });
+            setIsLoading(false);
             return;
         }
 
@@ -171,12 +171,12 @@ async function setViewPopup(setPopupData, setIsLoading, state, item) {
                     5000
                 );
                 console.error(err);
-                this.setState({ isLoading: false });
+                setIsLoading(false);
                 return;
             }
         } else {
             createToastMessage("You can't view your own posts", 5000);
-            this.setState({ isLoading: false });
+            setIsLoading(false);
             return;
         }
 
@@ -184,15 +184,7 @@ async function setViewPopup(setPopupData, setIsLoading, state, item) {
         let _id = await contract.id();
         let _hashOfContent = await contract.hashOfContent();
         let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
-
-        this.setState({
-            currentItem: item,
-            id: _id.toNumber(),
-            addressOfPoster: _addressOfPoster,
-            contentType: _contentType,
-            hashOfContent: _hashOfContent,
-            content: _content,
-        });
+        
         setPopupData({
             currentItem: item,
             id: _id.toNumber(),

@@ -22,10 +22,7 @@ function NewPostPopup(props) {
               return;
             }
             this.handleSubmit(event, state, dispatch, ContractType.ORIGINAL);
-            this.setState({
-              currentPopup: PopupState.CLOSED,
-              IsLoading: false,
-            });
+            props.setCurrentPopup(PopupState.CLOSED);
           }}
         >
           <div className="textbox-container">

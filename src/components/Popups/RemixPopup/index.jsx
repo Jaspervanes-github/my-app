@@ -22,10 +22,7 @@ function RemixPopup(props) {
               return;
             }
             this.handleSubmit(event, state, dispatch, ContractType.REMIX);
-            this.setState({
-              currentPopup: PopupState.CLOSED,
-              isLoading: false,
-            });
+            props.setCurrentPopup(PopupState.CLOSED);
           }}
         >
           <div className="textbox-container">

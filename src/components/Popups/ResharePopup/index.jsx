@@ -25,10 +25,7 @@ function ResharePopup(props) {
               return;
             }
             this.handleSubmit(event, state, dispatch, ContractType.RESHARE);
-            this.setState({
-              currentPopup: PopupState.CLOSED,
-              isLoading: false,
-            });
+            props.setCurrentPopup(PopupState.CLOSED);
           }}
         >
           <div className="textbox-container">
