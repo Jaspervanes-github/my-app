@@ -72,7 +72,8 @@ async function handleSubmit(event, state, dispatch, type, setCurrentPopup, popup
     popupData.payees,
     popupData.shares,
     popupData.royaltyMultiplier,
-    setCurrentPopup
+    setCurrentPopup,
+    popupData
   );
   event.preventDefault();
 }
@@ -92,10 +93,11 @@ function PopupWrapper(props) {
           <NewPostPopup
             state={state}
             dispatch={dispatch}
+            setPopupData={props.setPopupData}
             popupData={popupData}
             setCurrentPopup={props.setCurrentPopup}
-            handleChange={handleChange.bind(this)}
-            handleSubmit={handleSubmit.bind(this)}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
           />
         </PopupWrapperLayout>
       );
@@ -105,10 +107,11 @@ function PopupWrapper(props) {
           <ResharePopup
             state={state}
             dispatch={dispatch}
+            setPopupData={props.setPopupData}
             popupData={popupData}
             setCurrentPopup={props.setCurrentPopup}
-            handleChange={handleChange.bind(this)}
-            handleSubmit={handleSubmit.bind(this)}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
           />
         </PopupWrapperLayout>
       );
@@ -118,10 +121,11 @@ function PopupWrapper(props) {
           <RemixPopup
             state={state}
             dispatch={dispatch}
+            setPopupData={props.setPopupData}
             popupData={popupData}
             setCurrentPopup={props.setCurrentPopup}
-            handleChange={handleChange.bind(this)}
-            handleSubmit={handleSubmit.bind(this)}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
           />
         </PopupWrapperLayout>
       );
@@ -133,8 +137,6 @@ function PopupWrapper(props) {
             dispatch={dispatch}
             popupData={popupData}
             setCurrentPopup={props.setCurrentPopup}
-            handleChange={handleChange.bind(this)}
-            handleSubmit={handleSubmit.bind(this)}
           />
         </PopupWrapperLayout>
       );
@@ -146,8 +148,6 @@ function PopupWrapper(props) {
             dispatch={dispatch}
             popupData={popupData}
             setCurrentPopup={props.setCurrentPopup}
-            handleChange={handleChange.bind(this)}
-            handleSubmit={handleSubmit.bind(this)}
           />
         </PopupWrapperLayout>
       );

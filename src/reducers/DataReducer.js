@@ -11,6 +11,7 @@ export function dataReducer(state, action) {
         } case 'setPosts': {
             return { ...state, posts: action.value }
         } case 'addPost': {
+            console.log("In addPost in DataReducer");
             let currentPostList = state.posts;
             let currentPostDataList = state.postData;
             if (!currentPostList.includes(action.value)) {

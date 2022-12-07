@@ -10,7 +10,7 @@ function PopupWrapperLayout(props) {
             <Button
               className="close-btn"
               variant="contained"
-              setPopupClosed={props.setPopupClosed}
+              onClick={props.setPopupClosed}
             >
               Close
             </Button>

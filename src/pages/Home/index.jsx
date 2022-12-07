@@ -57,7 +57,6 @@ function Home() {
                         state,
                         "No item"
                       );
-                      // this.createNewPost();
                     }}
                   >
                     Create New Post
@@ -73,11 +72,11 @@ function Home() {
                 <PopupWrapper
                   state={state}
                   dispatch={dispatch}
+                  setPopupData={setPopupData}
                   popupData={popupData}
                   currentPopup={currentPopup}
                   setCurrentPopup={setCurrentPopup}
                   setPopupClosed={() => {
-                    console.log("I am in the setPopupClosed function!!!!!!")
                     setIsLoading(false);
                     setCurrentPopup(PopupState.CLOSED);
                   }}

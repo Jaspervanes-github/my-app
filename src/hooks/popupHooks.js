@@ -7,6 +7,7 @@ import { PopupState } from "../utils/enums";
 
 
 function setData(setPopupData, setIsLoading, currentPopup, state, item) {
+    // setNewPostPopup(setPopupData);
     switch (currentPopup) {
         case PopupState.CLOSED:
             break;
@@ -247,4 +248,4 @@ async function setDetailsPopup(setPopupData, setIsLoading, state, item) {
     setIsLoading(false);
 }
 
-export default { setData }
+export default setData

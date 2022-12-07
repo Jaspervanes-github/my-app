@@ -24,7 +24,14 @@ function ResharePopup(props) {
               event.preventDefault();
               return;
             }
-            this.handleSubmit(event, state, dispatch, ContractType.RESHARE);
+            props.handleSubmit(
+              event,
+              state,
+              dispatch,
+              ContractType.RESHARE,
+              props.setCurrentPopup,
+              popupData
+            );
             props.setCurrentPopup(PopupState.CLOSED);
           }}
         >

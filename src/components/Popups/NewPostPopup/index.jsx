@@ -21,7 +21,14 @@ function NewPostPopup(props) {
               event.preventDefault();
               return;
             }
-            this.handleSubmit(event, state, dispatch, ContractType.ORIGINAL);
+            props.handleSubmit(
+              event,
+              state,
+              dispatch,
+              ContractType.REMIX,
+              props.setCurrentPopup,
+              popupData
+            );
             props.setCurrentPopup(PopupState.CLOSED);
           }}
         >
@@ -59,7 +66,9 @@ function NewPostPopup(props) {
                 type="select"
                 name="contentType"
                 value={popupData.contentType}
-                onChange={this.handleChange}
+                onChange={(event) => {
+                  props.handleChange(event, props.setPopupData, popupData);
+                }}
               >
                 <option value="0">TEXT</option>
                 <option value="1">IMAGE</option>
@@ -84,9 +93,11 @@ function NewPostPopup(props) {
                         height: 135 + "px",
                         maxHeight: window.innerHeight / 2,
                       }}
-                      onInput={resizeHeightOfElement}
-                      onSelect={resizeHeightOfElement}
-                      onChange={this.handleChange}
+                      // onInput={resizeHeightOfElement}
+                      // onSelect={resizeHeightOfElement}
+                      onChange={(event) => {
+                        props.handleChange(event, props.setPopupData, popupData);
+                      }}
                     />
                   );
                 }
@@ -109,7 +120,9 @@ function NewPostPopup(props) {
                         name="content"
                         id="input"
                         accept="image/*"
-                        onChange={this.handleChange}
+                        onChange={(event) => {
+                          props.handleChange(event, props.setPopupData, popupData);
+                        }}
                       />
                     </span>
                   );

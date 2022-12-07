@@ -21,7 +21,14 @@ function RemixPopup(props) {
               event.preventDefault();
               return;
             }
-            this.handleSubmit(event, state, dispatch, ContractType.REMIX);
+            props.handleSubmit(
+              event,
+              state,
+              dispatch,
+              ContractType.REMIX,
+              props.setCurrentPopup,
+              popupData
+            );
             props.setCurrentPopup(PopupState.CLOSED);
           }}
         >
@@ -56,7 +63,9 @@ function RemixPopup(props) {
                 type="select"
                 name="contentType"
                 value={popupData.contentType}
-                onChange={this.handleChange}
+                onChange={(event) => {
+                  props.handleChange(event, props.setPopupData, popupData);
+                }}
               >
                 <option value="0">TEXT</option>
                 <option value="1">IMAGE</option>
@@ -82,7 +91,9 @@ function RemixPopup(props) {
                       }}
                       onInput={resizeHeightOfElement}
                       onSelect={resizeHeightOfElement}
-                      onChange={this.handleChange}
+                      onChange={(event) => {
+                        props.handleChange(event, props.setPopupData, popupData);
+                      }}
                     />
                   );
                 }
@@ -104,7 +115,9 @@ function RemixPopup(props) {
                         name="content"
                         id="input"
                         accept="image/*"
-                        onChange={this.handleChange}
+                        onChange={(event) => {
+                          props.handleChange(event, props.setPopupData, popupData);
+                        }}
                       />
                     </div>
                   );

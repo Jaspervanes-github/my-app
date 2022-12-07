@@ -3,4 +3,4 @@ function resizeHeightOfElement(elem) {
     elem.target.style.height = elem.target.scrollHeight + "px";
 }
 
-export default { resizeHeightOfElement }
+export default resizeHeightOfElement 

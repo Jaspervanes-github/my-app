@@ -39,7 +39,6 @@ function Post(props) {
             onClick={() => {
               props.setCurrentPopup(PopupState.RESHARING);
               setData(props.setPopupData, props.setIsLoading, props.currentPopup, state, item);
-              // this.createResharePost(state, item);
             }}
           >
             <ReshareIcon />
@@ -50,7 +49,6 @@ function Post(props) {
             onClick={() => {
               props.setCurrentPopup(PopupState.REMIXING);
               setData(props.setPopupData, props.setIsLoading, props.currentPopup, state, item);
-              // this.createRemixPost(state, item);
             }}
           >
             <RemixIcon />
@@ -61,7 +59,6 @@ function Post(props) {
             onClick={() => {
               props.setCurrentPopup(PopupState.VIEWING);
               setData(props.setPopupData, props.setIsLoading, props.currentPopup, state, item);
-              // this.viewPost(state, item);
             }}
           >
             <ViewIcon />
@@ -72,7 +69,6 @@ function Post(props) {
             onClick={() => {
               props.setCurrentPopup(PopupState.DETAILS);
               setData(props.setPopupData, props.setIsLoading, props.currentPopup, state, item);
-              // this.detailPost(state, item);
             }}
           >
             <DetailIcon />
