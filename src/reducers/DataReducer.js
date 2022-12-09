@@ -20,6 +20,8 @@ export function dataReducer(state, action) {
                 currentPostDataList.unshift(action.data);
                 localStorage.setItem("postData", JSON.stringify(currentPostDataList));
                 return { ...state, posts: currentPostList, postData: currentPostDataList }
+            }else{
+                return{...state}
             }
             break;
         }
