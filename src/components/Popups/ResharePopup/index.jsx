@@ -7,10 +7,11 @@ import {
 } from "../../../utils/contract";
 import { createToastMessage } from "../../../utils/toast";
 import { PopupState } from "../../../utils/enums";
+import { useContext } from "react";
+import { DataContext } from "../../../contexts/DataContext";
 
 function ResharePopup(props) {
-  let state = props.state;
-  let dispatch = props.dispatch;
+  const { state, dispatch } = useContext(DataContext);
   let popupData = props.popupData;
 
   return (
@@ -26,11 +27,11 @@ function ResharePopup(props) {
             }
             props.handleSubmit(
               event,
-              state,
-              dispatch,
               ContractType.RESHARE,
               props.setCurrentPopup,
-              popupData
+              popupData,
+              state,
+              dispatch
             );
             props.setCurrentPopup(PopupState.CLOSED);
           }}

@@ -32,7 +32,6 @@ function createDataForChart(payees, shares) {
 }
 
 function RoyaltieSplitDiagram(props) {
-
   return (
     <React.Fragment>
       <h3>Pie Chart of Royaltysplit:</h3>

@@ -1,6 +1,8 @@
 import { ContractFactory } from "ethers";
+import { useContext } from "react";
 import Post_ABI from "../assets/metadata/Post_ABI.json";
 import Post_ByteCode from "../assets/metadata/Post_ByteCode.json";
+import { DataContext } from "../contexts/DataContext";
 import { PopupState } from "./enums";
 import { createToastMessage } from "./toast";
 
@@ -43,8 +45,6 @@ export function contentTypeToString(contentType) {
 
 //Deploys a new Post contract to the blockchain and adds it to to posts list
 export async function deployNewPostContract(
-    state,
-    dispatch,
     type,
     id,
     contractType,
@@ -55,7 +55,9 @@ export async function deployNewPostContract(
     shares,
     royaltyMultiplier,
     setCurrentPopup,
-    popupData
+    popupData,
+    state, 
+    dispatch
 ) {
     try {
         const factory = new ContractFactory(
@@ -110,28 +112,31 @@ export async function deployNewPostContract(
     }
 }
 
-export async function getPayees(state, indexOfContract) {
-    try {
-        let payees = await state.posts[indexOfContract].getAllPayees();
-        return payees;
-    } catch (err) {
-        console.error(err);
-    }
-}
+// export async function getPayees(indexOfContract) {
+//     const { state } = useContext(DataContext);
+//     try {
+//         let payees = await state.posts[indexOfContract].getAllPayees();
+//         return payees;
+//     } catch (err) {
+//         console.error(err);
+//     }
+// }
 
-export async function getShares(state, indexOfContract) {
-    try {
-        let shares = await state.posts[indexOfContract].getAllShares();
-        return shares;
-    } catch (err) {
-        console.error(err);
-    }
-}
+// export async function getShares(indexOfContract) {
+//     const { state } = useContext(DataContext);
+//     try {
+//         let shares = await state.posts[indexOfContract].getAllShares();
+//         return shares;
+//     } catch (err) {
+//         console.error(err);
+//     }
+// }
 
-export async function payoutUser(state, indexOfContract) {
-    try {
-        await state.posts[indexOfContract].payoutUser();
-    } catch (err) {
-        console.error(err);
-    }
-}
+// export async function payoutUser(indexOfContract) {
+//     const { state } = useContext(DataContext);
+//     try {
+//         await state.posts[indexOfContract].payoutUser();
+//     } catch (err) {
+//         console.error(err);
+//     }
+// }

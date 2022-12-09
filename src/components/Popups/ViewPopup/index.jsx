@@ -3,10 +3,7 @@ import "./index.css";
 import { ContentType } from "../../../utils/contract";
 
 function ViewPopup(props) {
-  let state = props.state;
-  let dispatch = props.dispatch;
   let popupData = props.popupData;
-
   return (
     <React.Fragment>
       <div className="viewPostTemplate">

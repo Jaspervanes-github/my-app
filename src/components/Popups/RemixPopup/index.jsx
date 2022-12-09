@@ -4,10 +4,11 @@ import { ContractType, ContentType } from "../../../utils/contract";
 import { createToastMessage } from "../../../utils/toast";
 import { PopupState } from "../../../utils/enums";
 import resizeHeightOfElement from "../../../utils/resizeElement";
+import { useContext } from "react";
+import { DataContext } from "../../../contexts/DataContext";
 
 function RemixPopup(props) {
-  let state = props.state;
-  let dispatch = props.dispatch;
+  const {state, dispatch} = useContext(DataContext);
   let popupData = props.popupData;
 
   return (
@@ -23,11 +24,11 @@ function RemixPopup(props) {
             }
             props.handleSubmit(
               event,
-              state,
-              dispatch,
               ContractType.REMIX,
               props.setCurrentPopup,
-              popupData
+              popupData,
+              state,
+              dispatch
             );
             props.setCurrentPopup(PopupState.CLOSED);
           }}

@@ -29,6 +29,7 @@ function DataProvider({ children }) {
     </DataContext.Provider>
 }
 
+//Deprecated
 function DataConsumer({ children }) {
     return (
         <DataContext.Consumer>
@@ -42,4 +43,4 @@ function DataConsumer({ children }) {
     )
 }
 
-export { DataProvider, DataConsumer }
+export { DataProvider, DataConsumer, DataContext }

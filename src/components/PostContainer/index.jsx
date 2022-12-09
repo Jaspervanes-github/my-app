@@ -2,9 +2,11 @@ import React from "react";
 import "./index.css";
 import ViewportList from "react-viewport-list";
 import Post from "../../components/Post";
+import { useContext } from "react";
+import { DataContext } from "../../contexts/DataContext";
 
 function PostContainer(props) {
-  let state = props.state;
+  const { state } = useContext(DataContext);
   let ref = React.createRef(null);
   return (
     <div
@@ -26,7 +28,6 @@ function PostContainer(props) {
             setIsLoading={props.setIsLoading}
             currentPopup={props.currentPopup}
             item={item}
-            state={state}
             setCurrentPopup={props.setCurrentPopup}
           />
         )}

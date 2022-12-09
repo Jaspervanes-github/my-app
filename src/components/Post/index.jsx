@@ -7,10 +7,35 @@ import ViewIcon from "@material-ui/icons/Visibility";
 import DetailIcon from "@material-ui/icons/Info";
 import { PopupState } from "../../utils/enums";
 import setData from "../../hooks/popupHooks";
+import { useContext } from "react";
+import { DataContext } from "../../contexts/DataContext";
+
+const buttons = [
+  {
+    title: "Reshare Post",
+    state: PopupState.RESHARING,
+    icon: <ReshareIcon />,
+  },
+  {
+    title: "Remix Post",
+    state: PopupState.REMIXING,
+    icon: <RemixIcon />,
+  },
+  {
+    title: "View Post",
+    state: PopupState.VIEWING,
+    icon: <ViewIcon />,
+  },
+  {
+    title: "Details of the Post",
+    state: PopupState.DETAILS,
+    icon: <DetailIcon />,
+  },
+];
 
 function Post(props) {
+  const { state } = useContext(DataContext);
   let item = props.item;
-  let state = props.state;
   return (
     <React.Fragment key={state.posts.indexOf(item)}>
       <div className="post">
@@ -33,74 +58,24 @@ function Post(props) {
         </div>
         <br />
         <div className="post-buttons">
-          <IconButton
-            className="button"
-            title="Reshare Post"
-            onClick={() => {
-              setData(
-                props.setPopupData,
-                props.setIsLoading,
-                props.setCurrentPopup,
-                // props.currentPopup,
-                PopupState.RESHARING,
-                state,
-                item
-              );
-            }}
-          >
-            <ReshareIcon />
-          </IconButton>
-          <IconButton
-            className="button"
-            title="Remix Post"
-            onClick={() => {
-              setData(
-                props.setPopupData,
-                props.setIsLoading,
-                props.setCurrentPopup,
-                // props.currentPopup,
-                PopupState.REMIXING,
-                state,
-                item
-              );
-            }}
-          >
-            <RemixIcon />
-          </IconButton>
-          <IconButton
-            className="button"
-            title="View Post"
-            onClick={() => {
-              setData(
-                props.setPopupData,
-                props.setIsLoading,
-                props.setCurrentPopup,
-                // props.currentPopup,
-                PopupState.VIEWING,
-                state,
-                item
-              );
-            }}
-          >
-            <ViewIcon />
-          </IconButton>
-          <IconButton
-            className="button"
-            title="Detail of the Post"
-            onClick={() => {
-              setData(
-                props.setPopupData,
-                props.setIsLoading,
-                props.setCurrentPopup,
-                // props.currentPopup,
-                PopupState.DETAILS,
-                state,
-                item
-              );
-            }}
-          >
-            <DetailIcon />
-          </IconButton>
+          {buttons.map((buttonContent) => (
+            <IconButton
+              className="button"
+              title={buttonContent.title}
+              onClick={() => {
+                setData(
+                  props.setPopupData,
+                  props.setIsLoading,
+                  props.setCurrentPopup,
+                  buttonContent.state,
+                  item,
+                  state
+                );
+              }}
+            >
+              {buttonContent.icon}
+            </IconButton>
+          ))}
         </div>
       </div>
     </React.Fragment>

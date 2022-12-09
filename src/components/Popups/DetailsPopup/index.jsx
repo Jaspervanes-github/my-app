@@ -4,10 +4,7 @@ import { contractTypeToString, contentTypeToString } from "../../../utils/contra
 import RoyaltieSplitDiagram from "../../RoyaltieSplitDiagram";
 
 function DetailsPopup(props) {
-  let state = props.state;
-  let dispatch = props.dispatch;
   let popupData = props.popupData;
-
   return (
     <React.Fragment>
       <div className="detailTemplate"> 

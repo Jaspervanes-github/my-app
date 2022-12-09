@@ -4,10 +4,12 @@ import { createToastMessage } from "../utils/toast";
 import { retrieveDataFromIPFS } from "../utils/ipfs";
 import { ContractType, ContentType } from "../utils/contract";
 import { PopupState } from "../utils/enums";
+import { useContext } from "react";
+import { DataContext } from "../contexts/DataContext";
 
 
-function setData(setPopupData, setIsLoading, setCurrentPopup, currentPopup, state, item) {
-    // setNewPostPopup(setPopupData);
+function setData(setPopupData, setIsLoading, setCurrentPopup, currentPopup, item, state) {
+
     switch (currentPopup) {
         case PopupState.CLOSED:
             break;
@@ -15,16 +17,16 @@ function setData(setPopupData, setIsLoading, setCurrentPopup, currentPopup, stat
             setNewPostPopup(setPopupData, setCurrentPopup);
             break;
         case PopupState.RESHARING:
-            setResharePopup(setPopupData, setIsLoading, setCurrentPopup, state, item);
+            setResharePopup(setPopupData, setIsLoading, setCurrentPopup, item, state);
             break;
         case PopupState.REMIXING:
-            setRemixPopup(setPopupData, setIsLoading, setCurrentPopup, state, item);
+            setRemixPopup(setPopupData, setIsLoading, setCurrentPopup, item, state);
             break;
         case PopupState.VIEWING:
-            setViewPopup(setPopupData, setIsLoading, setCurrentPopup, state, item);
+            setViewPopup(setPopupData, setIsLoading, setCurrentPopup, item, state);
             break;
         case PopupState.DETAILS:
-            setDetailsPopup(setPopupData, setIsLoading, setCurrentPopup, state, item);
+            setDetailsPopup(setPopupData, setIsLoading, setCurrentPopup, item, state);
             break;
         default:
             break;
@@ -44,7 +46,7 @@ function setNewPostPopup(setPopupData, setCurrentPopup) {
     setCurrentPopup(PopupState.NEWPOST);
 }
 
-async function setResharePopup(setPopupData, setIsLoading, setCurrentPopup, state, item) {
+async function setResharePopup(setPopupData, setIsLoading, setCurrentPopup, item, state) {
     try {
         setIsLoading(true);
 
@@ -95,7 +97,7 @@ async function setResharePopup(setPopupData, setIsLoading, setCurrentPopup, stat
     setIsLoading(false);
 }
 
-async function setRemixPopup(setPopupData, setIsLoading, setCurrentPopup, state, item) {
+async function setRemixPopup(setPopupData, setIsLoading, setCurrentPopup, item, state) {
     try {
         setIsLoading(true);
 
@@ -146,7 +148,7 @@ async function setRemixPopup(setPopupData, setIsLoading, setCurrentPopup, state,
     setIsLoading(false);
 }
 
-async function setViewPopup(setPopupData, setIsLoading, setCurrentPopup, state, item) {
+async function setViewPopup(setPopupData, setIsLoading, setCurrentPopup, item, state) {
     try {
         setIsLoading(true);
 
@@ -200,7 +202,7 @@ async function setViewPopup(setPopupData, setIsLoading, setCurrentPopup, state, 
     setIsLoading(false);
 }
 
-async function setDetailsPopup(setPopupData, setIsLoading, setCurrentPopup, state, item) {
+async function setDetailsPopup(setPopupData, setIsLoading, setCurrentPopup, item, state) {
     try {
         setIsLoading(true);
 
