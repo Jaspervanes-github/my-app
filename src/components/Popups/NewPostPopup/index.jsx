@@ -96,7 +96,11 @@ function NewPostPopup(props) {
                       // onInput={resizeHeightOfElement}
                       // onSelect={resizeHeightOfElement}
                       onChange={(event) => {
-                        props.handleChange(event, props.setPopupData, popupData);
+                        props.handleChange(
+                          event,
+                          props.setPopupData,
+                          popupData
+                        );
                       }}
                     />
                   );
@@ -121,7 +125,11 @@ function NewPostPopup(props) {
                         id="input"
                         accept="image/*"
                         onChange={(event) => {
-                          props.handleChange(event, props.setPopupData, popupData);
+                          props.handleChange(
+                            event,
+                            props.setPopupData,
+                            popupData
+                          );
                         }}
                       />
                     </span>

@@ -14,6 +14,7 @@
     align-items: flex-start;
     margin-right: 5px;
     padding: 5px;
+    min-height: 36vh;
 }
 
 .remixPostTemplate .textbox-container .textbox {
@@ -31,6 +32,10 @@
     background-repeat: no-repeat;
     background-size: 100%;
     pointer-events: none;
+}
+
+.remixPostTemplate .textbox-container .image-container input {
+    max-width: 21%;
 }
 
 .remixPostTemplate .textarea {

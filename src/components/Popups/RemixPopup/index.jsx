@@ -92,7 +92,11 @@ function RemixPopup(props) {
                       onInput={resizeHeightOfElement}
                       onSelect={resizeHeightOfElement}
                       onChange={(event) => {
-                        props.handleChange(event, props.setPopupData, popupData);
+                        props.handleChange(
+                          event,
+                          props.setPopupData,
+                          popupData
+                        );
                       }}
                     />
                   );
@@ -104,22 +108,27 @@ function RemixPopup(props) {
                 ) {
                   return (
                     // render Image selection component here
-                    <div>
+                    <span className="image-container">
                       <img
                         src={popupData.content}
                         alt=""
                         className="imageBox"
                       />
+                      <br />
                       <input
                         type="file"
                         name="content"
                         id="input"
                         accept="image/*"
                         onChange={(event) => {
-                          props.handleChange(event, props.setPopupData, popupData);
+                          props.handleChange(
+                            event,
+                            props.setPopupData,
+                            popupData
+                          );
                         }}
                       />
-                    </div>
+                    </span>
                   );
                 }
               })()}
