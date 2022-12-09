@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import NavBar from "../../components/Navbar";
 import { DataConsumer } from "../../contexts/DataContext";
 import { Grid } from "@material-ui/core";
@@ -12,7 +12,6 @@ import LoadingScreen from "../../components/LoadingScreen";
 import PostContainer from "../../components/PostContainer";
 import { useState } from "react";
 import { ContractType, ContentType } from "../../utils/contract";
-import { useEffect } from "react";
 import setData from "../../hooks/popupHooks";
 
 function Home() {
@@ -53,7 +52,9 @@ function Home() {
                       setData(
                         setPopupData,
                         setIsLoading,
-                        currentPopup,
+                        setCurrentPopup,
+                        // currentPopup,
+                        PopupState.NEWPOST,
                         state,
                         "No item"
                       );
@@ -81,7 +82,7 @@ function Home() {
                     setCurrentPopup(PopupState.CLOSED);
                   }}
                 />
-                <LoadingScreen trigger={isLoading} />
+                {isLoading ? <LoadingScreen /> : null}
               </Grid>
             </Grid>
           </div>

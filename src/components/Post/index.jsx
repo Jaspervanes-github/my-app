@@ -38,7 +38,15 @@ function Post(props) {
             title="Reshare Post"
             onClick={() => {
               props.setCurrentPopup(PopupState.RESHARING);
-              setData(props.setPopupData, props.setIsLoading, props.currentPopup, state, item);
+              setData(
+                props.setPopupData,
+                props.setIsLoading,
+                props.setCurrentPopup,
+                // props.currentPopup,
+                PopupState.RESHARING,
+                state,
+                item
+              );
             }}
           >
             <ReshareIcon />
@@ -48,7 +56,15 @@ function Post(props) {
             title="Remix Post"
             onClick={() => {
               props.setCurrentPopup(PopupState.REMIXING);
-              setData(props.setPopupData, props.setIsLoading, props.currentPopup, state, item);
+              setData(
+                props.setPopupData,
+                props.setIsLoading,
+                props.setCurrentPopup,
+                // props.currentPopup,
+                PopupState.REMIXING,
+                state,
+                item
+              );
             }}
           >
             <RemixIcon />
@@ -58,7 +74,15 @@ function Post(props) {
             title="View Post"
             onClick={() => {
               props.setCurrentPopup(PopupState.VIEWING);
-              setData(props.setPopupData, props.setIsLoading, props.currentPopup, state, item);
+              setData(
+                props.setPopupData,
+                props.setIsLoading,
+                props.setCurrentPopup,
+                // props.currentPopup,
+                PopupState.VIEWING,
+                state,
+                item
+              );
             }}
           >
             <ViewIcon />
@@ -68,7 +92,15 @@ function Post(props) {
             title="Detail of the Post"
             onClick={() => {
               props.setCurrentPopup(PopupState.DETAILS);
-              setData(props.setPopupData, props.setIsLoading, props.currentPopup, state, item);
+              setData(
+                props.setPopupData,
+                props.setIsLoading,
+                props.setCurrentPopup,
+                // props.currentPopup,
+                PopupState.DETAILS,
+                state,
+                item
+              );
             }}
           >
             <DetailIcon />

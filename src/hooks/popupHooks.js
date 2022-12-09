@@ -6,7 +6,7 @@ import { ContractType, ContentType } from "../utils/contract";
 import { PopupState } from "../utils/enums";
 
 
-function setData(setPopupData, setIsLoading, currentPopup, state, item) {
+function setData(setPopupData, setIsLoading, setCurrentPopup, currentPopup, state, item) {
     // setNewPostPopup(setPopupData);
     switch (currentPopup) {
         case PopupState.CLOSED:
@@ -15,16 +15,16 @@ function setData(setPopupData, setIsLoading, currentPopup, state, item) {
             setNewPostPopup(setPopupData);
             break;
         case PopupState.RESHARING:
-            setResharePopup(setPopupData, setIsLoading, state, item);
+            setResharePopup(setPopupData, setIsLoading, setCurrentPopup, state, item);
             break;
         case PopupState.REMIXING:
-            setRemixPopup(setPopupData, setIsLoading, state, item);
+            setRemixPopup(setPopupData, setIsLoading, setCurrentPopup, state, item);
             break;
         case PopupState.VIEWING:
-            setViewPopup(setPopupData, setIsLoading, state, item);
+            setViewPopup(setPopupData, setIsLoading, setCurrentPopup, state, item);
             break;
         case PopupState.DETAILS:
-            setDetailsPopup(setPopupData, setIsLoading, state, item);
+            setDetailsPopup(setPopupData, setIsLoading, setCurrentPopup, state, item);
             break;
         default:
             break;
@@ -33,21 +33,17 @@ function setData(setPopupData, setIsLoading, currentPopup, state, item) {
 
 function setNewPostPopup(setPopupData) {
     setPopupData({
-        // currentItem: "No item",
-        // id: -1,
-        // addressOfPoster: "0x0000000000000000000000000000000000000000",
         originalPostAddress: "0x0000000000000000000000000000000000000000",
         contractType: ContractType.ORIGINAL,
         contentType: ContentType.TEXT,
         payees: [],
         shares: [],
         royaltyMultiplier: 5,
-        content: "",
-        // hashOfContent: "No hash",
+        content: ""
     });
 }
 
-async function setResharePopup(setPopupData, setIsLoading, state, item) {
+async function setResharePopup(setPopupData, setIsLoading, setCurrentPopup, state, item) {
     try {
         setIsLoading(true);
 
@@ -63,6 +59,7 @@ async function setResharePopup(setPopupData, setIsLoading, state, item) {
         }
         if (isAlreadyOwner) {
             createToastMessage("You can't reshare your own posts", false);
+            setCurrentPopup(PopupState.CLOSED);
             setIsLoading(false);
             return;
         }
@@ -80,8 +77,6 @@ async function setResharePopup(setPopupData, setIsLoading, state, item) {
 
         setPopupData({
             currentItem: item,
-            // id: -1,
-            // addressOfPoster: "0x0000000000000000000000000000000000000000",
             originalPostAddress: _originalPostAddress,
             contractType: ContractType.RESHARE,
             contentType: _contentType,
@@ -89,16 +84,17 @@ async function setResharePopup(setPopupData, setIsLoading, state, item) {
             shares: _shares,
             royaltyMultiplier: 2,
             content: _content,
-            hashOfContent: _hashOfContent,
+            hashOfContent: _hashOfContent
         });
     } catch (err) {
         console.error(err);
+        setCurrentPopup(PopupState.CLOSED);
         setIsLoading(false);
     }
     setIsLoading(false);
 }
 
-async function setRemixPopup(setPopupData, setIsLoading, state, item) {
+async function setRemixPopup(setPopupData, setIsLoading, setCurrentPopup, state, item) {
     try {
         setIsLoading(true);
 
@@ -114,6 +110,7 @@ async function setRemixPopup(setPopupData, setIsLoading, state, item) {
         }
         if (isAlreadyOwner) {
             createToastMessage("You can't reshare your own posts", false);
+            setCurrentPopup(PopupState.CLOSED);
             setIsLoading(false);
             return;
         }
@@ -131,25 +128,24 @@ async function setRemixPopup(setPopupData, setIsLoading, state, item) {
 
         setPopupData({
             currentItem: item,
-            // id: -1,
-            // addressOfPoster: "0x0000000000000000000000000000000000000000",
             originalPostAddress: _originalPostAddress,
-            contractType: ContractType.ORIGINAL,
-            contentType: ContentType.TEXT,
+            contractType: ContractType.REMIX,
+            contentType: _contentType,
             payees: _payees,
             shares: _shares,
             royaltyMultiplier: 4,
             content: _content,
-            hashOfContent: _hashOfContent,
+            hashOfContent: _hashOfContent
         })
     } catch (err) {
         console.error(err);
+        setCurrentPopup(PopupState.CLOSED);
         setIsLoading(false);
     }
     setIsLoading(false);
 }
 
-async function setViewPopup(setPopupData, setIsLoading, state, item) {
+async function setViewPopup(setPopupData, setIsLoading, setCurrentPopup, state, item) {
     try {
         setIsLoading(true);
 
@@ -177,6 +173,7 @@ async function setViewPopup(setPopupData, setIsLoading, state, item) {
             }
         } else {
             createToastMessage("You can't view your own posts", 5000);
+            setCurrentPopup(PopupState.CLOSED);
             setIsLoading(false);
             return;
         }
@@ -190,23 +187,19 @@ async function setViewPopup(setPopupData, setIsLoading, state, item) {
             currentItem: item,
             id: _id.toNumber(),
             addressOfPoster: _addressOfPoster,
-            // originalPostAddress: "0x0000000000000000000000000000000000000000",
-            // contractType: ContractType.ORIGINAL,
             contentType: _contentType,
-            // payees: [],
-            // shares: [],
-            // royaltyMultiplier: 5,
             content: _content,
-            hashOfContent: _hashOfContent,
+            hashOfContent: _hashOfContent
         })
     } catch (err) {
         console.error(err);
+        setCurrentPopup(PopupState.CLOSED);
         setIsLoading(false);
     }
     setIsLoading(false);
 }
 
-async function setDetailsPopup(setPopupData, setIsLoading, state, item) {
+async function setDetailsPopup(setPopupData, setIsLoading, setCurrentPopup, state, item) {
     try {
         setIsLoading(true);
 
@@ -243,6 +236,7 @@ async function setDetailsPopup(setPopupData, setIsLoading, state, item) {
         })
     } catch (err) {
         console.error(err);
+        setCurrentPopup(PopupState.CLOSED);
         setIsLoading(false);
     }
     setIsLoading(false);
