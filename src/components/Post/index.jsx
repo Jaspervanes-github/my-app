@@ -37,7 +37,6 @@ function Post(props) {
             className="button"
             title="Reshare Post"
             onClick={() => {
-              props.setCurrentPopup(PopupState.RESHARING);
               setData(
                 props.setPopupData,
                 props.setIsLoading,
@@ -55,7 +54,6 @@ function Post(props) {
             className="button"
             title="Remix Post"
             onClick={() => {
-              props.setCurrentPopup(PopupState.REMIXING);
               setData(
                 props.setPopupData,
                 props.setIsLoading,
@@ -73,7 +71,6 @@ function Post(props) {
             className="button"
             title="View Post"
             onClick={() => {
-              props.setCurrentPopup(PopupState.VIEWING);
               setData(
                 props.setPopupData,
                 props.setIsLoading,
@@ -91,7 +88,6 @@ function Post(props) {
             className="button"
             title="Detail of the Post"
             onClick={() => {
-              props.setCurrentPopup(PopupState.DETAILS);
               setData(
                 props.setPopupData,
                 props.setIsLoading,

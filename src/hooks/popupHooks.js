@@ -12,7 +12,7 @@ function setData(setPopupData, setIsLoading, setCurrentPopup, currentPopup, stat
         case PopupState.CLOSED:
             break;
         case PopupState.NEWPOST:
-            setNewPostPopup(setPopupData);
+            setNewPostPopup(setPopupData, setCurrentPopup);
             break;
         case PopupState.RESHARING:
             setResharePopup(setPopupData, setIsLoading, setCurrentPopup, state, item);
@@ -31,7 +31,7 @@ function setData(setPopupData, setIsLoading, setCurrentPopup, currentPopup, stat
     }
 }
 
-function setNewPostPopup(setPopupData) {
+function setNewPostPopup(setPopupData, setCurrentPopup) {
     setPopupData({
         originalPostAddress: "0x0000000000000000000000000000000000000000",
         contractType: ContractType.ORIGINAL,
@@ -41,6 +41,7 @@ function setNewPostPopup(setPopupData) {
         royaltyMultiplier: 5,
         content: ""
     });
+    setCurrentPopup(PopupState.NEWPOST);
 }
 
 async function setResharePopup(setPopupData, setIsLoading, setCurrentPopup, state, item) {
@@ -59,7 +60,6 @@ async function setResharePopup(setPopupData, setIsLoading, setCurrentPopup, stat
         }
         if (isAlreadyOwner) {
             createToastMessage("You can't reshare your own posts", false);
-            setCurrentPopup(PopupState.CLOSED);
             setIsLoading(false);
             return;
         }
@@ -86,6 +86,7 @@ async function setResharePopup(setPopupData, setIsLoading, setCurrentPopup, stat
             content: _content,
             hashOfContent: _hashOfContent
         });
+        setCurrentPopup(PopupState.RESHARING);
     } catch (err) {
         console.error(err);
         setCurrentPopup(PopupState.CLOSED);
@@ -110,7 +111,6 @@ async function setRemixPopup(setPopupData, setIsLoading, setCurrentPopup, state,
         }
         if (isAlreadyOwner) {
             createToastMessage("You can't reshare your own posts", false);
-            setCurrentPopup(PopupState.CLOSED);
             setIsLoading(false);
             return;
         }
@@ -137,6 +137,7 @@ async function setRemixPopup(setPopupData, setIsLoading, setCurrentPopup, state,
             content: _content,
             hashOfContent: _hashOfContent
         })
+        setCurrentPopup(PopupState.REMIXING);
     } catch (err) {
         console.error(err);
         setCurrentPopup(PopupState.CLOSED);
@@ -173,7 +174,6 @@ async function setViewPopup(setPopupData, setIsLoading, setCurrentPopup, state, 
             }
         } else {
             createToastMessage("You can't view your own posts", 5000);
-            setCurrentPopup(PopupState.CLOSED);
             setIsLoading(false);
             return;
         }
@@ -182,7 +182,7 @@ async function setViewPopup(setPopupData, setIsLoading, setCurrentPopup, state, 
         let _id = await contract.id();
         let _hashOfContent = await contract.hashOfContent();
         let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
-        
+
         setPopupData({
             currentItem: item,
             id: _id.toNumber(),
@@ -191,6 +191,7 @@ async function setViewPopup(setPopupData, setIsLoading, setCurrentPopup, state, 
             content: _content,
             hashOfContent: _hashOfContent
         })
+        setCurrentPopup(PopupState.VIEWING);
     } catch (err) {
         console.error(err);
         setCurrentPopup(PopupState.CLOSED);
@@ -234,6 +235,8 @@ async function setDetailsPopup(setPopupData, setIsLoading, setCurrentPopup, stat
             content: _content,
             hashOfContent: _hashOfContent,
         })
+
+        setCurrentPopup(PopupState.DETAILS);
     } catch (err) {
         console.error(err);
         setCurrentPopup(PopupState.CLOSED);

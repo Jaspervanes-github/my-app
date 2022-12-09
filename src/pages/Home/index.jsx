@@ -48,7 +48,6 @@ function Home() {
                     className="create"
                     startIcon={<CreatePostIcon />}
                     onClick={() => {
-                      setCurrentPopup(PopupState.NEWPOST);
                       setData(
                         setPopupData,
                         setIsLoading,
