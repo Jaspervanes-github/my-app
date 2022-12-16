@@ -6,12 +6,19 @@ import { ethers } from "ethers";
 import { useContext } from "react";
 import { DataContext } from "../../contexts/DataContext";
 import "./index.css";
+import { createToastMessage } from "../../utils/toast";
 
 function Login() {
   const { state, dispatch } = useContext(DataContext);
 
   //Connects with the MetaMask plugin and loads the existing posts
   async function connectToMetamask() {
+    if (window.ethereum === undefined) {
+      createToastMessage(
+        "You need to have MetaMask installed to use this application. You can go to https://metamask.io/ to install the plugin."
+      );
+      return;
+    }
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const accounts = await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
