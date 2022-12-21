@@ -2,6 +2,11 @@ import React from "react";
 import { ContentType } from "../../../utils/contract";
 import "./index.css";
 
+/**
+ * This component displays a popup in which you can view a post.
+ * @param {*} props Contains the passed variables.
+ * @returns The render components of the ViewPopup component.
+ */
 function ViewPopup(props) {
   let popupData = props.popupData;
   return (

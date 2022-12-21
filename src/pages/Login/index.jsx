@@ -8,10 +8,17 @@ import { DataContext } from "../../contexts/DataContext";
 import { createToastMessage } from "../../utils/toast";
 import "./index.css";
 
+/**
+ * This component displays the login page of the application, this consists of a description of the application 
+ * and a button to connect to the MetaMask plugin and navigate the user to the home page.
+ * @returns The render components of the Login component.
+ */
 function Login() {
   const { state, dispatch } = useContext(DataContext);
 
-  //Connects with the MetaMask plugin and loads the existing posts
+  /**
+   * Connects with the MetaMask plugin and loads the existing posts.
+   */
   async function connectToMetamask() {
     if (window.ethereum === undefined) {
       createToastMessage(
@@ -42,7 +49,10 @@ function Login() {
     });
   }
 
-  //Renders all the ellements of the Login page
+  /**
+   * This function renders all the componets of the Login page.
+   * @returns The render components of the Login component.
+   */
   function renderMetamask() {
     if (!state.selectedAccount) {
       return (

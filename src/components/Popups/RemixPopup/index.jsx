@@ -6,6 +6,11 @@ import resizeHeightOfElement from "../../../utils/resizeElement";
 import { createToastMessage } from "../../../utils/toast";
 import "./index.css";
 
+/**
+ * This component displays a popup in which you can change the content of a post and repost it.
+ * @param {*} props Contains the passed variables.
+ * @returns The render components of the RemixPopup component.
+ */
 function RemixPopup(props) {
   const {state, dispatch} = useContext(DataContext);
   let popupData = props.popupData;

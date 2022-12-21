@@ -6,17 +6,28 @@ import { createToastMessage } from "./toast";
 
 const PUBLISHER_ADDRESS = "0x1F871dC82BF9048946540Ac41231b50fE4Da883b";
 
+/**
+ * Represents the type of the contract.
+ */
 export const ContractType = {
     ORIGINAL: 0,
     RESHARE: 1,
     REMIX: 2,
 };
 
+/**
+ * Represents the type of the content of the post.
+ */
 export const ContentType = {
     TEXT: 0,
     IMAGE: 1,
 };
 
+/**
+ * Converts the enum ContractType to a string value.
+ * @param {*} contractType An enum of type ContractType. 
+ * @returns A string value of the corresponding ContractType enum.
+ */
 export function contractTypeToString(contractType) {
     switch (contractType) {
         case 0:
@@ -30,6 +41,11 @@ export function contractTypeToString(contractType) {
     }
 }
 
+/**
+ * Converts the enum ContentType to a string value.
+ * @param {*} contentType An enum of type ContentType. 
+ * @returns A string value of the corresponding ContentType enum.
+ */
 export function contentTypeToString(contentType) {
     switch (contentType) {
         case 0:
@@ -41,7 +57,22 @@ export function contentTypeToString(contentType) {
     }
 }
 
-//Deploys a new Post contract to the blockchain and adds it to to posts list
+/**
+ * Deploys a new Post contract to the blockchain and adds it to to posts list.
+ * @param {*} type An enum of the type ContractType. States of what typing the current post is.
+ * @param {*} id Unique key value of the post.
+ * @param {*} contractType An enum of the type ContractType. States of what typing the selected post is.
+ * @param {*} originalPostAddress The contract address of the original post contract.
+ * @param {*} contentType An enum of the type ContentType. States of what typing the content of the current post is.
+ * @param {*} hashOfContent A string which refers to the data of the content of the post.
+ * @param {*} payees An array of wallet addresses which refer to the account that have shares in this post.
+ * @param {*} shares An array of numbers which refer to the amount of shares the payees hold in this post.
+ * @param {*} royaltyMultiplier The share multiplier of the current post.
+ * @param {*} setCurrentPopup Function to set the currentPopup variable.
+ * @param {*} popupData This varaiable holds all the data of the current post.
+ * @param {*} state Variable in which the data of the application gets stored globally.
+ * @param {*} dispatch Function to change the global state variable.
+ */
 export async function deployNewPostContract(
     type,
     id,

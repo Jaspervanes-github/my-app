@@ -5,6 +5,11 @@ import { dataReducer } from '../reducers/DataReducer';
 
 const DataContext = React.createContext();
 
+/**
+ * This component stores all the global variables in the state variable, also initilizes the reducer.
+ * @param {*} children Contains everything within the DataConsumer tag.
+ * @returns The render components of the DataConsumer component.
+ */
 function DataProvider({ children }) {
     const [state, dispatch] = React.useReducer(dataReducer, {
         provider: '',
@@ -29,6 +34,12 @@ function DataProvider({ children }) {
     </DataContext.Provider>
 }
 
+/**
+ * This component handles the interaction with the DataProvider.
+ * If calls to the DataProvider are made within a DataConsumer tag they are valid. Otherwise trows an exception (Deprecated)
+ * @param {*} children Contains everything within the DataConsumer tag.
+ * @returns The render components of the DataConsumer component.
+ */
 //Deprecated
 function DataConsumer({ children }) {
     return (

@@ -12,6 +12,10 @@ import { ContentType, ContractType } from "../../utils/contract";
 import { PopupState } from "../../utils/enums";
 import "./index.css";
 
+/**
+ * This component displays the home page of the application, this consists of a navBar, a list of posts, costDisplay and a button to create a new post.
+ * @returns The render components of the DataConsumer component.
+ */
 function Home() {
   const { state } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(false);

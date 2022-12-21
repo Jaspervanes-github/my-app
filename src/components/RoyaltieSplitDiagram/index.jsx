@@ -2,6 +2,12 @@ import React from "react";
 import Chart from "react-apexcharts";
 import "./index.css";
 
+/**
+ * This function calculates the amount of shares per category of posts.
+ * @param {*} payees An array of walletAddresses.
+ * @param {*} shares An array of numbers used to track the amount of shares.
+ * @returns An array which contains the amount of shares per category of posts.
+ */
 function createDataForChart(payees, shares) {
   let amountOfOriginals = 0;
   let amountOfReshares = 0;
@@ -31,6 +37,11 @@ function createDataForChart(payees, shares) {
   ];
 }
 
+/**
+ * This component displays a pie diagram of the shares per category of posts.
+ * @param {*} props Contains the passed variables.
+ * @returns The render components of the PopupWrapperLayout component.
+ */
 function RoyaltieSplitDiagram(props) {
   return (
     <React.Fragment>

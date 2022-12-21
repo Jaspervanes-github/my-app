@@ -11,7 +11,12 @@ import ResharePopup from "../ResharePopup";
 import ViewPopup from "../ViewPopup";
 import "./index.css";
 
-//Handles the changes in the form element of the popups
+/**
+ * Handles the changes in the form element of the popups.
+ * @param {*} event This variable contains all the data of the method call, for example where it gets called from.
+ * @param {*} setPopupData Function to set the popupData variable.
+ * @param {*} popupData This varaiable holds all the data of the current post.
+ */
 function handleChange(event, setPopupData, popupData) {
   const target = event.target;
   const name = target.name;
@@ -43,7 +48,15 @@ setPopupData({...popupData, [name]: value});
   // });
 }
 
-//Handles the submittions of the form element of the popups
+/**
+ * Handles the submittions of the form element of the popups.
+ * @param {*} event This variable contains all the data of the method call, for example where it gets called from.
+ * @param {*} type Enum that represents the type of the popup.
+ * @param {*} setCurrentPopup Function to set the currentPopup variable.
+ * @param {*} popupData This varaiable holds all the data of the current post.
+ * @param {*} state Variable in which the data of the application gets stored globally.
+ * @param {*} dispatch Function to change the global state variable.
+ */
 async function handleSubmit(event, type, setCurrentPopup, popupData, state, dispatch) {
   createToastMessage("The post is being created, please wait...", 3000);
 
@@ -78,6 +91,11 @@ async function handleSubmit(event, type, setCurrentPopup, popupData, state, disp
   event.preventDefault();
 }
 
+/**
+ * This component wraps the PopupWrapperLayout and a poup component. Is used to handle the switching between popups.
+ * @param {*} props Contains the passed variables.
+ * @returns The render components of the PopupWrapper component.
+ */
 function PopupWrapper(props) {
   let popupData = props.popupData;
   let currentPopup = props.currentPopup;

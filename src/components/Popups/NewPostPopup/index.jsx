@@ -5,6 +5,11 @@ import { PopupState } from "../../../utils/enums";
 import { createToastMessage } from "../../../utils/toast";
 import "./index.css";
 
+/**
+ * This component displays a popup in which you can put content to post.
+ * @param {*} props Contains the passed variables.
+ * @returns The render components of the NewPostPopup component.
+ */
 function NewPostPopup(props) {
   const {state, dispatch} = useContext(DataContext);
   let popupData = props.popupData;

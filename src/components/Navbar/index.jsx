@@ -1,13 +1,17 @@
-import React from 'react';
-import { Toolbar, Typography, Button } from '@material-ui/core';
-import HomeIcon from "@material-ui/icons/Home";
-import DiscoverIcon from "@material-ui/icons/Search";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+import { Button, Toolbar } from '@material-ui/core';
 import LogoutIcon from "@material-ui/icons/ExitToApp";
+import HomeIcon from "@material-ui/icons/Home";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import DiscoverIcon from "@material-ui/icons/Search";
+import React from 'react';
 import { useNavigate } from "react-router-dom";
 import "./index.css";
 
-function NavBar(props) {
+/**
+ * This component displays a list of buttons. These buttons navigates the user to different pages of the application.
+ * @returns The render components of the NavBar component.
+ */
+function NavBar() {
     const navigate = useNavigate();
     return (
         <div className="navbar">

@@ -1,6 +1,10 @@
 import React from "react";
 import "./index.css";
 
+/**
+ * This component displays a list in which it states the costs of creating posts.
+ * @returns The render components of the CostDisplay component.
+ */
 function CostsDisplay() {
   return (
     <React.Fragment>

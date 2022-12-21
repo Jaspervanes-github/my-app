@@ -5,7 +5,15 @@ import { PopupState } from "../utils/enums";
 import { retrieveDataFromIPFS } from "../utils/ipfs";
 import { createToastMessage } from "../utils/toast";
 
-
+/**
+ * This function handles the switching of the PopupStates. Everytime this variable changes it sets the popupData to the correct values depending on the PopupState.
+ * @param {*} setPopupData Function to set the popupData variable.
+ * @param {*} setIsLoading Function to set the isLoading variable.
+ * @param {*} setCurrentPopup Function to set the currentPopup variable.
+ * @param {*} currentPopup This varaiable holds all the data of the current post.
+ * @param {*} item This variable holds the contractAddress of the selected post.
+ * @param {*} state Variable in which the data of the application gets stored globally.
+ */
 function setData(setPopupData, setIsLoading, setCurrentPopup, currentPopup, item, state) {
 
     switch (currentPopup) {
@@ -31,6 +39,11 @@ function setData(setPopupData, setIsLoading, setCurrentPopup, currentPopup, item
     }
 }
 
+/**
+ * This function sets the popupData to the correct values of the NewPostPopup.
+ * @param {*} setPopupData Function to set the popupData variable.
+ * @param {*} setCurrentPopup Function to set the currentPopup variable.
+ */
 function setNewPostPopup(setPopupData, setCurrentPopup) {
     setPopupData({
         originalPostAddress: "0x0000000000000000000000000000000000000000",
@@ -44,6 +57,15 @@ function setNewPostPopup(setPopupData, setCurrentPopup) {
     setCurrentPopup(PopupState.NEWPOST);
 }
 
+/**
+ * This function retrieves the data of the selected post contract and sets the popupData to the correct values of the ResharePopup.
+ * @param {*} setPopupData Function to set the popupData variable.
+ * @param {*} setIsLoading Function to set the isLoading variable.
+ * @param {*} setCurrentPopup Function to set the currentPopup variable.
+ * @param {*} item This variable holds the contractAddress of the selected post.
+ * @param {*} state Variable in which the data of the application gets stored globally.
+ * @returns 
+ */
 async function setResharePopup(setPopupData, setIsLoading, setCurrentPopup, item, state) {
     try {
         setIsLoading(true);
@@ -95,6 +117,15 @@ async function setResharePopup(setPopupData, setIsLoading, setCurrentPopup, item
     setIsLoading(false);
 }
 
+/**
+ * This function retrieves the data of the selected post contract and sets the popupData to the correct values of the RemixPopup.
+ * @param {*} setPopupData Function to set the popupData variable.
+ * @param {*} setIsLoading Function to set the isLoading variable.
+ * @param {*} setCurrentPopup Function to set the currentPopup variable.
+ * @param {*} item This variable holds the contractAddress of the selected post.
+ * @param {*} state Variable in which the data of the application gets stored globally.
+ * @returns 
+ */
 async function setRemixPopup(setPopupData, setIsLoading, setCurrentPopup, item, state) {
     try {
         setIsLoading(true);
@@ -146,6 +177,15 @@ async function setRemixPopup(setPopupData, setIsLoading, setCurrentPopup, item, 
     setIsLoading(false);
 }
 
+/**
+ * This function retrieves the data of the selected post contract and sets the popupData to the correct values of the ViewPopup.
+ * @param {*} setPopupData Function to set the popupData variable.
+ * @param {*} setIsLoading Function to set the isLoading variable.
+ * @param {*} setCurrentPopup Function to set the currentPopup variable.
+ * @param {*} item This variable holds the contractAddress of the selected post.
+ * @param {*} state Variable in which the data of the application gets stored globally. 
+ * @returns 
+ */
 async function setViewPopup(setPopupData, setIsLoading, setCurrentPopup, item, state) {
     try {
         setIsLoading(true);
@@ -200,6 +240,14 @@ async function setViewPopup(setPopupData, setIsLoading, setCurrentPopup, item, s
     setIsLoading(false);
 }
 
+/**
+ * This function retrieves the data of the selected post contract and sets the popupData to the correct values of the DetailsPopup.
+ * @param {*} setPopupData Function to set the popupData variable.
+ * @param {*} setIsLoading Function to set the isLoading variable.
+ * @param {*} setCurrentPopup Function to set the currentPopup variable.
+ * @param {*} item This variable holds the contractAddress of the selected post.
+ * @param {*} state Variable in which the data of the application gets stored globally.
+ */
 async function setDetailsPopup(setPopupData, setIsLoading, setCurrentPopup, item, state) {
     try {
         setIsLoading(true);

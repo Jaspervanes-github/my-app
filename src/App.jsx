@@ -33,6 +33,10 @@ const theme = createTheme({
   },
 });
 
+/**
+ * This component handles the changing of pages and renders the corresponding page. It also renders the Header and holds the DataProvider.
+ * @returns The render components of the App component.
+ */
 function App() {
   return (
     <ThemeProvider theme={theme}>

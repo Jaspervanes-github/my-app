@@ -1,3 +1,9 @@
+/**
+ * This function handles the data changes of the state variable from the DataProvider
+ * @param {*} state Variable in which the data of the application gets stored globally.
+ * @param {*} action Represents the action which needs to be excecuted to update the correct variable(s).
+ * @returns The updated state variable containing every global variable of the application.
+ */
 export function dataReducer(state, action) {
     switch (action.type) {
         case 'setProvider': {

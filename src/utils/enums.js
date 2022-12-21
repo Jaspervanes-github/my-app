@@ -1,3 +1,6 @@
+/**
+ * Represents the state of the popup
+ */
 const PopupState = {
     CLOSED: 0,
     NEWPOST: 1,

@@ -4,6 +4,11 @@ import Post from "../../components/Post";
 import { DataContext } from "../../contexts/DataContext";
 import "./index.css";
 
+/**
+ * This component displays all the posts in a list.
+ * @param {*} props Contains the passed variables.
+ * @returns The render components of the PostContainer component.
+ */
 function PostContainer(props) {
   const { state } = useContext(DataContext);
   let ref = React.createRef(null);

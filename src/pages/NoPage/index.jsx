@@ -3,6 +3,10 @@ import React from "react";
 import NavBar from "../../components/Navbar";
 import "./index.css";
 
+/**
+ * This component displays the error page of the application, this page gets shown when an invalid URL is enterred.
+ * @returns The render components of the DataConsumer component.
+ */
 const NoPage = () => {
   return (
     <React.Fragment>

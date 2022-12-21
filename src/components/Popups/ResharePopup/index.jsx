@@ -8,6 +8,11 @@ import { PopupState } from "../../../utils/enums";
 import { createToastMessage } from "../../../utils/toast";
 import "./index.css";
 
+/**
+ * This component displays a popup in which repost a post.
+ * @param {*} props Contains the passed variables.
+ * @returns The render components of the ResharePopup component.
+ */
 function ResharePopup(props) {
   const { state, dispatch } = useContext(DataContext);
   let popupData = props.popupData;

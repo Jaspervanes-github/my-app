@@ -5,6 +5,10 @@ import TwitterIcon from '@material-ui/icons/Twitter';
 import InstagramIcon from '@material-ui/icons/Instagram';
 import YouTubeIcon from '@material-ui/icons/YouTube';
 
+/**
+ * This component displays multiple buttons to link social media, usually displayed at the bottom of the page.
+ * @returns The render components of the Footer component.
+ */
 function Footer() {
     return (
         <BottomNavigation>

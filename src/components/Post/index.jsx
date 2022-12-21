@@ -32,6 +32,11 @@ const buttons = [
   },
 ];
 
+/**
+ * This component displays a preview of the post content together with buttons to reshare, remix, view or see details of the post. 
+ * @param {*} props Contains the passed variables.
+ * @returns The render components of the Post component.
+ */
 function Post(props) {
   const { state } = useContext(DataContext);
   let item = props.item;

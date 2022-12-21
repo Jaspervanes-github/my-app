@@ -3,6 +3,12 @@ import { contentTypeToString, contractTypeToString } from "../../../utils/contra
 import RoyaltieSplitDiagram from "../../RoyaltieSplitDiagram";
 import "./index.css";
 
+/**
+ * This component displays the detail data of a post. This data consists of a link to the contract, 
+ * wallet adress of poster, cotract ID, contract type, content type, post address, hash of content and a pie diagram of the royaltysplit.
+ * @param {*} props Contains the passed variables.
+ * @returns The render components of the DetaislPopup component.
+ */
 function DetailsPopup(props) {
   let popupData = props.popupData;
   return (
