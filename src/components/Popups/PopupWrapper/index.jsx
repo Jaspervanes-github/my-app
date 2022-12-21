@@ -1,17 +1,15 @@
 import React from "react";
-import "./index.css";
-import PopupWrapperLayout from "../../Layout";
-import NewPostPopup from "../NewPostPopup";
-import ResharePopup from "../ResharePopup";
-import RemixPopup from "../RemixPopup";
-import ViewPopup from "../ViewPopup";
-import DetailsPopup from "../DetailsPopup";
-import { PopupState } from "../../../utils/enums";
-import { createToastMessage } from "../../../utils/toast";
 import { ContentType, deployNewPostContract } from "../../../utils/contract";
-import { saveTextToIPFS, saveImageToIPFS } from "../../../utils/ipfs";
-import { useContext } from "react";
-import { DataContext } from "../../../contexts/DataContext";
+import { PopupState } from "../../../utils/enums";
+import { saveImageToIPFS, saveTextToIPFS } from "../../../utils/ipfs";
+import { createToastMessage } from "../../../utils/toast";
+import PopupWrapperLayout from "../../Layout";
+import DetailsPopup from "../DetailsPopup";
+import NewPostPopup from "../NewPostPopup";
+import RemixPopup from "../RemixPopup";
+import ResharePopup from "../ResharePopup";
+import ViewPopup from "../ViewPopup";
+import "./index.css";
 
 //Handles the changes in the form element of the popups
 function handleChange(event, setPopupData, popupData) {

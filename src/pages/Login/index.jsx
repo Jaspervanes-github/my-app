@@ -1,12 +1,12 @@
 import { Button } from "@material-ui/core";
-import React, { Component } from "react";
+import React from "react";
 import { Navigate } from "react-router-dom";
 
 import { ethers } from "ethers";
 import { useContext } from "react";
 import { DataContext } from "../../contexts/DataContext";
-import "./index.css";
 import { createToastMessage } from "../../utils/toast";
+import "./index.css";
 
 function Login() {
   const { state, dispatch } = useContext(DataContext);

@@ -1,11 +1,9 @@
 import { ethers } from "ethers";
 import Post_ABI from "../assets/metadata/Post_ABI.json";
-import { createToastMessage } from "../utils/toast";
-import { retrieveDataFromIPFS } from "../utils/ipfs";
-import { ContractType, ContentType } from "../utils/contract";
+import { ContentType, ContractType } from "../utils/contract";
 import { PopupState } from "../utils/enums";
-import { useContext } from "react";
-import { DataContext } from "../contexts/DataContext";
+import { retrieveDataFromIPFS } from "../utils/ipfs";
+import { createToastMessage } from "../utils/toast";
 
 
 function setData(setPopupData, setIsLoading, setCurrentPopup, currentPopup, item, state) {

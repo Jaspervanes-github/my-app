@@ -7,4 +7,4 @@ const PopupState = {
     DETAILS: 5,
   };
 
-  export {PopupState};
+  export { PopupState };

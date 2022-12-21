@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { dataReducer } from '../reducers/DataReducer';
 import { useNavigate } from 'react-router-dom';
+import { dataReducer } from '../reducers/DataReducer';
 
 
 const DataContext = React.createContext();
@@ -43,4 +43,4 @@ function DataConsumer({ children }) {
     )
 }
 
-export { DataProvider, DataConsumer, DataContext }
+export { DataProvider, DataConsumer, DataContext };

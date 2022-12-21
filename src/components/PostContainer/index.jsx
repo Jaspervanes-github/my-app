@@ -1,9 +1,8 @@
-import React from "react";
-import "./index.css";
+import React, { useContext } from "react";
 import ViewportList from "react-viewport-list";
 import Post from "../../components/Post";
-import { useContext } from "react";
 import { DataContext } from "../../contexts/DataContext";
+import "./index.css";
 
 function PostContainer(props) {
   const { state } = useContext(DataContext);

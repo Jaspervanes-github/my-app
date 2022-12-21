@@ -1,7 +1,7 @@
 import React from "react";
-import "./index.css";
-import { contractTypeToString, contentTypeToString } from "../../../utils/contract";
+import { contentTypeToString, contractTypeToString } from "../../../utils/contract";
 import RoyaltieSplitDiagram from "../../RoyaltieSplitDiagram";
+import "./index.css";
 
 function DetailsPopup(props) {
   let popupData = props.popupData;

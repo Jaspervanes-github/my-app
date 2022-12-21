@@ -1,11 +1,9 @@
-import React from "react";
-import "./index.css";
-import { ContractType, ContentType } from "../../../utils/contract";
-import { createToastMessage } from "../../../utils/toast";
-import { PopupState } from "../../../utils/enums";
-import resizeHeightOfElement from "../../../utils/resizeElement";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { DataContext } from "../../../contexts/DataContext";
+import { ContentType, ContractType } from "../../../utils/contract";
+import { PopupState } from "../../../utils/enums";
+import { createToastMessage } from "../../../utils/toast";
+import "./index.css";
 
 function NewPostPopup(props) {
   const {state, dispatch} = useContext(DataContext);

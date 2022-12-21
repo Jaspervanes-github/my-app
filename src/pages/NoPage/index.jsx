@@ -1,7 +1,7 @@
+import { Grid } from "@material-ui/core";
 import React from "react";
 import NavBar from "../../components/Navbar";
 import "./index.css";
-import { Grid } from "@material-ui/core";
 
 const NoPage = () => {
   return (

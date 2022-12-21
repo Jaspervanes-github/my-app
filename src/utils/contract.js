@@ -1,8 +1,6 @@
 import { ContractFactory } from "ethers";
-import { useContext } from "react";
 import Post_ABI from "../assets/metadata/Post_ABI.json";
 import Post_ByteCode from "../assets/metadata/Post_ByteCode.json";
-import { DataContext } from "../contexts/DataContext";
 import { PopupState } from "./enums";
 import { createToastMessage } from "./toast";
 

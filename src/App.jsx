@@ -1,16 +1,15 @@
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import { Route, Routes } from "react-router-dom";
-import "./App.css";
-import React, { Component } from "react";
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { BrowserRouter } from "react-router-dom";
+import "./App.css";
 
+import Header from "./components/Header";
+import { DataProvider } from "./contexts/DataContext";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NoPage from "./pages/NoPage";
-import { DataProvider } from "./contexts/DataContext";
-import Header from "./components/Header";
 
 const theme = createTheme({
   palette: {

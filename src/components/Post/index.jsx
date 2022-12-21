@@ -1,14 +1,13 @@
-import React from "react";
-import "./index.css";
 import IconButton from "@material-ui/core/IconButton";
-import ReshareIcon from "@material-ui/icons/Share";
 import RemixIcon from "@material-ui/icons/Edit";
-import ViewIcon from "@material-ui/icons/Visibility";
 import DetailIcon from "@material-ui/icons/Info";
-import { PopupState } from "../../utils/enums";
-import setData from "../../hooks/popupHooks";
-import { useContext } from "react";
+import ReshareIcon from "@material-ui/icons/Share";
+import ViewIcon from "@material-ui/icons/Visibility";
+import React, { useContext } from "react";
 import { DataContext } from "../../contexts/DataContext";
+import setData from "../../hooks/popupHooks";
+import { PopupState } from "../../utils/enums";
+import "./index.css";
 
 const buttons = [
   {

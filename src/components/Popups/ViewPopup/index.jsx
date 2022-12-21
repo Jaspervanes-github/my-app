@@ -1,6 +1,6 @@
 import React from "react";
-import "./index.css";
 import { ContentType } from "../../../utils/contract";
+import "./index.css";
 
 function ViewPopup(props) {
   let popupData = props.popupData;

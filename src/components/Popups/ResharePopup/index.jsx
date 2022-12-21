@@ -1,14 +1,12 @@
-import React from "react";
-import "./index.css";
-import {
-  ContractType,
-  ContentType,
-  contentTypeToString,
-} from "../../../utils/contract";
-import { createToastMessage } from "../../../utils/toast";
-import { PopupState } from "../../../utils/enums";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { DataContext } from "../../../contexts/DataContext";
+import {
+  ContentType,
+  contentTypeToString, ContractType
+} from "../../../utils/contract";
+import { PopupState } from "../../../utils/enums";
+import { createToastMessage } from "../../../utils/toast";
+import "./index.css";
 
 function ResharePopup(props) {
   const { state, dispatch } = useContext(DataContext);
