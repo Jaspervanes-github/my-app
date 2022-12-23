@@ -27,7 +27,7 @@ function NewPostPopup(props) {
             }
             props.handleSubmit(
               event,
-              ContractType.REMIX,
+              ContractType.ORIGINAL,
               props.setCurrentPopup,
               popupData,
               state,
