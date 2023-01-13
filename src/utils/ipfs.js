@@ -62,14 +62,14 @@ export async function saveImageToIPFS(image) {
 export async function retrieveDataFromIPFS(hash, contentType) {
     let node = await IPFS.create({ repo: "ok" + Math.random() });
 
-    let dataReceived;
     let asyncitr = node.cat(hash);
     const decoder = new TextDecoder();
-    dataReceived = "";
+    let dataReceived = '';
 
     for await (const itr of asyncitr) {
         dataReceived += decoder.decode(itr, { stream: true });
         console.log("Data received: " + dataReceived);
     }
     return dataReceived;
+    // return "";
 }
