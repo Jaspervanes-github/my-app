@@ -95,7 +95,9 @@ async function setResharePopup(setPopupData, setIsLoading, setCurrentPopup, item
         let _originalPostAddress = await contract.originalPost();
         let _shares = await contract.getAllShares();
         let _hashOfContent = await contract.hashOfContent();
-        let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
+        // let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
+        let _content = state.postData[state.posts.indexOf(item)];
+
 
         setPopupData({
             currentItem: item,
@@ -155,7 +157,9 @@ async function setRemixPopup(setPopupData, setIsLoading, setCurrentPopup, item, 
         let _originalPostAddress = await contract.originalPost();
         let _shares = await contract.getAllShares();
         let _hashOfContent = await contract.hashOfContent();
-        let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
+        // let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
+        let _content = state.postData[state.posts.indexOf(item)];
+
 
         setPopupData({
             currentItem: item,
@@ -221,7 +225,9 @@ async function setViewPopup(setPopupData, setIsLoading, setCurrentPopup, item, s
         let _contentType = await contract.contentType();
         let _id = await contract.id();
         let _hashOfContent = await contract.hashOfContent();
-        let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
+        // let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
+        let _content = state.postData[state.posts.indexOf(item)];
+
 
         setPopupData({
             currentItem: item,
@@ -268,7 +274,9 @@ async function setDetailsPopup(setPopupData, setIsLoading, setCurrentPopup, item
         let _shares = await contract.getAllShares();
         let _royaltyMultiplier = await contract.royaltyMultiplier();
         let _hashOfContent = await contract.hashOfContent();
-        let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
+        // let _content = await retrieveDataFromIPFS(_hashOfContent, _contentType);
+        let _content = state.postData[state.posts.indexOf(item)];
+
 
         setPopupData({
             currentItem: item,

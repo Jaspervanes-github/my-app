@@ -60,16 +60,19 @@ export async function saveImageToIPFS(image) {
  * @returns The data that gets retrieved from the IPFS network.
  */
 export async function retrieveDataFromIPFS(hash, contentType) {
-    let node = await IPFS.create({ repo: "ok" + Math.random() });
+    // let node = await IPFS.create({ repo: "ok" + Math.random() });
 
-    let asyncitr = node.cat(hash);
-    const decoder = new TextDecoder();
-    let dataReceived = '';
+    // let asyncitr = node.cat(hash);
+    // const decoder = new TextDecoder();
+    // let dataReceived = '';
 
-    for await (const itr of asyncitr) {
-        dataReceived += decoder.decode(itr, { stream: true });
-        console.log("Data received: " + dataReceived);
-    }
-    return dataReceived;
-    // return "";
+    // try {
+    //     for await (const itr of asyncitr) {
+    //         dataReceived += decoder.decode(itr, { stream: true });
+    //         console.log("Data received: " + dataReceived);
+    //     }
+    // } catch (err) { console.log(err) }
+
+    // return dataReceived;
+    return "";
 }
